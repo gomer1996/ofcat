@@ -2008,7 +2008,7 @@ input:active{ outline: none; }
 	font-weight: bold;
 	padding: 15px 0 15px 0;
 }
-.korzblok a {
+.korzblok a, .korzblok button {
 	text-decoration: none;
 	color:#ffffff;
 	background-color: rgba(247, 148, 29, 1);
@@ -2017,10 +2017,12 @@ input:active{ outline: none; }
 	padding: 14px 30px;
 	font-size: 93%;
 	display: inline-block;
+    cursor: pointer;
 	font-weight: bold;
 	margin-bottom: 30px;
+    border: none;
 }
-.korzblok a:hover {
+.korzblok a:hover, .korzblok button:hover {
 	background-color: #cd7710;
 }
 .korzpromo form p:first-child {

@@ -14,6 +14,7 @@ class ProductIntro extends Component
     {
         Cart::add($product["id"], $product["name"], $this->cartQty, $product["price"]);
         $this->emit('productAddedToCart');
+        $this->emit('cartUpdated');
     }
 
     public function increase()

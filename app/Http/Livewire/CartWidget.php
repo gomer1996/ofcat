@@ -9,7 +9,7 @@ class CartWidget extends Component
 {
     public $count = 0;
 
-    protected $listeners = ['productAddedToCart' => 'updateCount'];
+    protected $listeners = ['cartUpdated' => 'updateCount'];
 
     public function mount()
     {

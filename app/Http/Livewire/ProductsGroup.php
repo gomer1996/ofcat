@@ -14,6 +14,7 @@ class ProductsGroup extends Component
     {
         Cart::add($product["id"], $product["name"], 1, $product["price"]);
         $this->emit('productAddedToCart');
+        $this->emit('cartUpdated');
     }
 
     public function render()

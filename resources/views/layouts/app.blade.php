@@ -92,9 +92,9 @@
             </div>
             <div class="blocright">
                 <div id="header_search">
-                    <form name="search" action="#" method="get">
+                    <form name="search" action="{{ route('categories.index') }}" method="get">
                         <div class="search">
-                            <div class="blokleft"><input type="text" name="words"  placeholder="Поиск по каталогу" /></div>
+                            <div class="blokleft"><input type="text" name="search"  placeholder="Поиск по каталогу" /></div>
                             <div class="blocright"><input type="submit" name="seatch" value="" /></div>
                         </div>
                     </form>

@@ -19,12 +19,15 @@ Route::get('/', function () {
 });
 
 Route::view('/cart', 'cart')->name('cart.index');
+Route::view('/checkout', 'checkout')->name('checkout.index');
 
-Route::get('/categories/{category}', [\App\Http\Controllers\CategoryController::class, 'index'])->name('categories.index');
-
-Route::get('/products/{product}', [\App\Http\Controllers\ProductController::class, 'show'])->name('products.show');
+Route::get('/discounts', [\App\Http\Controllers\DiscountController::class, 'index'])->name('discounts.index');
 
 Route::get('/news', [\App\Http\Controllers\NewsController::class, 'index'])->name('news.index');
+
+Route::get('/categories/{id?}', [\App\Http\Controllers\CategoryController::class, 'index'])->name('categories.index');
+
+Route::get('/products/{product}', [\App\Http\Controllers\ProductController::class, 'show'])->name('products.show');
 
 Route::get('/news/{news}', [\App\Http\Controllers\NewsController::class, 'show'])->name('news.show');
 

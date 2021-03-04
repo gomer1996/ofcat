@@ -12,11 +12,25 @@ class CategoryProducts extends Component
     use WithPagination;
 
     public $category;
+    public $searchString = '';
+
+    public function mount()
+    {
+        $this->searchString = request()->get('search');
+    }
 
     public function render()
     {
+        $filter = Product::whereNotNull('id');
+
+        if ($this->category) $filter->where('category_id', $this->category->id);
+
+        if ($this->searchString) $filter->where('name', 'like', "%$this->searchString%");
+
+        $products = $filter->paginate(3);
+
         return view('livewire.category-products', [
-            'products' => Product::where('category_id', $this->category->id)->paginate(3),
+            'products' => $products,
             'category' => $this->category
         ]);
     }

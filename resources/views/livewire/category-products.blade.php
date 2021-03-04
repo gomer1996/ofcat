@@ -1,6 +1,6 @@
 <div id="productgroup" class="field">
     <div class="subproductgroup">
-        <h1>{{ $category->name }}</h1>
+        <h1>{{ $category->name ?? "Результаты поиска" }}</h1>
         <div class="pagination">
             <table>
                 <tr>
