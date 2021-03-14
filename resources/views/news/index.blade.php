@@ -1,4 +1,5 @@
 <x-app-layout>
+    @section('title', 'Новости')
     <div class="cleaner"></div>
     <div id="hornav">
         <div class="field">
@@ -31,7 +32,7 @@
                         @foreach($chunk as $singleNews)
                             <td class="page_left">
                                 <a href="{{ route('news.show', $singleNews) }}" target="_blank">
-                                    <img src="images/news.jpg" alt="Новость" />
+                                    <img src="{{ asset('storage/'.$singleNews->img) }}" alt="Новость" />
                                     <p class="page_title">{{ $singleNews->title }}</p>
                                     <p>{{ $singleNews->intro_content }}</p>
                                     <p><span>{{ $singleNews->formatted_date }}</span></p>

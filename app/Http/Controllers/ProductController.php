@@ -13,4 +13,13 @@ class ProductController extends Controller
             'product' => $product
         ]);
     }
+
+    public function search()
+    {
+        $searchString = request()->get('q');
+
+        return view('product.search-results', [
+            'products' => Product::where('name', 'like', "%$searchString%")->limit(10)->get()
+        ]);
+    }
 }

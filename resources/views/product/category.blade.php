@@ -1,6 +1,6 @@
 <x-app-layout>
-
-    <livewire:category-products :category="$category" />
+    @section('title', $category->name)
+    <livewire:products-list :category="$category" />
     <div class="otstyp">
     </div>
 </x-app-layout>

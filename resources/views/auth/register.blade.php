@@ -1,67 +1,8 @@
-{{--<x-guest-layout>--}}
-{{--    <x-auth-card>--}}
-{{--        <x-slot name="logo">--}}
-{{--            <a href="/">--}}
-{{--                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />--}}
-{{--            </a>--}}
-{{--        </x-slot>--}}
-
-{{--        <!-- Validation Errors -->--}}
-{{--        <x-auth-validation-errors class="mb-4" :errors="$errors" />--}}
-
-{{--        <form method="POST" action="{{ route('register') }}">--}}
-{{--            @csrf--}}
-
-{{--            <!-- Name -->--}}
-{{--            <div>--}}
-{{--                <x-label for="name" :value="__('Name')" />--}}
-
-{{--                <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus />--}}
-{{--            </div>--}}
-
-{{--            <!-- Email Address -->--}}
-{{--            <div class="mt-4">--}}
-{{--                <x-label for="email" :value="__('Email')" />--}}
-
-{{--                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />--}}
-{{--            </div>--}}
-
-{{--            <!-- Password -->--}}
-{{--            <div class="mt-4">--}}
-{{--                <x-label for="password" :value="__('Password')" />--}}
-
-{{--                <x-input id="password" class="block mt-1 w-full"--}}
-{{--                                type="password"--}}
-{{--                                name="password"--}}
-{{--                                required autocomplete="new-password" />--}}
-{{--            </div>--}}
-
-{{--            <!-- Confirm Password -->--}}
-{{--            <div class="mt-4">--}}
-{{--                <x-label for="password_confirmation" :value="__('Confirm Password')" />--}}
-
-{{--                <x-input id="password_confirmation" class="block mt-1 w-full"--}}
-{{--                                type="password"--}}
-{{--                                name="password_confirmation" required />--}}
-{{--            </div>--}}
-
-{{--            <div class="flex items-center justify-end mt-4">--}}
-{{--                <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">--}}
-{{--                    {{ __('Already registered?') }}--}}
-{{--                </a>--}}
-
-{{--                <x-button class="ml-4">--}}
-{{--                    {{ __('Register') }}--}}
-{{--                </x-button>--}}
-{{--            </div>--}}
-{{--        </form>--}}
-{{--    </x-auth-card>--}}
-{{--</x-guest-layout>--}}
-
 @php
     $isCompany = request()->get('type') === 'company';
 @endphp
 <x-app-layout>
+    @section('title', 'Регистрация')
     <div id="hornav" class="hornav_fon">
         <div class="field">
             <table>
@@ -82,9 +23,7 @@
     <div class="cleaner"></div>
     <div id="registration" >
         <div class="field">
-            <!-- Validation Errors -->
-            <x-auth-validation-errors class="mb-4" :errors="$errors" />
-            <form method="POST" action="{{ route('register') }}">
+            <form method="POST" action="{{ route('register') }}" class="form">
                 @csrf
                 <table>
                     <tr>
@@ -114,10 +53,14 @@
                                     <input id="company_name"
                                            type="text"
                                            name="company_name"
+                                           class="@error('company_name') is-invalid-input @enderror"
                                            value="{{ old('company_name') }}"
                                            placeholder="Организация"
                                            required />
                                 </p>
+                                @error('company_name')
+                                    <p class="invalid-input-msg">{{ $message }}</p>
+                                @enderror
                             </td>
                         </tr>
                     @endif
@@ -128,10 +71,14 @@
                                 <input id="name"
                                        type="text"
                                        name="name"
+                                       class="@error('name') is-invalid-input @enderror"
                                        value="{{ old('name') }}"
                                        placeholder="Имя"
                                        required autofocus />
                             </p>
+                            @error('name')
+                                <p class="invalid-input-msg">{{ $message }}</p>
+                            @enderror
                         </td>
                     </tr>
                     <tr>
@@ -141,10 +88,14 @@
                                 <input id="phone"
                                        type="tel"
                                        name="phone"
+                                       class="@error('phone') is-invalid-input @enderror"
                                        value="{{ old('phone') }}"
                                        placeholder="89999999999"
                                        required autofocus />
                             </p>
+                            @error('phone')
+                                <p class="invalid-input-msg">{{ $message }}</p>
+                            @enderror
                         </td>
                     </tr>
                     <tr>
@@ -154,10 +105,14 @@
                                 <input id="email"
                                        type="email"
                                        name="email"
+                                       class="@error('email') is-invalid-input @enderror"
                                        placeholder="Email"
                                        value="{{ old('email') }}"
                                        required />
                             </p>
+                            @error('email')
+                                <p class="invalid-input-msg">{{ $message }}</p>
+                            @enderror
                         </td>
                     </tr>
                     <tr>
@@ -169,8 +124,12 @@
                                        placeholder="Пароль"
                                        type="password"
                                        name="password"
+                                       class="@error('password') is-invalid-input @enderror"
                                        required autocomplete="new-password" />
                             </p>
+                            @error('password')
+                                <p class="invalid-input-msg">{{ $message }}</p>
+                            @enderror
                         </td>
                     </tr>
                     <tr>
@@ -180,9 +139,13 @@
                                 <input id="password_confirmation"
                                        type="password"
                                        placeholder="Повторите пароль"
+                                       class="@error('password_confirmation') is-invalid-input @enderror"
                                        name="password_confirmation"
                                        required />
                             </p>
+                            @error('password_confirmation')
+                                <p class="invalid-input-msg">{{ $message }}</p>
+                            @enderror
                         </td>
                     </tr>
                     <tr>

@@ -1,4 +1,5 @@
 <x-app-layout>
+    @section('title', 'Скидки')
     <div id="hornav">
         <div class="field">
             <table>
@@ -20,7 +21,7 @@
         @foreach($discounts as $discount)
             <div class="akcii {{ $loop->last ? "akciilast" : "" }}" style="min-height: 170px">
                 {{--       todo put real img         --}}
-                <img src="/images/akcii_1.png" alt="Акция" />
+                <img src="{{ asset('storage/'.$discount->img) }}" alt="Акция" />
                 <div>
                     <p class="akciizag">{{ $discount->name }}</p>
                     <p>{!! $discount->description !!}</p>

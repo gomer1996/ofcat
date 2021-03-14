@@ -1,4 +1,5 @@
 <x-app-layout>
+    @section('title', $product->name)
     <div id="hornav">
         <div class="field">
             <table>

@@ -1,5 +1,5 @@
 <x-app-layout>
-
+    @section('title', 'Интернет магазин Ofcat')
     <x-banners />
 
     <div id="benefit">
@@ -104,7 +104,7 @@
         </table>
     </div>
     <div class="cleaner"></div>
-    <livewire:products-group :type="'popular'" />
+    <x-popular-products />
     <div class="cleaner"></div>
         <x-news />
     <div class="cleaner"></div>

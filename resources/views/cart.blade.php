@@ -1,4 +1,5 @@
 <x-app-layout>
+    @section('title', 'Корзина')
     <div class="cleaner"></div>
     <div id="hornav" class="hornav_fon">
         <div class="field">

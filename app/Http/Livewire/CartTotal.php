@@ -3,9 +3,11 @@
 namespace App\Http\Livewire;
 
 use App\Models\Discount;
+use App\Models\Settings;
 use Carbon\Carbon;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Livewire\Component;
+use App\Helpers\CartHelper;
 
 class CartTotal extends Component
 {
@@ -14,21 +16,26 @@ class CartTotal extends Component
     public $totalPrice = 0;
     public $userDiscount;
     public $cartDiscount = 0;
-
+    public $from = '';
     public $discountPercent = 0;
+    public $deliveryPrice = 0;
 
     protected $listeners = ['cartUpdated' => 'mount'];
 
     public function mount()
     {
+
         $this->productsCount = Cart::count();
-        $this->totalPrice = Cart::total();
         $this->totalPriceWithoutDiscount = Cart::priceTotal();
         $this->cartDiscount = Cart::discount();
 
         $discountParsed = floatval(Cart::discount(2, '.', ''));
         $totalPriceParsed = floatval(Cart::priceTotal(2, '.', ''));
         $this->discountPercent = $discountParsed ? round($totalPriceParsed / $discountParsed ) : 0;
+
+        $this->deliveryPrice = CartHelper::getDelivery();
+
+        $this->totalPrice = CartHelper::getTotalWithDelivery();
     }
 
     public function applyDiscount()
@@ -42,9 +49,8 @@ class CartTotal extends Component
             if ($foundDiscount) {
                 Cart::setGlobalDiscount($foundDiscount->percent);
                 $this->mount();
-                $this->emit('discountApplied');
-            }
-            $this->emit('discountFailed');
+                $this->emit('livewireNotify', 'success', 'Ваша скидка применена!');
+            }else $this->emit('livewireNotify', 'error', 'Скидка не найдена');;
         }
     }
 
@@ -56,6 +62,8 @@ class CartTotal extends Component
             'totalPrice' => $this->totalPrice,
             'cartDiscount' => $this->cartDiscount,
             'discountPercent' => $this->discountPercent,
+            'fromPage' => $this->from,
+            'deliveryPrice' => $this->deliveryPrice
         ]);
     }
 }

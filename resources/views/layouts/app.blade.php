@@ -1,49 +1,12 @@
-{{--<!DOCTYPE html>--}}
-{{--<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">--}}
-{{--    <head>--}}
-{{--        <meta charset="utf-8">--}}
-{{--        <meta name="viewport" content="width=device-width, initial-scale=1">--}}
-{{--        <meta name="csrf-token" content="{{ csrf_token() }}">--}}
-
-{{--        <title>{{ config('app.name', 'Laravel') }}</title>--}}
-
-{{--        <!-- Fonts -->--}}
-{{--        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">--}}
-
-{{--        <!-- Styles -->--}}
-{{--        <link rel="stylesheet" href="{{ asset('css/app.css') }}">--}}
-
-{{--        <!-- Scripts -->--}}
-{{--        <script src="{{ asset('js/app.js') }}" defer></script>--}}
-{{--    </head>--}}
-{{--    <body class="font-sans antialiased">--}}
-{{--        <div class="min-h-screen bg-gray-100">--}}
-{{--            @include('layouts.navigation')--}}
-
-{{--            <!-- Page Heading -->--}}
-{{--            <header class="bg-white shadow">--}}
-{{--                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">--}}
-{{--                    {{ $header }}--}}
-{{--                </div>--}}
-{{--            </header>--}}
-
-{{--            <!-- Page Content -->--}}
-{{--            <main>--}}
-{{--                {{ $slot }}--}}
-{{--            </main>--}}
-{{--        </div>--}}
-{{--    </body>--}}
-{{--</html>--}}
-
-
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <title>Интернет-магазин</title>
+    <title>@yield('title')</title>
     <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
     <meta name="description" content="Интернет-магазин товаров для офисов, предприятий и школ" />
     <meta name="keywords" content="Интернет магазин для офисов, интернет магазин комплексного снабжения, интернет магазин канцелярских товаров, интернет магазин бытовой химии, интернет магазин стульев и кресел, интернет магазин хозяйственных товаров" />
     <link type="text/css" rel="stylesheet" href="{{ asset('css/main.css') }}" />
+    <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="{{ asset('js/menu.js') }}"></script>
     @livewireStyles
@@ -60,8 +23,8 @@
                 <div class="blokleft">
                     <div class="header_logo blokleft">
                         <a class="demo" href="/">
-                            <img class="raz" src="images/logohover.png" alt="Логотип компании" />
-                            <img class="dva" src="images/logo.png" alt="Логотип компании" />
+                            <img class="raz" src="/images/logohover.png" alt="Логотип компании" />
+                            <img class="dva" src="/images/logo.png" alt="Логотип компании" />
                         </a>
                     </div>
                     <div class="header_im">
@@ -92,10 +55,10 @@
             </div>
             <div class="blocright">
                 <div id="header_search">
-                    <form name="search" action="{{ route('categories.index') }}" method="get">
+                    <form name="search" action="{{ route('products.search') }}" method="get">
                         <div class="search">
-                            <div class="blokleft"><input type="text" name="search"  placeholder="Поиск по каталогу" /></div>
-                            <div class="blocright"><input type="submit" name="seatch" value="" /></div>
+                            <div class="blokleft"><input type="text" name="q" value="{{ request()->get('q') }}"  placeholder="Поиск по каталогу" /></div>
+                            <div class="blocright"><input type="submit" value="" /></div>
                         </div>
                     </form>
                 </div>
@@ -108,9 +71,10 @@
 
     <x-footer />
     @livewireScripts
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>
-        Livewire.on('productAddedToCart', () => {
-            //alert('A post was added with the id of: ');
+        Livewire.on('livewireNotify', (type, msg) => {
+            toastr[type](msg);
         })
     </script>
 </div>

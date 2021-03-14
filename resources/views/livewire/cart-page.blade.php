@@ -56,7 +56,7 @@
 
                     </table>
                 </td>
-                <livewire:cart-total />
+                <livewire:cart-total :from="'cart-page'" />
             </tr>
             <tr>
                 <td colspan="2">

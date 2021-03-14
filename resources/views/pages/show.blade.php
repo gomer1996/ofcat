@@ -1,4 +1,5 @@
 <x-app-layout>
+    @section('title', $page->title)
     <div class="cleaner"></div>
     <div id="hornav">
         <div class="field">

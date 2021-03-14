@@ -2222,7 +2222,7 @@ input:active{ outline: none; }
 	color: #7c7c7c;
 	font-size: 90%;
 }
-.ofzakaz_lev input[type="text"], .ofzakaz_lev input[type="tel"],.ofzakaz_lev input[type="email"], .kabinet input[type="text"], .kabinet input[type="tel"],.kabinet input[type="email"] {
+.ofzakaz_lev input[type="text"], .ofzakaz_lev input[type="tel"],.ofzakaz_lev input[type="email"], .kabinet input[type="text"], .kabinet input[type="tel"],.kabinet input[type="email"], .ofzakaz_lev select {
     background-color: #ffffff;
     border: 1px solid #ececec;
     width: 680px;
@@ -2230,15 +2230,20 @@ input:active{ outline: none; }
 	border-radius: 6px;
 	box-shadow: 0 7px 9px #f5f9f9;
 }
-.ofzakaz_lev input[type="text"]:focus, .ofzakaz_lev input[type="tel"]:focus,.ofzakaz_lev input[type="email"]:focus,.kabinet input[type="text"]:focus, .kabinet input[type="tel"]:focus,.kabinet input[type="email"]:focus {
+.ofzakaz_lev input[type="text"]:focus, .ofzakaz_lev input[type="tel"]:focus,.ofzakaz_lev input[type="email"]:focus,.kabinet input[type="text"]:focus, .kabinet input[type="tel"]:focus,.kabinet input[type="email"]:focus, .ofzakaz_lev select:focus {
     border: 1px solid #917b60;
 }
-.ofzakaz_lev input[type="text"]:hover, .ofzakaz_lev input[type="tel"]:hover,.ofzakaz_lev input[type="email"]:hover,.kabinet input[type="text"]:hover, .kabinet input[type="tel"]:hover,.kabinet input[type="email"]:hover {
+.ofzakaz_lev input[type="text"]:hover, .ofzakaz_lev input[type="tel"]:hover,.ofzakaz_lev input[type="email"]:hover,.kabinet input[type="text"]:hover, .kabinet input[type="tel"]:hover,.kabinet input[type="email"]:hover, .ofzakaz_lev select:hover {
     border: 1px solid #917b60;
 }
 .ofzakaz_lev placeholder, .kabinet placeholder {
 	color: #7c7c7c;
 }
+
+.form .input-select {
+    width: 702px;
+}
+
 .kabinet a {
 	text-decoration: none;
 	color: #7c7c7c;
@@ -2329,4 +2334,44 @@ input:active{ outline: none; }
 
 .product-pagination a {
     cursor: pointer;
+}
+
+.form .is-invalid-input {
+    color: brown !important;
+    border: 1px solid brown !important;
+}
+
+.form .invalid-input-msg {
+    margin-top: 0;
+    width: 100%;
+    text-align: center;
+    font-size: 13px;
+    color: brown;
+}
+
+.alert {
+    display: inline-block;
+    background: transparent;
+    color: white;
+    padding: 8px 20px;
+    font-size: 13px;
+    border-radius: 5px;
+}
+
+.alert-danger {
+    background: brown !important;
+}
+
+.alert-success {
+    background: green !important;
+}
+
+.btn-primary {
+    background: #f7941d;
+    color: #fff !important;
+    text-decoration: none;
+    padding: 11px 20px;
+    font-size: 14px;
+    box-shadow: 0 7px 9px #dccfc0;
+    border-radius: 10px;
 }

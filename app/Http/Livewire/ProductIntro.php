@@ -12,9 +12,9 @@ class ProductIntro extends Component
 
     public function addToCart($product)
     {
-        Cart::add($product["id"], $product["name"], $this->cartQty, $product["price"]);
-        $this->emit('productAddedToCart');
-        $this->emit('cartUpdated');
+       Cart::add($product["id"], $product["name"], $this->cartQty, $product["price"]);
+       $this->emit('livewireNotify', 'success', 'Товар добавлен в корзину');
+       $this->emit('cartUpdated');
     }
 
     public function increase()

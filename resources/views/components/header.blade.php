@@ -12,7 +12,9 @@
                     @endforeach
                     @auth
                         <li>
-
+                            <a href="{{ route('profile.index') }}">Профиль</a>
+                        </li>
+                        <li>
                             <form method="POST" action="{{ route('logout') }}">
                                 @csrf
                                 <a href="{{ route('logout') }}" onclick="event.preventDefault();
@@ -41,10 +43,10 @@
         <div class="blocright">
             <div class="header_social blokleft">
                 <a href="#">
-                    <img src="images/hed_vk.png" alt="Вконтакте" />
+                    <img src="/images/hed_vk.png" alt="Вконтакте" />
                 </a>
                 <a class="social_last" href="#">
-                    <img src="images/hed_insta.png" alt="Инстаграмм" />
+                    <img src="/images/hed_insta.png" alt="Инстаграмм" />
                 </a>
             </div>
             <livewire:cart-widget />

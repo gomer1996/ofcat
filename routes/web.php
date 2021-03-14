@@ -18,24 +18,66 @@ Route::get('/', function () {
     return view('home');
 });
 
-Route::view('/cart', 'cart')->name('cart.index');
-Route::view('/checkout', 'checkout')->name('checkout.index');
+Route::get('/profile', [\App\Http\Controllers\ProfileController::class, 'index'])
+    ->name('profile.index');
 
-Route::get('/discounts', [\App\Http\Controllers\DiscountController::class, 'index'])->name('discounts.index');
+Route::put('/profile', [\App\Http\Controllers\ProfileController::class, 'update'])
+    ->name('profile.update');
 
-Route::get('/news', [\App\Http\Controllers\NewsController::class, 'index'])->name('news.index');
+Route::get('/profile/addresses', [\App\Http\Controllers\ProfileController::class, 'addresses'])
+    ->name('profile.addresses');
 
-Route::get('/categories/{id?}', [\App\Http\Controllers\CategoryController::class, 'index'])->name('categories.index');
+Route::get('/profile/create/addresses', [\App\Http\Controllers\ProfileController::class, 'createAddresses'])
+    ->name('profile.create.addresses');
 
-Route::get('/products/{product}', [\App\Http\Controllers\ProductController::class, 'show'])->name('products.show');
+Route::post('/profile/addresses', [\App\Http\Controllers\ProfileController::class, 'storeAddresses'])
+    ->name('profile.store.addresses');
 
-Route::get('/news/{news}', [\App\Http\Controllers\NewsController::class, 'show'])->name('news.show');
+Route::delete('/profile/addresses/{address}', [\App\Http\Controllers\ProfileController::class, 'deleteAddresses'])
+    ->name('profile.destroy.addresses');
 
-Route::get('/pages/{page}', [\App\Http\Controllers\PageController::class, 'show'])->name('pages.show');
+Route::get('/profile/orders', [\App\Http\Controllers\ProfileController::class, 'orders'])
+    ->name('profile.orders');
 
+Route::get('/profile/subscriptions', [\App\Http\Controllers\ProfileController::class, 'subscriptions'])
+    ->name('profile.subscriptions');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::put('/profile/subscriptions', [\App\Http\Controllers\ProfileController::class, 'updateSubscriptions'])
+    ->name('profile.update.subscriptions');
+
+Route::view('/cart', 'cart')
+    ->name('cart.index');
+
+//------------------------------------------------------------------------------------------
+
+Route::get('/checkout', [\App\Http\Controllers\CheckoutController::class, 'index'])
+    ->name('checkout.index');
+
+Route::post('/checkout', [\App\Http\Controllers\CheckoutController::class, 'store'])
+    ->name('checkout.store');
+
+Route::view('/checkout/success', 'checkout.success')
+    ->name('checkout.success');
+
+Route::get('/discounts', [\App\Http\Controllers\DiscountController::class, 'index'])
+    ->name('discounts.index');
+
+Route::get('/news', [\App\Http\Controllers\NewsController::class, 'index'])
+    ->name('news.index');
+
+Route::get('/categories/{category}', [\App\Http\Controllers\CategoryController::class, 'index'])
+    ->name('categories.index');
+
+Route::get('/products/search', [\App\Http\Controllers\ProductController::class, 'search'])
+    ->name('products.search');
+
+Route::get('/products/{product}', [\App\Http\Controllers\ProductController::class, 'show'])
+    ->name('products.show');
+
+Route::get('/news/{news}', [\App\Http\Controllers\NewsController::class, 'show'])
+    ->name('news.show');
+
+Route::get('/pages/{page}', [\App\Http\Controllers\PageController::class, 'show'])
+    ->name('pages.show');
 
 require __DIR__.'/auth.php';

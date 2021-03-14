@@ -22,16 +22,7 @@
                         @endif
                     </td>
                     @endforeach
-{{--                    <td  class="news_cent">--}}
-{{--                        <a href="#" target="_blank">--}}
-{{--                            <p class="news_title">Изменен график работы в праздничные дни</p>--}}
-{{--                            <p>Режим работы интернет магазина в период с 30.12.2019 по 09.01.2020 года Режим работы интернет магазина в период с 30.12.2019 по 09.01.2020 года...</p>--}}
-{{--                            <p><span>20.12.2019</span></p>--}}
-{{--                        </a>--}}
-{{--                        <a id="news_key" href="{{ route('news.index') }}">--}}
-{{--                            <span>ВСЕ НОВОСТИ</span>--}}
-{{--                        </a>--}}
-{{--                    </td>--}}
+
                     <td  class="news_right subscr">
                         <p>ХОТИТЕ ПЛАТИТЬ<br />МЕНЬШЕ?</P>
                         <form name="subscription" action="#" method="post">
