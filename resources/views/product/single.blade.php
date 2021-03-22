@@ -46,89 +46,30 @@
             <tr>
                 <td class="slid">
                     <div class="slidercontainer">
-                        <!-- крупное изображение -->
-                        <div class="img">
-                            <a href="assets/img/236748.jpg"  id="bigimage" class='fresco' data-fresco-group='example'>
-                                <img src="assets/img/236748.jpg" id="bigimageimg" alt="" />
-                            </a>
-                        </div>
+                        @if($product->getMedia('product_media_collection')->first())
+                            <!-- крупное изображение -->
+                            <div class="img">
+                                <a href="{{ $product->getMedia('product_media_collection')->first()->getFullUrl() }}"  id="bigimage" class='fresco' data-fresco-group='example'>
+                                    <img src="{{ $product->getMedia('product_media_collection')->first()->getFullUrl() }}" id="bigimageimg" alt="" />
+                                </a>
+                            </div>
+                        @endif
                         <!-- Миниатюры -->
                         <div class="thumbs">
+                            @foreach($product->getMedia('product_media_collection') as $media)
                             <!-- Миниатюра 1 -->
                             <div class="thumb">
-                                <a href="assets/img/236748.jpg" class='sliderpr fresco' data-fresco-group='example'>
-                                    <img src="assets/img/236748.jpg" alt="" />
+                                <a href="{{ $media->getFullUrl() }}" class='sliderpr fresco' data-fresco-group='example'>
+                                    {{ $media }}
                                     <div class="overlayit"></div>
                                 </a>
                             </div>
-                            <!-- Миниатюра 2 -->
-                            <div class="thumb">
-                                <a href="assets/img/236748_1.jpg" class='sliderpr fresco' data-fresco-group='example'>
-                                    <img src="assets/img/236748_1.jpg" alt="" />
-                                    <div class="overlayit"></div>
-                                </a>
-                            </div>
-                            <!-- Миниатюра 3 -->
-                            <div class="thumb">
-                                <a href="assets/img/236748_2.jpg" class='sliderpr fresco' data-fresco-group='example'>
-                                    <img src="assets/img/236748_2.jpg" alt="" />
-                                    <div class="overlayit"></div>
-                                </a>
-                            </div>
-                            <!-- Миниатюра 4 -->
-                            <div class="thumb">
-                                <a href="assets/img/236748_3.jpg" class='sliderpr fresco' data-fresco-group='example'>
-                                    <img src="assets/img/236748_3.jpg" alt="" />
-                                    <div class="overlayit"></div>
-                                </a>
-                            </div>
-                            <!-- Миниатюра 5 -->
-                            <div class="thumb">
-                                <a href="assets/img/236748_4.jpg" class='sliderpr fresco' data-fresco-group='example'>
-                                    <img src="assets/img/236748_4.jpg" alt="" />
-                                    <div class="overlayit"></div>
-                                </a>
-                            </div>
-                            <!-- Миниатюра 6 -->
-                            <div class="thumb">
-                                <a href="assets/img/236748_5.jpg" class='sliderpr fresco' data-fresco-group='example'>
-                                    <img src="assets/img/236748_5.jpg" alt="" />
-                                    <div class="overlayit"></div>
-                                </a>
-                            </div>
-                            <!-- Миниатюра 7 -->
-                            <div class="thumb">
-                                <a href="assets/img/236748_6.jpg" class='sliderpr fresco' data-fresco-group='example'>
-                                    <img src="assets/img/236748_6.jpg" alt="" />
-                                    <div class="overlayit"></div>
-                                </a>
-                            </div>
-                            <!-- Миниатюра 8 -->
-                            <div class="thumb">
-                                <a href="assets/img/236748_7.jpg" class='sliderpr fresco' data-fresco-group='example'>
-                                    <img src="assets/img/236748_7.jpg" alt="" />
-                                    <div class="overlayit"></div>
-                                </a>
-                            </div>
-                            <!-- Миниатюра 9 -->
-                            <div class="thumb">
-                                <a href="assets/img/236748_8.jpg" class='sliderpr fresco' data-fresco-group='example'>
-                                    <img src="assets/img/236748_8.jpg" alt="" />
-                                    <div class="overlayit"></div>
-                                </a>
-                            </div>
-                            <!-- Миниатюра 10 -->
-                            <div class="thumb">
-                                <a href="assets/img/236748_9.jpg" class='sliderpr fresco' data-fresco-group='example'>
-                                    <img src="assets/img/236748_9.jpg" alt="" />
-                                    <div class="overlayit"></div>
-                                </a>
-                            </div>
+                            @endforeach
                         </div>
                     </div>
                     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-                    <script type="text/javascript" src="assets/js/jquery.browser.min.js"></script>
-                    <script type="text/javascript" src="assets/js/fresco.js"></script>
+                    <script type="text/javascript" src="/assets/js/jquery.browser.min.js"></script>
+                    <script type="text/javascript" src="/assets/js/fresco.js"></script>
                     <script type="text/javascript">
                         $(document).ready(function(){
                             $('.sliderpr').click(function(e){					/*------ 			Обрабатываем событие "Клик по элементу" 				------*/

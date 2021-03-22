@@ -579,5 +579,11 @@
     "Pre market": "Пре-маркет",
     "No data": "Нет данных",
     "Enable geographic tabs": "Включить географические табы",
-    "Tab": "Таб"
+    "Tab": "Таб",
+
+    "Pick a value": "Выберите из списка",
+    "Press enter to select": "Нажмите чтобы выбрать",
+    "Press enter to remove": "Нажмите чтобы удалить",
+    "Selected": "Выбрано",
+    "List is empty": "Список пуст"
 }

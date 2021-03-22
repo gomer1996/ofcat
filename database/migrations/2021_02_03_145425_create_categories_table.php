@@ -17,7 +17,9 @@ class CreateCategoriesTable extends Migration
             $table->id();
             $table->string('name');
             $table->bigInteger('parent_id')->nullable();
+            $table->enum('level', [1,2,3])->nullable();
             $table->integer('order')->default(0);
+            $table->string('img')->nullable();
             $table->timestamps();
         });
     }

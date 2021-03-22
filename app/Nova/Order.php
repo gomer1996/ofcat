@@ -100,6 +100,13 @@ class Order extends Resource
             ])->displayUsingLabels()
                 ->readonly(fn () => true)
                 ->hideFromIndex(),
+
+            Text::make('Продукты', function () {
+                return view('nova.orders', [
+                    'products' => json_decode($this->cart, true)
+                ])->render();
+            })->asHtml()
+              ->hideFromIndex(),
         ];
     }
 

@@ -21,7 +21,9 @@
                             <td>
                                 <div class="korzimg">
                                     <a href="#">
-                                        <img src="images/603697.jpg" alt="Товар" />
+                                        @if($product->options["img"])
+                                            <img src="{{ $product->options["img"] }}" alt="{{ $product->name }}" />
+                                        @endif
                                     </a>
                                 </div>
                             </td>

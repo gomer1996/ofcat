@@ -10,7 +10,7 @@
 {{--                <div style="max-width: 300px; overflow: hidden; margin: auto;">--}}
                 <div>
                     <a href="{{ route('products.show', $product) }}">
-                        <img src="/images/600163.jpg" alt="Товар" />
+                        <img src="{{ $product->thumbnail }}" alt="Товар" />
                     </a>
                 </div>
             </td>

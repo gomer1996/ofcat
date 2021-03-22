@@ -10,13 +10,15 @@
     "require": {
         "php": "^7.3|^8.0",
         "bumbummen99/shoppingcart": "^4.0",
+        "ebess/advanced-nova-media-library": "^3.4",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.12",
+        "laravel/nova": "*",
         "laravel/tinker": "^2.5",
         "livewire/livewire": "^2.4",
-        "laravel/nova": "*"
+        "royduin/laravel-nova-field-dynamic-select": "^1.6"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

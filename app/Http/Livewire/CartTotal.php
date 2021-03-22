@@ -24,7 +24,6 @@ class CartTotal extends Component
 
     public function mount()
     {
-
         $this->productsCount = Cart::count();
         $this->totalPriceWithoutDiscount = Cart::priceTotal();
         $this->cartDiscount = Cart::discount();
