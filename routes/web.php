@@ -48,6 +48,12 @@ Route::put('/profile/subscriptions', [\App\Http\Controllers\ProfileController::c
 Route::view('/cart', 'cart')
     ->name('cart.index');
 
+Route::view('/products/new', 'product.new')
+    ->name('products.new');
+
+Route::view('/products/bestsellers', 'product.bestsellers')
+    ->name('products.bestsellers');
+
 //------------------------------------------------------------------------------------------
 
 Route::get('/checkout', [\App\Http\Controllers\CheckoutController::class, 'index'])

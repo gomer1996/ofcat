@@ -5,7 +5,7 @@ namespace App\View\Components;
 use App\Models\Product;
 use Illuminate\View\Component;
 
-class PopularProducts extends Component
+class NewProducts extends Component
 {
     /**
      * Create a new component instance.
@@ -24,8 +24,8 @@ class PopularProducts extends Component
      */
     public function render()
     {
-        return view('components.popular-products', [
-            'products' => Product::all()->random()->limit(8)->get()->shuffle()
+        return view('components.new-products', [
+            'products' => Product::latest()->limit(8)->get()
         ]);
     }
 }

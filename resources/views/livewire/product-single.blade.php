@@ -6,7 +6,7 @@
     </tr>
     <tr>
         <td  class="images" colspan="2">
-            <div>
+            <div style="min-width: 300px">
                 @if($product->getMedia('product_media_collection')->first())
                     <a href="#">
                         <img src="{{ $product->getMedia('product_media_collection')->first()->getFullUrl() }}" alt="Товар" />

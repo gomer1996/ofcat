@@ -17,25 +17,13 @@
                         <p>-</p>
                     </td>
                     <td>
-                        <a href="#">Хозтовары</a>
+                        <a href="{{ route('categories.index', $product->category) }}">{{ $product->category->name }}</a>
                     </td>
                     <td>
                         <p>-</p>
                     </td>
                     <td>
-                        <a href="#">Гигиенические товары</a>
-                    </td>
-                    <td>
-                        <p>-</p>
-                    </td>
-                    <td>
-                        <a href="#">Диспенсеры и держатели для туалетной бумаги, полотенец и расходные материалы к ним</a>
-                    </td>
-                    <td>
-                        <p>-</p>
-                    </td>
-                    <td>
-                        <a href="#">Диспенсеры для полотенец</a>
+                        <a href="#">{{ $product->name }}</a>
                     </td>
                 </tr>
             </table>
@@ -44,7 +32,7 @@
     <div class="field"  id="product">
         <table>
             <tr>
-                <td class="slid">
+                <td class="slid" style="width: 700px">
                     <div class="slidercontainer">
                         @if($product->getMedia('product_media_collection')->first())
                             <!-- крупное изображение -->
@@ -67,7 +55,6 @@
                             @endforeach
                         </div>
                     </div>
-                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
                     <script type="text/javascript" src="/assets/js/jquery.browser.min.js"></script>
                     <script type="text/javascript" src="/assets/js/fresco.js"></script>
                     <script type="text/javascript">
@@ -98,25 +85,7 @@
                                 <h1>{{ $product->name }}</h1>
                             </td>
                         </tr>
-                        <tr>
-                            <td class="prod_price" colspan="2">
-                                <div class="blokleft">
-                                    <p>{{ $product->price }} руб.</p>
-                                </div>
-                                <div class="stepper stepper--style-2 js-spinner blokleft">
-                                    <input autofocus type="number" min="1" max="9999" step="1" value="1" class="stepper__input">
-                                    <div class="stepper__controls">
-                                        <button type="button" spinner-button="up">+</button>
-                                        <button type="button" spinner-button="down">−</button>
-                                    </div>
-                                </div>
-
-                                <script src="js/stepper.min.js"></script>
-                                <div class="prod_but">
-                                    <a href="#">В КОРЗИНУ</a>
-                                </div>
-                            </td>
-                        </tr>
+                        <livewire:product-inner-cart :product="$product" />
                         <tr>
                             <td class="prod_info">
                                 <img src="images/auxiliary_2.png" alt="" />
@@ -194,163 +163,9 @@
             </table>
         </div>
     </div>
-    <div id="concomitant" class="field">
-        <div class="category">
-            <p>Вместе с этим товаром покупают:</p>
-        </div>
-        <table>
-            <tr>
-                <td class="left">
-                    <table>
-                        <tr>
-                            <td  class="title" colspan="2">
-                                <p><span>ХИТ ПРОДАЖ</span></p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td  class="images" colspan="2">
-                                <div>
-                                    <a href="#">
-                                        <img src="images/600163.jpg" alt="Товар" />
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="tov" colspan="2">
-                                <p>
-                                    <a href="#">Диспенсер для полотенец TORK (Система H3) Elevation, mini, ZZ, белый, 55310</a>
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="price">
-                                <p><span>2996.77</span> р.</p>
-                            </td>
-                            <td class="buy">
-                                <p>
-                                    <a href="#">
-                                        <span>КУПИТЬ</span>
-                                    </a>
-                                </p>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                <td class="center">
-                    <table>
-                        <tr>
-                            <td  class="title" colspan="2">
-                                <p><span>ХИТ ПРОДАЖ</span></p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td  class="images" colspan="2">
-                                <div>
-                                    <a href="#">
-                                        <img src="images/603061.jpg" alt="Товар" />
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="tov" colspan="2">
-                                <p>
-                                    <a href="#">Средство для уборки туалета 1 л, "Белизна-гель" с отбеливающим эффектом</a>
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="price">
-                                <p><span>106.88</span> р.</p>
-                            </td>
-                            <td class="buy">
-                                <p>
-                                    <a href="#">
-                                        <span>КУПИТЬ</span>
-                                    </a>
-                                </p>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                <td class="center">
-                    <table>
-                        <tr>
-                            <td  class="title" colspan="2">
-                                <p><span>ХИТ ПРОДАЖ</span></p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td  class="images" colspan="2">
-                                <div>
-                                    <a href="#">
-                                        <img src="images/603527.jpg" alt="Товар" />
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td  class="tov" colspan="2">
-                                <p>
-                                    <a href="#">Чистящее средство для ванн и раковин 500 мл, SARMA (Сарма) "Свежесть", универсальное, гель, 8079</a>
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="price">
-                                <p><span>132.26</span> р.</p>
-                            </td>
-                            <td class="buy">
-                                <p>
-                                    <a href="#">
-                                        <span>КУПИТЬ</span>
-                                    </a>
-                                </p>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-                <td class="right">
-                    <table>
-                        <tr>
-                            <td  class="title" colspan="2">
-                                <p><span>ХИТ ПРОДАЖ</span></p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td  class="images" colspan="2">
-                                <div>
-                                    <a href="#">
-                                        <img src="images/601426.jpg" alt="Товар" />
-                                    </a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td  class="tov" colspan="2">
-                                <p>
-                                    <a href="#">Диспенсер для полотенец ЛАЙМА PROFESSIONAL (Система H3), ZZ (V), белый, ABS-пластик, 601426</a>
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="price">
-                                <p><span>2068.00</span> р.</p>
-                            </td>
-                            <td class="buy">
-                                <p>
-                                    <a href="#">
-                                        <span>КУПИТЬ</span>
-                                    </a>
-                                </p>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-    </div>
+
+    <x-similar-products />
+
     <div class="cleaner"></div>
     <div class="otstyp">
     </div>

@@ -29,17 +29,17 @@
             </div>
         </li>
         <li>
-            <a href="#">
+            <a href="{{ route('discounts.index') }}">
                 <span>АКЦИИ</span>
             </a>
         </li>
         <li>
-            <a href="#">
+            <a href="{{ route('products.new') }}">
                 <span>НОВИНКИ</span>
             </a>
         </li>
         <li>
-            <a href="#">
+            <a href="{{ route('products.bestsellers') }}">
                 <span>ХИТЫ ПРОДАЖ</span>
             </a>
         </li>
