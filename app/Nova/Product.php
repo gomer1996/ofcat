@@ -22,7 +22,7 @@ class Product extends Resource
 
     public function __construct($resource)
     {
-        $this->categories = \App\Models\Category::all();
+        $this->categories = \App\Models\Category::where('level', '3')->get();
         parent::__construct($resource);
     }
 
@@ -64,33 +64,11 @@ class Product extends Resource
             Text::make('Наименовние', 'name')
                 ->rules('required', 'max:255'),
 
-            DynamicSelect::make('Категория 1 уровень', 'top_category')
-                ->options(
-                    $this->categories->where('level', '1')->pluck('name', 'id')
-                )
-                ->withMeta(['ignoreOnSaving'])
-                ->rules('required'),
-
-            DynamicSelect::make('Категория 2 уровень', 'middle_category')
-                ->dependsOn(['top_category'])
-                ->options(function($values) {
-                    return $this->categories
-                        ->where('level', '2')
-                        ->where('parent_id', $values["top_category"])
-                        ->pluck('name', 'id');
-                })
-                ->withMeta(['ignoreOnSaving'])
-                ->rules('required'),
-
-            DynamicSelect::make('Категория 3 уровень', 'category_id')
-                ->dependsOn(['middle_category'])
-                ->options(function($values) {
-                    return $this->categories
-                        ->where('level', '3')
-                        ->where('parent_id', $values["middle_category"])
-                        ->pluck('name', 'id');
-                })
-                ->rules('required'),
+            Select::make('Категория', 'category_id')->options(
+                $this->categories->pluck('name', 'id')
+            )->searchable()
+             ->help('Категории 3 уровня')
+             ->displayUsingLabels(),
 
             Number::make('Цена', 'price')
                 ->step(0.01)
@@ -106,7 +84,6 @@ class Product extends Resource
                 ->fullSize()
                 ->hideFromIndex()
                 ->croppable(false),
-
         ];
     }
 

@@ -9,13 +9,11 @@
                     <td class="pagincolor_l">
                         <div>
                             <label>Сортировать: </label>
-                            <select class="product_select" id="selectpag">
-                                <option>По популярсности</option>
-                                <option>По цене (сначала дешевле)</option>
-                                <option>По цене (сначала дороже)</option>
-                                <option>По названию (от А до Я)</option>
-                                <option>По названижю (от Я до А)</option>
-                                <option>По размеру скидки</option>
+                            <select class="product_select" id="selectpag"  wire:change.prevent="sort($event.target.value)">
+                                <option value="price_asc">По цене (сначала дешевле)</option>
+                                <option value="price_desc">По цене (сначала дороже)</option>
+                                <option value="name_asc">По названию (от А до Я)</option>
+                                <option value="name_desc">По названию (от Я до А)</option>
                             </select>
                         </div>
                     </td>

@@ -71,6 +71,9 @@ Route::get('/discounts', [\App\Http\Controllers\DiscountController::class, 'inde
 Route::get('/news', [\App\Http\Controllers\NewsController::class, 'index'])
     ->name('news.index');
 
+Route::get('/categories/all', [\App\Http\Controllers\CategoryController::class, 'all'])
+    ->name('categories.all');
+
 Route::get('/categories/{category}', [\App\Http\Controllers\CategoryController::class, 'index'])
     ->name('categories.index');
 

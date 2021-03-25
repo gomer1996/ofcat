@@ -9,10 +9,19 @@ use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use \App\Models\Category as CategoryModel;
 
 class Category extends Resource
 {
     use CommonTrait;
+
+    private $categories;
+
+    public function __construct($resource)
+    {
+        $this->categories = CategoryModel::where('level', '!=', '3')->get();
+        parent::__construct($resource);
+    }
 
     /**
      * The model the resource corresponds to.
@@ -52,8 +61,12 @@ class Category extends Resource
             Text::make('Наименовние', 'name')
                 ->rules('required', 'max:255'),
 
-            BelongsTo::make('Родитель', 'parent', 'App\Nova\Category')
-                ->nullable(),
+//            BelongsTo::make('Родитель', 'parent', 'App\Nova\Category')
+//                ->nullable(),
+
+            Select::make('Родитель', 'parent_id')->options(
+                $this->categories->pluck('name', 'id')
+            )->searchable()->displayUsingLabels(),
 
             Select::make('Уровень', 'level')->options([
                 '1'  => 'Первый',

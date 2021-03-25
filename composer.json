@@ -18,7 +18,8 @@
         "laravel/nova": "*",
         "laravel/tinker": "^2.5",
         "livewire/livewire": "^2.4",
-        "royduin/laravel-nova-field-dynamic-select": "^1.6"
+        "royduin/laravel-nova-field-dynamic-select": "^1.6",
+        "staudenmeir/eloquent-has-many-deep": "^1.7"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
