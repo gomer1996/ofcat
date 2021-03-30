@@ -9,6 +9,10 @@ class ProductController extends Controller
 {
     public function show(Product $product)
     {
+        // todo medialib
+//        $url = 'https://api.samsonopt.ru/goods/100008/7b9708521771c130b0b0db8024d06b81_x.jpg';
+//        $product->addMediaFromUrl($url)
+//                    ->toMediaCollection('product_media_collection');
         return view('product.single', [
             'product' => $product
         ]);

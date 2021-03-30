@@ -82,12 +82,6 @@ class CartPage extends Component
         $this->resetCartProps();
     }
 
-    public function apply()
-    {
-        if ($this->discount) Cart::setGlobalDiscount($this->discount);
-        $this->resetCartProps();
-    }
-
     public function render()
     {
         return view('livewire.cart-page', [

@@ -1576,7 +1576,6 @@ input:active{ outline: none; }
 	margin-top: 20px;
 	width: 240px;
 	min-height: 200px;
-	background-color: red;
 }
 #productgroup .tovcontent {
 	margin-top: 20px;
@@ -1584,7 +1583,7 @@ input:active{ outline: none; }
 }
 #productgroup table {
 	border-collapse: collapse;
-	width: 100%;
+	/*width: 100%;*/
 	}
 #productgroup table td {
 	padding: 0;
@@ -2374,4 +2373,52 @@ input:active{ outline: none; }
     font-size: 14px;
     box-shadow: 0 7px 9px #dccfc0;
     border-radius: 10px;
+}
+
+.myfilter_inner {
+    background: #f4f4f4;
+    margin: 0 15px;
+    padding: 15px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+}
+
+.myfilter_inner ul {
+    padding: 0;
+}
+
+.myfilter_inner ul li {
+    list-style-type: none;
+}
+
+.myfilter_inner_title {
+    font-weight: bold;
+    margin-bottom: 8px;
+    margin-left: 5px;
+}
+
+.myfilter_inner_show {
+    margin-top: 10px;
+    background: #f7941d;
+    color: #ffffff;
+    box-shadow: 0 7px 12px #ddd1c1;
+    border-radius: 5px;
+    border: none;
+    text-decoration: none;
+    padding: 8px 17px;
+    width: 100%;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.myfilter_inner_show:hover {
+    background: #cd7710;
+}
+
+.myfilter_inner_price_inputs{
+    width: 40%;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid #c4c4c4;
+    border-radius: 3px;
 }

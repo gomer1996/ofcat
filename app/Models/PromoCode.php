@@ -5,9 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Discount extends Model
+class PromoCode extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $casts = [
+        'starts_at' => 'datetime',
+        'expires_at' => 'datetime'
+    ];
 }

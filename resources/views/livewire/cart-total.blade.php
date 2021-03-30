@@ -32,10 +32,10 @@
                 <form>
                     <p>Промокод</p>
                     <p class="blokleft">
-                        <input class="korzin" wire:model="userDiscount" type="text" required="required"/>
+                        <input class="korzin" wire:model="userPromoCode" type="text" required="required"/>
                     </p>
                     <p>
-                        <input class="korzsub" wire:click.prevent="applyDiscount" type="submit" value="ПРИМЕНИТЬ" />
+                        <input class="korzsub" wire:click.prevent="applyPromoCode" type="submit" value="ПРИМЕНИТЬ" />
                     </p>
                 </form>
             </div>

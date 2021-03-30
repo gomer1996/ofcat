@@ -14,6 +14,8 @@ class ProductsList extends Component
 
     public $sort = 'price_asc';
 
+    public $type = 'block';
+
     private $orderState = [
         "price_asc" => [ "field" => "price", "type" => "ASC" ],
         "price_desc" => [ "field" => "price", "type" => "DESC" ],
@@ -21,19 +23,63 @@ class ProductsList extends Component
         "name_desc" => [ "field" => "name", "type" => "DESC" ],
     ];
 
+    public $priceFrom = 0;
+    public $priceTo = 0;
+    public $selectedBrands = [];
+    public $brands = [];
+
+    public function mount()
+    {
+        $this->priceTo = ceil(Product::max('price') ?? 0);
+        $this->brands = Product::getUniqueBrands();
+    }
+
     public function sort($val)
     {
         $this->sort = $val;
+        $this->resetPage();
+    }
+
+    public function changeView($type)
+    {
+        if (in_array($type, ['line', 'block'])) $this->type = $type;
+    }
+
+    public function updatedPriceTo()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedPriceFrom()
+    {
+        $this->resetPage();
+    }
+
+    public function updatedSelectedBrands()
+    {
+        $this->resetPage();
     }
 
     public function render()
     {
-        return view('livewire.products-list', [
-            'products' => Product::where('category_id', $this->category->id)
-                ->orderBy($this->orderState[$this->sort]["field"], $this->orderState[$this->sort]["type"])
-                ->paginate(3),
+        $query = Product::where('category_id', $this->category->id);
 
-            'title' => $this->category->name
+        $query->where('price', '>=', $this->priceFrom)
+              ->where('price', '<=', $this->priceTo);
+
+        if (count($this->selectedBrands)) $query->whereIn('brand', $this->selectedBrands);
+
+        $products = $query->orderBy(
+            $this->orderState[$this->sort]["field"],
+            $this->orderState[$this->sort]["type"]
+        )->paginate(3);
+
+        return view('livewire.products-list', [
+            'products' => $products,
+            'title' => $this->category->name,
+            'viewType' => $this->type,
+            'chunkCount' => $this->type === 'block' ? 3 : 1,
+            'brands' => $this->brands
         ]);
     }
 }

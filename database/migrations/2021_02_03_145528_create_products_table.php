@@ -20,6 +20,7 @@ class CreateProductsTable extends Migration
             $table->text('info')->nullable();
             $table->integer('quantity')->unsigned()->default(0);
             $table->integer('code')->nullable();
+            $table->string('brand')->nullable();
             $table->foreignId('category_id')->constrained();
             $table->timestamps();
         });

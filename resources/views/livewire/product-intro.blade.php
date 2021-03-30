@@ -1,4 +1,4 @@
-<td>
+<td style="width: 350px">
     <table>
         <tr>
             <td  class="title" colspan="2">

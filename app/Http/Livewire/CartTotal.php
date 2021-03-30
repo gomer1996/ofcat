@@ -2,8 +2,7 @@
 
 namespace App\Http\Livewire;
 
-use App\Models\Discount;
-use App\Models\Settings;
+use App\Models\PromoCode;
 use Carbon\Carbon;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Livewire\Component;
@@ -14,7 +13,7 @@ class CartTotal extends Component
     public $productsCount = 0;
     public $totalPriceWithoutDiscount = 0;
     public $totalPrice = 0;
-    public $userDiscount;
+    public $userPromoCode;
     public $cartDiscount = 0;
     public $from = '';
     public $discountPercent = 0;
@@ -37,10 +36,10 @@ class CartTotal extends Component
         $this->totalPrice = CartHelper::getTotalWithDelivery();
     }
 
-    public function applyDiscount()
+    public function applyPromoCode()
     {
-        if ($this->userDiscount) {
-            $foundDiscount = Discount::where(['code' => $this->userDiscount])
+        if ($this->userPromoCode) {
+            $foundDiscount = PromoCode::where(['code' => $this->userPromoCode])
                 ->whereDate('starts_at', '<', Carbon::now())
                 ->whereDate('expires_at', '>', Carbon::now())
                 ->first();
@@ -48,8 +47,8 @@ class CartTotal extends Component
             if ($foundDiscount) {
                 Cart::setGlobalDiscount($foundDiscount->percent);
                 $this->mount();
-                $this->emit('livewireNotify', 'success', 'Ваша скидка применена!');
-            }else $this->emit('livewireNotify', 'error', 'Скидка не найдена');;
+                $this->emit('livewireNotify', 'success', 'Ваш промокод применен!');
+            }else $this->emit('livewireNotify', 'error', 'Промокод не найден');;
         }
     }
 

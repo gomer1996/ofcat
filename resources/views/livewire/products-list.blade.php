@@ -20,11 +20,11 @@
                     <td class="pagincolor_r pagwidth_2">
                         <div class="disp_type">
                             <p>Вид: </p>
-                            <a href="#">
-                                <img src="images/Каталог-развернутый-список_05.png" alt="Построчно" />
+                            <a href="#" wire:click.prevent="changeView('line')">
+                                <img src="/images/Каталог-развернутый-список_05.png" alt="Построчно" />
                             </a>
-                            <a class="disp_typelast" href="#">
-                                <img src="images/Каталог-развернутый-список_07.png" alt="Блочно" />
+                            <a class="disp_typelast" href="#" wire:click.prevent="changeView('block')">
+                                <img src="/images/Каталог-развернутый-список_07.png" alt="Блочно" />
                             </a>
                         </div>
                     </td>
@@ -32,14 +32,42 @@
             </table>
         </div>
         <div class="blokleft myfilter">
-            <p>ФИЛЬТР</p>
+            <div class="myfilter_inner">
+                <ul>
+                    <li class="myfilter_inner_title">Бренд:</li>
+                    @foreach($brands as $brand)
+                        <li>
+                            <label>
+                                <input type="checkbox"
+                                       value="{{ $brand }}"
+                                       wire:model="selectedBrands" />
+                                {{ ucfirst($brand) }}
+                            </label>
+                        </li>
+                    @endforeach
+                </ul>
+                <ul>
+                    <li class="myfilter_inner_title">Цены:</li>
+                    <li>
+                        <input type="text"
+                               class="myfilter_inner_price_inputs"
+                               wire:model.debounce.1000ms="priceFrom"
+                               placeholder="от" />
+                        <input type="text"
+                               class="myfilter_inner_price_inputs"
+                               wire:model.debounce.1000ms="priceTo"
+                               placeholder="до" style="float: right" />
+                    </li>
+                </ul>
+{{--                <button class="myfilter_inner_show">Показать</button>--}}
+            </div>
         </div>
         <div class="tovcontent">
             <table>
-                @foreach($products->chunk(3) as $chunk)
+                @foreach($products->chunk($chunkCount) as $chunk)
                     <tr>
                         @foreach($chunk as $product)
-                            <livewire:product-intro :product="$product" :key="$product->id" />
+                            <livewire:product-intro :viewType="$viewType" :product="$product" :key="time().$product->id" />
                         @endforeach
                     </tr>
                     @if(!$loop->last)

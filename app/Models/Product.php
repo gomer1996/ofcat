@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\HasMedia;
+use Illuminate\Support\Facades\Cache;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Product extends Model implements HasMedia
@@ -44,5 +45,15 @@ class Product extends Model implements HasMedia
     {
         $this->addMediaCollection('main')->singleFile();
         $this->addMediaCollection('product_media_collection');
+    }
+
+    public static function getUniqueBrands()
+    {
+        return Cache::get('product_unique_brands', function () {
+            $brands = self::whereNotNull('brand')->distinct('brand')->get('brand')->pluck('brand');
+            Cache::put('product_unique_brands', $brands, 86400);
+            return $brands;
+        });
+
     }
 }

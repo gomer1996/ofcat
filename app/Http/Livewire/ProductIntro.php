@@ -9,6 +9,7 @@ class ProductIntro extends Component
 {
     public $product;
     public $cartQty = 1;
+    public $viewType;
 
     public function addToCart($product)
     {
@@ -29,11 +30,13 @@ class ProductIntro extends Component
         if ($this->cartQty > 1) $this->cartQty--;
     }
 
-
     public function render()
     {
-        return view('livewire.product-intro', [
-            'product' => $this->product
+        $view = $this->viewType === 'line' ? 'product-intro-line' : 'product-intro';
+
+        return view("livewire.{$view}", [
+            'product' => $this->product,
+            'viewType' => $this->viewType
         ]);
     }
 }

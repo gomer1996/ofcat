@@ -5,14 +5,12 @@ namespace App\Nova;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Fields\Trix;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class Discount extends Resource
+class PromoCode extends Resource
 {
     use CommonTrait;
 
@@ -21,14 +19,14 @@ class Discount extends Resource
      *
      * @var string
      */
-    public static $model = \App\Models\Discount::class;
+    public static $model = \App\Models\PromoCode::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'id';
 
     /**
      * The columns that should be searched.
@@ -37,7 +35,6 @@ class Discount extends Resource
      */
     public static $search = [
         'id',
-        'name',
     ];
 
     /**
@@ -50,18 +47,19 @@ class Discount extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
-
-            Text::make('Название', 'name')
+            Text::make('Код', 'code')
                 ->sortable()
                 ->rules('required', 'max:255'),
 
-            Image::make('Картинка', 'img')
-                ->disk('public')
-                ->prunable(),
+            Number::make('Скидка (проценты)', 'percent')->default(function(){
+                return 10;
+            })->rules('required', 'max:100'),
 
-            Trix::make('Описание', 'description')
+            DateTime::make('Начало акции', 'starts_at')
                 ->rules('required'),
 
+            DateTime::make('Конец акции', 'expires_at')
+                ->rules('required'),
         ];
     }
 
@@ -109,6 +107,7 @@ class Discount extends Resource
         return [];
     }
 
+
     /**
      * Get the displayable label of the resource.
      *
@@ -116,7 +115,7 @@ class Discount extends Resource
      */
     public static function label()
     {
-        return __('Акции');
+        return __('Промокоды');
     }
 
     /**
@@ -126,7 +125,7 @@ class Discount extends Resource
      */
     public static function singularLabel()
     {
-        return __('Акция');
+        return __('Промокод');
     }
 
     public static $trafficCop = false;
