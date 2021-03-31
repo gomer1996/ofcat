@@ -17,11 +17,27 @@ class CreateProductsTable extends Migration
             $table->id();
             $table->string('name');
             $table->float('price');
-            $table->text('info')->nullable();
-            $table->integer('quantity')->unsigned()->default(0);
-            $table->integer('code')->nullable();
-            $table->string('brand')->nullable();
             $table->foreignId('category_id')->constrained();
+            $table->string('brand')->nullable();
+
+            $table->integer('quantity')->unsigned()->default(0);
+            $table->text('info')->nullable();
+
+            // todo migrate this
+
+            $table->integer('code')->unique()->nullable();
+            $table->text('description')->nullable();
+            $table->string('manufacturer')->nullable();
+            $table->float('weight')->nullable();
+            $table->float('volume')->nullable();
+            $table->boolean('is_active')->default(1);
+            $table->string('barcode')->unique()->nullable();
+            $table->string('vendor_code')->unique()->nullable();
+            $table->string('relef_guid')->unique()->nullable();
+            $table->bigInteger('samson_sku')->unique()->nullable();
+            $table->json('properties')->nullable();
+
+
             $table->timestamps();
         });
     }

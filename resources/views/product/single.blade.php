@@ -114,17 +114,17 @@
             <div  class="specific_nav">
                 <ul>
                     <li>
-                        <a href="#">
+                        <a href="#" class="product_tabs" id="product_info">
                             <span>О товаре</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="#" class="product_tabs" id="product_props">
                             <span>Расширенные характеристики</span>
                         </a>
                     </li>
                     <li>
-                        <a href="#">
+                        <a href="#" class="product_tabs" id="product_delivery">
                             <span>Оплата и доставка</span>
                         </a>
                     </li>
@@ -136,9 +136,9 @@
     <div class="field">
         <div class="specific_tov">
             <table>
-                <tr>
+                <tr id="product_info_tab">
                     <td>
-                        <p>{{ $product->info }}</p>
+                        <p>{{ $product->info }} lorem ipsum</p>
                     </td>
                     <td>
                         <ul>
@@ -160,6 +160,16 @@
                         </ul>
                     </td>
                 </tr>
+                <tr id="product_props_tab" style="display: none">
+                    <td>
+                        <p>Характеристики</p>
+                    </td>
+                </tr>
+                <tr id="product_delivery_tab" style="display: none">
+                    <td>
+                        <p>Доставка</p>
+                    </td>
+                </tr>
             </table>
         </div>
     </div>
@@ -169,4 +179,20 @@
     <div class="cleaner"></div>
     <div class="otstyp">
     </div>
+    <script>
+        const tabs = ['product_info', 'product_props', 'product_delivery'];
+
+        $('.product_tabs').click(function(event){
+            event.preventDefault();
+
+            const selectedTabId = $(this).attr('id');
+            tabs.forEach(tab => {
+                console.log('->', `${tab}_tab`);
+                if (tab !== selectedTabId) $(`#${tab}_tab`).css('display', 'none');
+            });
+            $(`#${selectedTabId}_tab`).css('display', 'block');
+        });
+
+
+    </script>
 </x-app-layout>
