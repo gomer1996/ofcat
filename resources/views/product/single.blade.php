@@ -138,36 +138,45 @@
             <table>
                 <tr id="product_info_tab">
                     <td>
-                        <p>{{ $product->info }} lorem ipsum</p>
+                        <p>{{ $product->description }}</p>
                     </td>
                     <td>
                         <ul>
                             <li>
-                                <p>Цвет: черный</p>
+                                <p>Бренд: {{ $product->brand }}</p>
                             </li>
                             <li>
-                                <p>Высота доски: 60 см</p>
+                                <p>Производитель: {{ $product->manufacturer }}</p>
                             </li>
                             <li>
-                                <p>Ширина доски: 90 см</p>
+                                <p>Вес: {{ $product->weight }}</p>
                             </li>
                             <li>
-                                <p>Магнитная поверхность: да</p>
-                            </li>
-                            <li>
-                                <p>Тип покрытия доски: маркерное</p>
+                                <p>Объем: {{ $product->volume }}</p>
                             </li>
                         </ul>
                     </td>
                 </tr>
                 <tr id="product_props_tab" style="display: none">
                     <td>
-                        <p>Характеристики</p>
+                        <table>
+                            @if(count($product->properties_parsed["attributes"]))
+                                <td>
+                                    <ul>
+                                        @foreach($product->properties_parsed["attributes"] as $key => $val)
+                                            <li>
+                                                <p>{{ $key }}: {{ $val }}</p>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </td>
+                            @endif
+                        </table>
                     </td>
                 </tr>
                 <tr id="product_delivery_tab" style="display: none">
                     <td>
-                        <p>Доставка</p>
+                        <p>{{ $delivery_text }}</p>
                     </td>
                 </tr>
             </table>

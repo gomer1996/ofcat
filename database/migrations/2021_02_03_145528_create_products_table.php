@@ -20,12 +20,7 @@ class CreateProductsTable extends Migration
             $table->foreignId('category_id')->constrained();
             $table->string('brand')->nullable();
 
-            $table->integer('quantity')->unsigned()->default(0);
-            $table->text('info')->nullable();
-
-            // todo migrate this
-
-            $table->integer('code')->unique()->nullable();
+            $table->bigInteger('code')->unique()->nullable();
             $table->text('description')->nullable();
             $table->string('manufacturer')->nullable();
             $table->float('weight')->nullable();
@@ -36,7 +31,6 @@ class CreateProductsTable extends Migration
             $table->string('relef_guid')->unique()->nullable();
             $table->bigInteger('samson_sku')->unique()->nullable();
             $table->json('properties')->nullable();
-
 
             $table->timestamps();
         });

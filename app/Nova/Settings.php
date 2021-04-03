@@ -5,6 +5,7 @@ namespace App\Nova;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\Text;
 
@@ -60,7 +61,9 @@ class Settings extends Resource
                 ),
 
             Text::make('Email')
-                ->rules('required', 'email', 'max:254')
+                ->rules('required', 'email', 'max:254'),
+
+            Textarea::make('Текст доставки', 'product_page_delivery_text')->nullable()
         ];
     }
 

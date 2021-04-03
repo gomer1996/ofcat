@@ -5,14 +5,17 @@ namespace App\Nova;
 use Hubertnnn\LaravelNova\Fields\DynamicSelect\DynamicSelect;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\KeyValue;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
+use function PHPUnit\Framework\isNull;
 
 class Product extends Resource
 {
@@ -67,6 +70,7 @@ class Product extends Resource
             Select::make('Категория', 'category_id')->options(
                 $this->categories->pluck('name', 'id')
             )->searchable()
+             ->rules('required')
              ->help('Категории 3 уровня')
              ->displayUsingLabels(),
 
@@ -74,16 +78,82 @@ class Product extends Resource
                 ->step(0.01)
                 ->rules('required'),
 
-            Textarea::make('Описание', 'info')
+            Textarea::make('Описание', 'description')
                 ->nullable(),
 
             Number::make('Код', 'code')
-                ->rules('required', 'max:255'),
+                ->rules('max:255'),
 
             Images::make('Медиа', 'product_media_collection')
                 ->fullSize()
                 ->hideFromIndex()
                 ->croppable(false),
+
+            Text::make('Бренд', 'brand')
+                ->nullable()
+                ->rules('max:255'),
+
+            Text::make('Производитель', 'manufacturer')
+                ->nullable()
+                ->rules('max:255'),
+
+            Number::make('Вес', 'weight')
+                ->step(0.01)
+                ->nullable(),
+
+            Number::make('Объем', 'volume')
+                ->step(0.01)
+                ->nullable(),
+
+            Boolean::make('Активен', 'is_active')
+                ->default(fn() => true),
+
+            Text::make('Штрихкод', 'barcode')
+                ->creationRules([function($attribute, $value, $fail) {
+                    if ($value){
+                        $exists = \App\Models\Product::where($attribute, $value)->exists();
+                        if ($exists) {
+                            return $fail('Такой штрихкод уже существует.');
+                        }
+                    }
+                    return true;
+                }])
+                ->updateRules('unique:products,barcode,{{resourceId}}')
+                ->nullable(),
+
+            Text::make('Артикул', 'vendor_code')
+                ->creationRules([function($attribute, $value, $fail) {
+                    if ($value){
+                        $exists = \App\Models\Product::where($attribute, $value)->exists();
+                        if ($exists) {
+                            return $fail('Такой артикул уже существует.');
+                        }
+                    }
+                    return true;
+                }])
+                ->updateRules('unique:products,vendor_code,{{resourceId}}')
+                ->nullable()
+                ->rules('max:255'),
+
+            Text::make('Рельеф ID', 'relef_guid')
+                ->readonly()
+                ->creationRules('unique:products,relef_guid')
+                ->updateRules('unique:products,relef_guid,{{resourceId}}')
+                ->nullable()
+                ->rules('max:255'),
+
+            Number::make('Самсон ID', 'samson_sku')
+                ->step(0.01)
+                ->readonly()
+                ->creationRules('unique:products,samson_sku')
+                ->updateRules('unique:products,samson_sku,{{resourceId}}')
+                ->nullable(),
+
+            KeyValue::make('Характеристики', 'properties->attributes')
+                ->keyLabel('Свойство')
+                ->valueLabel('Значение')
+                ->actionText('Добавить'),
+
         ];
     }
 

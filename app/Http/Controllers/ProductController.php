@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Settings;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -13,8 +14,11 @@ class ProductController extends Controller
 //        $url = 'https://api.samsonopt.ru/goods/100008/7b9708521771c130b0b0db8024d06b81_x.jpg';
 //        $product->addMediaFromUrl($url)
 //                    ->toMediaCollection('product_media_collection');
+        $settings = Settings::first();
+
         return view('product.single', [
-            'product' => $product
+            'product' => $product,
+            'delivery_text' => $settings ? $settings->product_page_delivery_text : ''
         ]);
     }
 

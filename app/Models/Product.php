@@ -28,6 +28,14 @@ class Product extends Model implements HasMedia
         return $this->belongsTo(Category::class);
     }
 
+    public function getPropertiesParsedAttribute(): array
+    {
+        if ($this->attributes['properties']) {
+            return json_decode($this->attributes['properties'], true);
+        }
+        return [];
+    }
+
     public function getThumbnailAttribute()
     {
         $img = $this->getMedia('product_media_collection')->first() ?? null;
@@ -47,13 +55,14 @@ class Product extends Model implements HasMedia
         $this->addMediaCollection('product_media_collection');
     }
 
-    public static function getUniqueBrands()
+    //---------------------------------------------------------------------------------------------------------
+
+    public static function getUniqueBrands($categoryId)
     {
-        return Cache::get('product_unique_brands', function () {
-            $brands = self::whereNotNull('brand')->distinct('brand')->get('brand')->pluck('brand');
-            Cache::put('product_unique_brands', $brands, 86400);
+        return Cache::get('category_product_unique_brands_'.$categoryId, function () use ($categoryId) {
+            $brands = self::where('category_id', $categoryId)->whereNotNull('brand')->distinct('brand')->get('brand')->pluck('brand');
+            Cache::put('category_product_unique_brands_'.$categoryId, $brands, 86400);
             return $brands;
         });
-
     }
 }

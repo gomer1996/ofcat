@@ -19,7 +19,7 @@ class Category extends Resource
 
     public function __construct($resource)
     {
-        $this->categories = CategoryModel::where('level', '!=', '3')->get();
+        $this->categories = CategoryModel::where('level', '!=', '3')->orWhere('level', null)->get();
         parent::__construct($resource);
     }
 

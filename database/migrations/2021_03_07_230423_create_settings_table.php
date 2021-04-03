@@ -18,6 +18,7 @@ class CreateSettingsTable extends Migration
             $table->float('delivery_price')->default(0);
             $table->float('delivery_price_depends')->default(0);
             $table->string('email')->nullable();
+            $table->text('product_page_delivery_text')->nullable();
             $table->timestamps();
         });
     }
