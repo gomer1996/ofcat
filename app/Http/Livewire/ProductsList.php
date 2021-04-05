@@ -31,7 +31,7 @@ class ProductsList extends Component
     public function mount()
     {
         $this->priceTo = ceil(Product::max('price') ?? 0);
-        $this->brands = Product::getUniqueBrands();
+        $this->brands = Product::getUniqueBrands($this->category->id);
     }
 
     public function sort($val)

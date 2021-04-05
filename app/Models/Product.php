@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Scopes\ProductScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Facades\Cache;
@@ -55,6 +57,23 @@ class Product extends Model implements HasMedia
         $this->addMediaCollection('product_media_collection');
     }
 
+    public function scopePriced($query, $category = null)
+    {
+        if (auth()->user() && $category) {
+            $discount = UserCategoryDiscount::where(['user_id' => auth()->user()->id, 'category_id' => $category->id])->first();
+            if ($discount) {
+                return $query->select([
+                    '*',
+                    DB::raw('ROUND(products.price * (1 - '. $discount->discount .' / 100), 2) as new_price')]);
+            }
+        }
+        return $query->join('categories', 'products.category_id', '=', 'categories.id')
+            ->select([
+                'products.*',
+                DB::raw('ROUND(products.price * (1 - categories.discount / 100), 2) as new_price')
+            ]);
+    }
+
     //---------------------------------------------------------------------------------------------------------
 
     public static function getUniqueBrands($categoryId)
@@ -64,5 +83,15 @@ class Product extends Model implements HasMedia
             Cache::put('category_product_unique_brands_'.$categoryId, $brands, 86400);
             return $brands;
         });
+    }
+
+    /**
+     * The "booted" method of the model.
+     *
+     * @return void
+     */
+    protected static function booted()
+    {
+        static::addGlobalScope(new ProductScope);
     }
 }
