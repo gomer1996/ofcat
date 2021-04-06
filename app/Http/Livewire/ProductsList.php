@@ -62,7 +62,7 @@ class ProductsList extends Component
 
     public function render()
     {
-        $query = Product::where('category_id', $this->category->id);
+        $query = Product::where('products.category_id', $this->category->id);
 
         $query->where('price', '>=', $this->priceFrom)
               ->where('price', '<=', $this->priceTo);

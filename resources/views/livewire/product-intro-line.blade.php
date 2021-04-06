@@ -17,7 +17,7 @@
             </td>
             <td class="pricetop" rowspan="2">
                 <div class="pricegoz">
-                    <p><span>{{ $product->price }}</span> р.</p>
+                    <p><span>{{ $product->calculated_price }}</span> р.</p>
                 </div>
                 <div class="tovsteppergoz tovstepper--style-2 js-spinner blokleft">
                     <input type="number" min="1" max="9999" step="1" wire:model="cartQty" class="tovstepper__input">
