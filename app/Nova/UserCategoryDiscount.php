@@ -4,25 +4,23 @@ namespace App\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Image;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
-use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
-use \App\Models\Category as CategoryModel;
-use Epartment\NovaDependencyContainer\NovaDependencyContainer;
-use Epartment\NovaDependencyContainer\HasDependencies;
+use App\Nova\Category;
+use App\Models\UserCategoryDiscount as UCDModel;
 
-class Category extends Resource
+class UserCategoryDiscount extends Resource
 {
-    use CommonTrait, HasDependencies;
+    use CommonTrait;
 
     private $categories;
 
     public function __construct($resource)
     {
-        $this->categories = CategoryModel::where('level', '!=', '3')->orWhere('level', null)->get();
+        $this->categories = \App\Models\Category::where('level', '3')->get();
         parent::__construct($resource);
     }
 
@@ -31,14 +29,14 @@ class Category extends Resource
      *
      * @var string
      */
-    public static $model = \App\Models\Category::class;
+    public static $model = \App\Models\UserCategoryDiscount::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
      *
      * @var string
      */
-    public static $title = 'name';
+    public static $title = 'id';
 
     /**
      * The columns that should be searched.
@@ -47,7 +45,6 @@ class Category extends Resource
      */
     public static $search = [
         'id',
-        'name',
     ];
 
     /**
@@ -61,36 +58,29 @@ class Category extends Resource
         return [
             ID::make(__('ID'), 'id')->sortable(),
 
-            Text::make('Наименовние', 'name')
-                ->rules('required', 'max:255'),
+            BelongsTo::make('Пользователь', 'user', 'App\Nova\User')
+                ->rules('required', function($attribute, $value, $fail) use ($request){
+                    $exists = UCDModel::where(['user_id' => $value, 'category_id' => $request->category_id])->exists();
+                    if ($exists) {
+                        return $fail('Для этого пользователя уже есть скидка на эту категории');
+                    }
+                })->readonly(function($request) {
+                    return $request->isUpdateOrUpdateAttachedRequest();
+                }),
 
-//            BelongsTo::make('Родитель', 'parent', 'App\Nova\Category')
-//                ->nullable(),
-
-            Select::make('Родитель', 'parent_id')->options(
+            Select::make('Категория', 'category_id')->options(
                 $this->categories->pluck('name', 'id')
-            )->searchable()->displayUsingLabels(),
+            )->searchable()
+                ->displayUsingLabels()
+                ->rules('required')
+                ->readonly(function($request) {
+                    return $request->isUpdateOrUpdateAttachedRequest();
+                }),
 
-            Select::make('Уровень', 'level')->options([
-                '1'  => 'Первый',
-                '2'  => 'Второй',
-                '3'  => 'Третий',
-            ])->nullable()
-              ->displayUsingLabels(),
-
-            Image::make('Картинка', 'img')
-                ->disk('public')
-                ->prunable(),
-
-            NovaDependencyContainer::make([
-                Number::make('Скидка', 'discount')
-                    ->max(99)
-                    ->default(0)
-                    ->help('в процентах')
-                    ->hideFromIndex()
-            ])->dependsOn('level', 3),
-
-
+            Number::make('Скидка', 'discount')
+                ->max(99)
+                ->default(0)
+                ->help('в процентах')
         ];
     }
 
@@ -145,7 +135,7 @@ class Category extends Resource
      */
     public static function label()
     {
-        return __('Категории');
+        return __('Индивидуальные скидки');
     }
 
     /**
@@ -155,7 +145,7 @@ class Category extends Resource
      */
     public static function singularLabel()
     {
-        return __('Категория');
+        return __('Индивидуальная скидка');
     }
 
     public static $trafficCop = false;
