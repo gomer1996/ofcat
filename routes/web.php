@@ -80,7 +80,7 @@ Route::get('/categories/{category}', [\App\Http\Controllers\CategoryController::
 Route::get('/products/search', [\App\Http\Controllers\ProductController::class, 'search'])
     ->name('products.search');
 
-Route::get('/products/{product}', [\App\Http\Controllers\ProductController::class, 'show'])
+Route::get('/products/{id}', [\App\Http\Controllers\ProductController::class, 'show'])
     ->name('products.show');
 
 Route::get('/news/{news}', [\App\Http\Controllers\NewsController::class, 'show'])

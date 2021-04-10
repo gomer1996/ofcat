@@ -103,6 +103,7 @@
             </tr>
         </table>
     </div>
+
     <div class="cleaner"></div>
     <x-popular-products />
     <div class="cleaner"></div>

@@ -9,8 +9,9 @@ use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    public function show(Product $product)
+    public function show($id)
     {
+        $product = Product::where('products.id', $id)->firstOrFail();
         // todo medialib
 //        $url = 'https://api.samsonopt.ru/goods/100008/7b9708521771c130b0b0db8024d06b81_x.jpg';
 //        $product->addMediaFromUrl($url)

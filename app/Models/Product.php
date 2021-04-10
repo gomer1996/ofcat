@@ -62,7 +62,7 @@ class Product extends Model implements HasMedia
     public static function getUniqueBrands($categoryId)
     {
         return Cache::get('category_product_unique_brands_'.$categoryId, function () use ($categoryId) {
-            $brands = self::where('category_id', $categoryId)->whereNotNull('brand')->distinct('brand')->get('brand')->pluck('brand');
+            $brands = self::where('products.category_id', $categoryId)->whereNotNull('brand')->distinct('brand')->get('brand')->pluck('brand');
             Cache::put('category_product_unique_brands_'.$categoryId, $brands, 86400);
             return $brands;
         });

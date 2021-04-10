@@ -82,6 +82,7 @@ class Product extends Resource
                 ->nullable(),
 
             Number::make('Код', 'code')
+                ->hideFromIndex()
                 ->rules('max:255'),
 
             Images::make('Медиа', 'product_media_collection')
@@ -90,25 +91,35 @@ class Product extends Resource
                 ->croppable(false),
 
             Text::make('Бренд', 'brand')
+                ->hideFromIndex()
                 ->nullable()
                 ->rules('max:255'),
 
             Text::make('Производитель', 'manufacturer')
+                ->hideFromIndex()
                 ->nullable()
                 ->rules('max:255'),
 
             Number::make('Вес', 'weight')
+                ->hideFromIndex()
                 ->step(0.01)
                 ->nullable(),
 
             Number::make('Объем', 'volume')
+                ->hideFromIndex()
                 ->step(0.01)
                 ->nullable(),
 
             Boolean::make('Активен', 'is_active')
+                ->hideFromIndex()
                 ->default(fn() => true),
 
+            Boolean::make('Хит продаж', 'is_hit')
+                ->hideFromIndex()
+                ->default(fn() => false),
+
             Text::make('Штрихкод', 'barcode')
+                ->hideFromIndex()
                 ->creationRules([function($attribute, $value, $fail) {
                     if ($value){
                         $exists = \App\Models\Product::where($attribute, $value)->exists();
@@ -118,10 +129,13 @@ class Product extends Resource
                     }
                     return true;
                 }])
-                ->updateRules('unique:products,barcode,{{resourceId}}')
+                ->readonly(function($request) {
+                    return $request->isUpdateOrUpdateAttachedRequest();
+                })
                 ->nullable(),
 
             Text::make('Артикул', 'vendor_code')
+                ->hideFromIndex()
                 ->creationRules([function($attribute, $value, $fail) {
                     if ($value){
                         $exists = \App\Models\Product::where($attribute, $value)->exists();
@@ -131,11 +145,14 @@ class Product extends Resource
                     }
                     return true;
                 }])
-                ->updateRules('unique:products,vendor_code,{{resourceId}}')
+                ->readonly(function($request) {
+                    return $request->isUpdateOrUpdateAttachedRequest();
+                })
                 ->nullable()
                 ->rules('max:255'),
 
             Text::make('Рельеф ID', 'relef_guid')
+                ->hideFromIndex()
                 ->readonly()
                 ->creationRules('unique:products,relef_guid')
                 ->updateRules('unique:products,relef_guid,{{resourceId}}')
@@ -143,6 +160,7 @@ class Product extends Resource
                 ->rules('max:255'),
 
             Number::make('Самсон ID', 'samson_sku')
+                ->hideFromIndex()
                 ->step(0.01)
                 ->readonly()
                 ->creationRules('unique:products,samson_sku')
@@ -150,6 +168,7 @@ class Product extends Resource
                 ->nullable(),
 
             KeyValue::make('Характеристики', 'properties->attributes')
+                ->hideFromIndex()
                 ->keyLabel('Свойство')
                 ->valueLabel('Значение')
                 ->actionText('Добавить'),

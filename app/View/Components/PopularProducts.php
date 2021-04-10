@@ -26,7 +26,7 @@ class PopularProducts extends Component
     public function render()
     {
         return view('components.popular-products', [
-            'products' => Product::limit(8)->get()->shuffle()
+            'products' => Product::where('is_hit', true)->latest()->limit(16)->get()
         ]);
     }
 }

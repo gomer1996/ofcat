@@ -2,14 +2,16 @@
     <table>
         <tr>
             <td  class="title" colspan="2">
-                <p><span>ХИТ ПРОДАЖ</span></p>
+                @if($product->is_hit)
+                    <p><span>ХИТ ПРОДАЖ</span></p>
+                @endif
             </td>
         </tr>
         <tr>
             <td class="images" colspan="2">
 {{--                <div style="max-width: 300px; overflow: hidden; margin: auto;">--}}
                 <div>
-                    <a href="{{ route('products.show', $product) }}">
+                    <a href="{{ route('products.show', $product->id) }}">
                         <img src="{{ $product->thumbnail }}" alt="Товар" />
                     </a>
                 </div>
@@ -18,7 +20,7 @@
         <tr>
             <td class="tov" colspan="2">
                 <p>
-                    <a href="{{ route('products.show', $product) }}">{{ $product->name }}</a>
+                    <a href="{{ route('products.show', $product->id) }}">{{ $product->name }}</a>
                 </p>
                 <p class="kod">Код {{ $product->code }}</p>
             </td>

@@ -5,13 +5,13 @@
             <table>
                 <tr>
                     <td>
-                        <a href="#">Главная</a>
+                        <a href="/">Главная</a>
                     </td>
                     <td>
                         <p>-</p>
                     </td>
                     <td>
-                        <a href="#">Хиты продаж</a>
+                        <a href="{{ route('products.bestsellers') }}">Хиты продаж</a>
                     </td>
                 </tr>
             </table>

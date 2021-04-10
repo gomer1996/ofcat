@@ -2,7 +2,9 @@
     <table>
         <tr>
             <td  class="titlegoz">
-                <p><span>ХИТ ПРОДАЖ</span></p>
+                @if($product->is_hit)
+                    <p><span>ХИТ ПРОДАЖ</span></p>
+                @endif
             </td>
             <td class="tovgoz" rowspan="2" style="width: 700px">
                 <p>
@@ -36,7 +38,7 @@
         <tr>
             <td  class="imagesgoz" style="width: 130px">
                 <div>
-                    <a href="{{ route('products.show', $product) }}">
+                    <a href="{{ route('products.show', $product->id) }}">
                         <img src="{{ $product->thumbnail }}" style="width: 100px; height: auto" alt="Товар" />
                     </a>
                 </div>

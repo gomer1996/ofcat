@@ -32,6 +32,8 @@ class CreateProductsTable extends Migration
             $table->bigInteger('samson_sku')->unique()->nullable();
             $table->json('properties')->nullable();
 
+            $table->boolean('is_hit')->default(false);
+
             $table->timestamps();
         });
     }
