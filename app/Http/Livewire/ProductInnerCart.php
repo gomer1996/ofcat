@@ -9,10 +9,16 @@ class ProductInnerCart extends Component
 {
     public $product;
     public $cartQty = 1;
+    public $productCalculatedPrice;
+
+    public function mount()
+    {
+        $this->productCalculatedPrice = $this->product->calculated_price;
+    }
 
     public function addToCart($product)
     {
-        Cart::add($product["id"], $product["name"], $this->cartQty, $product["price"], 0, [
+        Cart::add($product["id"], $product["name"], $this->cartQty, $this->productCalculatedPrice, 0, [
             'img' => $product["thumbnail"]
         ]);
         $this->emit('livewireNotify', 'success', 'Товар добавлен в корзину');
@@ -32,7 +38,8 @@ class ProductInnerCart extends Component
     public function render()
     {
         return view('livewire.product-inner-cart', [
-            'product' => $this->product
+            'product' => $this->product,
+            'productCalculatedPrice' => $this->productCalculatedPrice
         ]);
     }
 }

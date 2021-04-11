@@ -89,4 +89,8 @@ Route::get('/news/{news}', [\App\Http\Controllers\NewsController::class, 'show']
 Route::get('/pages/{page}', [\App\Http\Controllers\PageController::class, 'show'])
     ->name('pages.show');
 
+Route::get('/selections/{category}', [\App\Http\Controllers\ProductSelectionCategoryController::class, 'index'])
+    ->name('selections.index');
+
+
 require __DIR__.'/auth.php';

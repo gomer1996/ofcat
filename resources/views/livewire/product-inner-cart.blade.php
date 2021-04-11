@@ -1,7 +1,7 @@
 <tr>
     <td class="prod_price" colspan="2">
         <div class="blokleft">
-            <p>{{ $product->price }} руб.</p>
+            <p>{{ $productCalculatedPrice }} руб.</p>
         </div>
         <div class="stepper stepper--style-2 js-spinner blokleft">
             <input autofocus type="number" min="1" max="9999" wire:model="cartQty" class="stepper__input">

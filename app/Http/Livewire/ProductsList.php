@@ -64,10 +64,10 @@ class ProductsList extends Component
     {
         $query = Product::where('products.category_id', $this->category->id);
 
-        $query->where('price', '>=', $this->priceFrom)
-              ->where('price', '<=', $this->priceTo);
+        $query->having('calculated_price', '>=', $this->priceFrom)
+              ->having('calculated_price', '<=', $this->priceTo);
 
-        if (count($this->selectedBrands)) $query->whereIn('brand', $this->selectedBrands);
+        if (count($this->selectedBrands)) $query->whereIn('products.brand', $this->selectedBrands);
 
         $products = $query->orderBy(
             $this->orderState[$this->sort]["field"],

@@ -4,16 +4,23 @@ namespace App\Http\Livewire;
 
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Livewire\Component;
+use App\Models\Product;
 
 class ProductIntro extends Component
 {
     public $product;
     public $cartQty = 1;
     public $viewType;
+    public $productCalculatedPrice;
+
+    public function mount()
+    {
+        $this->productCalculatedPrice = $this->product->calculated_price;
+    }
 
     public function addToCart($product)
     {
-       Cart::add($product["id"], $product["name"], $this->cartQty, $product["price"], 0, [
+       Cart::add($product["id"], $product["name"], $this->cartQty, $this->productCalculatedPrice, 0, [
            'img' => $product["thumbnail"]
        ]);
        $this->emit('livewireNotify', 'success', 'Товар добавлен в корзину');
@@ -36,7 +43,8 @@ class ProductIntro extends Component
 
         return view("livewire.{$view}", [
             'product' => $this->product,
-            'viewType' => $this->viewType
+            'viewType' => $this->viewType,
+            'productCalculatedPrice' => $this->productCalculatedPrice
         ]);
     }
 }

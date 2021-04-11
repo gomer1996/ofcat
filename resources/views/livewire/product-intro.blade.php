@@ -27,7 +27,7 @@
         </tr>
         <tr>
             <td class="price" colspan="2">
-                <p><span>{{ $product->calculated_price }}</span> р.</p>
+                <p><span>{{ $productCalculatedPrice }}</span> р.</p>
             </td>
         </tr>
         <tr>
