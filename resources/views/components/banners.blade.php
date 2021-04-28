@@ -3,7 +3,16 @@
         <table>
             <tr>
                 @if($large)
-                    <td rowspan="2">
+                    <td rowspan="2" class="owl-carousel" style="width: 800px">
+                        <a href="{{ $large->link }}">
+                            <img src="{{ asset('/storage/'.$large->img) }}" alt="Акционное предложение" />
+                        </a>
+                        <a href="{{ $large->link }}">
+                            <img src="{{ asset('/storage/'.$large->img) }}" alt="Акционное предложение" />
+                        </a>
+                        <a href="{{ $large->link }}">
+                            <img src="{{ asset('/storage/'.$large->img) }}" alt="Акционное предложение" />
+                        </a>
                         <a href="{{ $large->link }}">
                             <img src="{{ asset('/storage/'.$large->img) }}" alt="Акционное предложение" />
                         </a>
@@ -28,4 +37,15 @@
             </tr>
         </table>
     </div>
+    @push('scripts')
+        <script>
+            $(document).ready(function(){
+                $(".owl-carousel").owlCarousel({
+                    items: 1,
+                    autoplay: true,
+                    autoplayTimeout: 3000
+                });
+            });
+        </script>
+    @endpush
 @endif

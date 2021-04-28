@@ -7,8 +7,14 @@
     <meta name="keywords" content="Интернет магазин для офисов, интернет магазин комплексного снабжения, интернет магазин канцелярских товаров, интернет магазин бытовой химии, интернет магазин стульев и кресел, интернет магазин хозяйственных товаров" />
     <link type="text/css" rel="stylesheet" href="{{ asset('css/main.css') }}" />
     <link type="text/css" rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+    <link rel="stylesheet" href="{{ asset('css/owl.carousel.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/owl.theme.default.min.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+    <script src="{{ asset('js/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('js/menu.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/gh/fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
     @livewireStyles
 </head>
 <body>
@@ -77,6 +83,7 @@
             toastr[type](msg);
         })
     </script>
+    @stack('scripts')
 </div>
 </body>
 </html>

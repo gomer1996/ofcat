@@ -37,7 +37,7 @@
                         @if($product->getMedia('product_media_collection')->first())
                             <!-- крупное изображение -->
                             <div class="img">
-                                <a href="{{ $product->getMedia('product_media_collection')->first()->getFullUrl() }}"  id="bigimage" class='fresco' data-fresco-group='example'>
+                                <a href="{{ $product->getMedia('product_media_collection')->first()->getFullUrl() }}"  id="bigimage" data-fancybox="gallery-{{ $product->id }}">
                                     <img src="{{ $product->getMedia('product_media_collection')->first()->getFullUrl() }}" id="bigimageimg" alt="" />
                                 </a>
                             </div>
@@ -47,7 +47,7 @@
                             @foreach($product->getMedia('product_media_collection') as $media)
                             <!-- Миниатюра 1 -->
                             <div class="thumb">
-                                <a href="{{ $media->getFullUrl() }}" class='sliderpr fresco' data-fresco-group='example'>
+                                <a href="{{ $media->getFullUrl() }}" data-fancybox="gallery-{{ $product->id }}">
                                     {{ $media }}
                                     <div class="overlayit"></div>
                                 </a>
@@ -55,19 +55,6 @@
                             @endforeach
                         </div>
                     </div>
-                    <script type="text/javascript" src="/assets/js/jquery.browser.min.js"></script>
-                    <script type="text/javascript" src="/assets/js/fresco.js"></script>
-                    <script type="text/javascript">
-                        $(document).ready(function(){
-                            $('.sliderpr').click(function(e){					/*------ 			Обрабатываем событие "Клик по элементу" 				------*/
-                                e.preventDefault();								/*------ 			Запрещаем запуск стандартного обработчика 				------*/
-                                var source = $(this).find('img').attr('src');	/*------ 			Берем изображение из аттрибута alt 					------*/
-                                $("#bigimage").attr('href',source);				/*------ 			Записываем изображение в большую картинку 				------*/
-                                $("#bigimageimg").attr('src',source);			/*------ 			Записываем изображение в ссылку на большую картинку 	------*/
-                                return false;									/*------ 			Возвращаем false 										------*/
-                            });
-                        });
-                    </script>
                 </td>
                 <td>
                     <table class="articl">
