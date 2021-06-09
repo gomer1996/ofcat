@@ -17,10 +17,12 @@ class CreateCategoriesTable extends Migration
             $table->id();
             $table->string('name');
             $table->bigInteger('parent_id')->nullable();
-            $table->enum('level', [1,2,3])->nullable();
+            $table->enum('level', [1,2,3,4,5])->nullable();
             $table->integer('order')->default(0);
             $table->string('img')->nullable();
             $table->float('discount')->default(0);
+            $table->string('samson_id')->unique()->nullable();
+            $table->string('samson_parent_id')->nullable();
             $table->timestamps();
         });
     }

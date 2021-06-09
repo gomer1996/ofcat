@@ -55,8 +55,8 @@ class Banner extends Resource
 
             Select::make('Расположение', 'type')->options([
                 'large'  => 'Большой',
-                'small-bottom' => 'Маленький сверху',
-                'small-top' => 'Маленький снизу',
+                'small-bottom' => 'Маленький снизу',
+                'small-top' => 'Маленький сверху',
             ])->displayUsingLabels()
                 ->default(function($r){
                     return "large";

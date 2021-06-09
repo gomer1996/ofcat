@@ -26,12 +26,12 @@ class Banners extends Component
     {
         $banners = Banner::all();
 
-        $large = $banners->firstWhere('type', 'large');
+        $largeBanners = $banners->where('type', 'large') ?? [];
         $smallTop = $banners->firstWhere('type', 'small-top');
         $smallBottom = $banners->firstWhere('type', 'small-bottom');
 
         return view('components.banners', [
-            'large' => $large,
+            'largeBanners' => $largeBanners,
             'smallTop' => $smallTop,
             'smallBottom' => $smallBottom
         ]);

@@ -1,25 +1,20 @@
-@if($large || $smallTop || $smallBottom)
+@if($largeBanners->count() || $smallTop || $smallBottom)
     <div id="slider">
         <table>
             <tr>
-                @if($large)
-                    <td rowspan="2" class="owl-carousel" style="width: 800px">
-                        <a href="{{ $large->link }}">
-                            <img src="{{ asset('/storage/'.$large->img) }}" alt="Акционное предложение" />
-                        </a>
-                        <a href="{{ $large->link }}">
-                            <img src="{{ asset('/storage/'.$large->img) }}" alt="Акционное предложение" />
-                        </a>
-                        <a href="{{ $large->link }}">
-                            <img src="{{ asset('/storage/'.$large->img) }}" alt="Акционное предложение" />
-                        </a>
-                        <a href="{{ $large->link }}">
-                            <img src="{{ asset('/storage/'.$large->img) }}" alt="Акционное предложение" />
-                        </a>
+                @if($largeBanners->count())
+                    <td rowspan="2">
+                        <div class="owl-carousel"  style="width: 800px">
+                            @foreach($largeBanners as $banner)
+                                <a href="{{ $banner->link }}">
+                                    <img src="{{ asset('/storage/'.$banner->img) }}" alt="Акционное предложение" />
+                                </a>
+                            @endforeach
+                        </div>
                     </td>
                 @endif
                 @if($smallTop)
-                    <td>
+                    <td style="vertical-align: top">
                         <a href="{{ $smallTop->link }}">
                             <img src="{{ asset('/storage/'.$smallTop->img) }}" alt="Акционное предложение" />
                         </a>
@@ -28,7 +23,7 @@
             </tr>
             <tr>
                 @if($smallBottom)
-                    <td>
+                    <td style="vertical-align: top">
                         <a href="{{ $smallBottom->link }}">
                             <img src="{{ asset('/storage/'.$smallBottom->img) }}" alt="Акционное предложение" />
                         </a>

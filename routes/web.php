@@ -1,5 +1,7 @@
 <?php
 
+use App\Integrations\Relef\SyncRelefProducts;
+use App\Integrations\Samson\SyncSamsonCategories;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Route;
 
@@ -91,6 +93,10 @@ Route::get('/pages/{page}', [\App\Http\Controllers\PageController::class, 'show'
 
 Route::get('/selections/{category}', [\App\Http\Controllers\ProductSelectionCategoryController::class, 'index'])
     ->name('selections.index');
+
+Route::get('/cron/run', function(){
+    (new SyncSamsonCategories)();
+});
 
 
 require __DIR__.'/auth.php';
