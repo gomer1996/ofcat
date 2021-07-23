@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\TestMail;
+use App\Mail\OrderConfirmMail;
 use App\Models\Product;
 use App\Models\Settings;
 use Illuminate\Http\Request;
@@ -19,7 +19,6 @@ class ProductController extends Controller
 //        $product->addMediaFromUrl($url)
 //                    ->toMediaCollection('product_media_collection');
         $settings = Settings::first();
-
         return view('product.single', [
             'product' => $product,
             'delivery_text' => $settings ? $settings->product_page_delivery_text : ''

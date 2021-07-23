@@ -48,6 +48,7 @@ class ResetPasswordNotification extends Notification
         ], false));
 
         return (new MailMessage)
+                    ->subject('Сброс пароля')
                     ->greeting('Привет.')
                     ->line('Вы запросили сброс пароля, если вы этого не делали просто игнорируйте это письмо.')
                     ->line('Для продолжения нажмите на кнопку ниже.')

@@ -69,17 +69,20 @@ class Category extends Resource
 
             Select::make('Родитель', 'parent_id')->options(
                 $this->categories->pluck('name', 'id')
-            )->searchable()->displayUsingLabels(),
+            )->searchable()
+             ->displayUsingLabels()
+             ->hideFromIndex(),
 
             Select::make('Уровень', 'level')->options([
                 '1'  => 'Первый',
                 '2'  => 'Второй',
                 '3'  => 'Третий',
+                '4'  => 'Четвертый',
             ])->nullable()
               ->displayUsingLabels(),
 
             Image::make('Картинка', 'img')
-                ->disk('public')
+                ->disk('categories')
                 ->prunable(),
 
             NovaDependencyContainer::make([

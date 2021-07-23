@@ -2,7 +2,9 @@
 
 use App\Integrations\Relef\SyncRelefProducts;
 use App\Integrations\Samson\SyncSamsonCategories;
+use App\Integrations\Samson\SyncSamsonProducts;
 use Gloudemans\Shoppingcart\Facades\Cart;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -95,7 +97,10 @@ Route::get('/selections/{category}', [\App\Http\Controllers\ProductSelectionCate
     ->name('selections.index');
 
 Route::get('/cron/run', function(){
-    (new SyncSamsonCategories)();
+//    (new SyncSamsonCategories)();
+    (new SyncSamsonProducts)();
+    //Mail::to('nasipkaliev96@gmail.com')->send(new \App\Mail\OrderConfirmMail());
+//    \App\Jobs\RunIntegrations::dispatch();
 });
 
 

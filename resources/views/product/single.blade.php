@@ -16,15 +16,16 @@
                     <td>
                         <p>-</p>
                     </td>
-                    <td>
-                        <a href="{{ route('categories.index', $product->category) }}">{{ $product->category->name }}</a>
-                    </td>
-                    <td>
-                        <p>-</p>
-                    </td>
-                    <td>
-                        <a href="#">{{ $product->name }}</a>
-                    </td>
+                    @foreach($product->categories as $cat)
+                        <td>
+                            <a href="{{ route('categories.index', $cat) }}">{{ $cat->name }}</a>
+                        </td>
+                        @if(!$loop->last)
+                            <td>
+                                <p>-</p>
+                            </td>
+                        @endif
+                    @endforeach
                 </tr>
             </table>
         </div>
@@ -147,10 +148,10 @@
                 <tr id="product_props_tab" style="display: none">
                     <td>
                         <table>
-                            @if(count($product->properties_parsed["attributes"]))
+                            @if(count($product->properties_parsed))
                                 <td>
                                     <ul>
-                                        @foreach($product->properties_parsed["attributes"] as $key => $val)
+                                        @foreach($product->properties_parsed as $key => $val)
                                             <li>
                                                 <p>{{ $key }}: {{ $val }}</p>
                                             </li>

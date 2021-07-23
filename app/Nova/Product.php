@@ -5,6 +5,7 @@ namespace App\Nova;
 use Hubertnnn\LaravelNova\Fields\DynamicSelect\DynamicSelect;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\BelongsToMany;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Currency;
 use Laravel\Nova\Fields\ID;
@@ -67,12 +68,16 @@ class Product extends Resource
             Text::make('Наименовние', 'name')
                 ->rules('required', 'max:255'),
 
-            Select::make('Категория', 'category_id')->options(
-                $this->categories->pluck('name', 'id')
-            )->searchable()
-             ->rules('required')
-             ->help('Категории 3 уровня')
-             ->displayUsingLabels(),
+            // todo: check categories for proper work
+
+//            Select::make('Категория', 'category_id')->options(
+//                $this->categories->pluck('name', 'id')
+//            )->searchable()
+//             ->rules('required')
+//             ->help('Категории 3 уровня')
+//             ->displayUsingLabels(),
+
+            BelongsToMany::make('Категории', 'categories', 'App\Nova\Category'),
 
             Number::make('Цена', 'price')
                 ->step(0.01)
@@ -167,7 +172,7 @@ class Product extends Resource
                 ->updateRules('unique:products,samson_sku,{{resourceId}}')
                 ->nullable(),
 
-            KeyValue::make('Характеристики', 'properties->attributes')
+            KeyValue::make('Характеристики', 'properties')
                 ->hideFromIndex()
                 ->keyLabel('Свойство')
                 ->valueLabel('Значение')

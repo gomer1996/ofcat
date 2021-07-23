@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\NewOrder;
 use App\Http\Requests\CheckoutStoreRequest;
 use App\Models\Order;
 use App\Models\Settings;
@@ -33,6 +34,7 @@ class CheckoutController extends Controller
 
         if (Order::create($request->all())) {
             Cart::destroy();
+            NewOrder::dispatch();
             return redirect()->route('checkout.success');
         }
         return view('checkout.index')->with('status', 'Что-то пошло не так');

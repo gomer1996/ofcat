@@ -9,9 +9,15 @@ class CategoryController extends Controller
 {
     public function index(Category $category)
     {
-        if (in_array($category->level, ['1', '2'])) {
+        if (in_array($category->level, ['1', '2', '3'])) {
 
             $category->load('children.children');
+
+            if (!$category->children()->count()) {
+                return view('product.category', [
+                    'category' => $category
+                ]);
+            }
 
             return view('category.index', [
                 'category' => $category

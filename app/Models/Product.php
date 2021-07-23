@@ -6,6 +6,7 @@ use App\Scopes\ProductScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\HasMedia;
@@ -22,6 +23,10 @@ class Product extends Model implements HasMedia
         'thumbnail'
     ];
 
+    protected $casts = [
+        'properties' => 'json',
+    ];
+
     /**
      * @return BelongsTo
      */
@@ -29,6 +34,14 @@ class Product extends Model implements HasMedia
     {
         return $this->belongsTo(Category::class);
     }
+
+//    /** todo del
+//     * @return BelongsToMany
+//     */
+//    public function categories(): BelongsToMany
+//    {
+//        return $this->belongsToMany(Category::class,'product_category');
+//    }
 
     public function getPropertiesParsedAttribute(): array
     {
@@ -62,7 +75,10 @@ class Product extends Model implements HasMedia
     public static function getUniqueBrands($categoryId)
     {
         return Cache::get('category_product_unique_brands_'.$categoryId, function () use ($categoryId) {
-            $brands = self::where('products.category_id', $categoryId)->whereNotNull('brand')->distinct('brand')->get('brand')->pluck('brand');
+            $brands = self::withoutGlobalScopes()->where('products.category_id', $categoryId)->whereNotNull('brand')->distinct('brand')->get('brand')->pluck('brand');
+//            $brands = self::whereHas('categories', function($query) use ($categoryId) { todo del
+//                $query->where('id', $categoryId);
+//            })->whereNotNull('brand')->distinct('brand')->get('brand')->pluck('brand');
             Cache::put('category_product_unique_brands_'.$categoryId, $brands, 86400);
             return $brands;
         });
