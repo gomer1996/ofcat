@@ -26,7 +26,7 @@ class Product extends Resource
 
     public function __construct($resource)
     {
-        $this->categories = \App\Models\Category::where('level', '3')->get();
+        $this->categories = \App\Models\Category::whereIn('level', ['3', '4'])->get();
         parent::__construct($resource);
     }
 
@@ -70,14 +70,14 @@ class Product extends Resource
 
             // todo: check categories for proper work
 
-//            Select::make('Категория', 'category_id')->options(
-//                $this->categories->pluck('name', 'id')
-//            )->searchable()
-//             ->rules('required')
-//             ->help('Категории 3 уровня')
-//             ->displayUsingLabels(),
+            Select::make('Категория', 'category_id')->options(
+                $this->categories->pluck('name', 'id')
+            )->searchable()
+             ->rules('required')
+             ->help('Категории 3 уровня')
+             ->displayUsingLabels(),
 
-            BelongsToMany::make('Категории', 'categories', 'App\Nova\Category'),
+//            BelongsToMany::make('Категории', 'categories', 'App\Nova\Category'),
 
             Number::make('Цена', 'price')
                 ->step(0.01)

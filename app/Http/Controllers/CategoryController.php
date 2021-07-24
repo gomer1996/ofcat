@@ -9,6 +9,15 @@ class CategoryController extends Controller
 {
     public function index(Category $category)
     {
+        $category->load('parent.parent.parent');
+
+        $breadcrumbs = [
+            $category->parent && $category->parent->parent ? $category->parent->parent->parent : null,
+            $category->parent ? $category->parent->parent : null,
+            $category->parent,
+            $category
+        ];
+
         if (in_array($category->level, ['1', '2', '3'])) {
 
             $category->load('children.children');
@@ -20,7 +29,8 @@ class CategoryController extends Controller
             }
 
             return view('category.index', [
-                'category' => $category
+                'category' => $category,
+                'breadcrumbs' => $breadcrumbs
             ]);
         }
 

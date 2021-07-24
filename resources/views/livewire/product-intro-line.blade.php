@@ -8,7 +8,7 @@
             </td>
             <td class="tovgoz" rowspan="2" style="width: 700px">
                 <p>
-                    <a href="#">{{ $product->name }}</a>
+                    <a href="{{ route('products.show', $product->id) }}">{{ $product->name }}</a>
                 </p>
                 <p class="kod">Код {{ $product->code }}</p>
                 <div>

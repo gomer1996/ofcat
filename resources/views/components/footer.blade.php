@@ -8,8 +8,8 @@
             <tr>
                 <td class="footer_logo">
                     <a class="demo" href="#">
-                        <img class="raz" src="images/logohover.png" alt="Логотип компании" />
-                        <img class="dva" src="images/logo.png" alt="Логотип компании" />
+                        <img class="raz" src="/images/logohover.png" alt="Логотип компании" />
+                        <img class="dva" src="/images/logo.png" alt="Логотип компании" />
                     </a>
                     <p>Интернет-магазин товаров<br />для дома и офиса</p>
                     <div class="footer_social">

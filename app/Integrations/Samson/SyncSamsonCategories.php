@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Storage;
 
 class SyncSamsonCategories
 {
+    private $url = 'https://api.samsonopt.ru/v1/category/?api_key=60769b17043981a854f4d6ac667e5ac5&pagination_count=100';
+
     /**
      * Prune the stale attachments from the system.
      *
@@ -15,7 +17,7 @@ class SyncSamsonCategories
      */
     public function __invoke()
     {
-        $this->syncCategories('https://api.samsonopt.ru/v1/category/?api_key=60769b17043981a854f4d6ac667e5ac5&pagination_count=100');
+        $this->syncCategories($this->url);
         $this->setParentIds();
     }
 

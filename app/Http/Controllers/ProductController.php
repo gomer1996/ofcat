@@ -14,14 +14,23 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = Product::where('products.id', $id)->firstOrFail();
-        // todo medialib
-//        $url = 'https://api.samsonopt.ru/goods/100008/7b9708521771c130b0b0db8024d06b81_x.jpg';
-//        $product->addMediaFromUrl($url)
-//                    ->toMediaCollection('product_media_collection');
         $settings = Settings::first();
+
+        $category = $product->category;
+
+        $category->load('parent.parent.parent');
+
+        $breadcrumbs = [
+            $category->parent && $category->parent->parent ? $category->parent->parent->parent : null,
+            $category->parent ? $category->parent->parent : null,
+            $category->parent,
+            $category
+        ];
+
         return view('product.single', [
             'product' => $product,
-            'delivery_text' => $settings ? $settings->product_page_delivery_text : ''
+            'delivery_text' => $settings ? $settings->product_page_delivery_text : '',
+            'breadcrumbs' => $breadcrumbs
         ]);
     }
 
@@ -30,7 +39,7 @@ class ProductController extends Controller
         $searchString = request()->get('q');
 
         return view('product.search-results', [
-            'products' => Product::where('name', 'like', "%$searchString%")->limit(10)->get()
+            'products' => Product::where('products.name', 'like', "%$searchString%")->limit(10)->get()
         ]);
     }
 }

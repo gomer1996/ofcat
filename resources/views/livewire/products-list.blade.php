@@ -34,17 +34,19 @@
         <div class="blokleft myfilter">
             <div class="myfilter_inner">
                 <ul>
-                    <li class="myfilter_inner_title">Бренд:</li>
-                    @foreach($brands as $brand)
-                        <li>
-                            <label>
-                                <input type="checkbox"
-                                       value="{{ $brand }}"
-                                       wire:model="selectedBrands" />
-                                {{ ucfirst($brand) }}
-                            </label>
-                        </li>
-                    @endforeach
+                    @if(count($brands))
+                        <li class="myfilter_inner_title">Бренд:</li>
+                        @foreach($brands as $brand)
+                            <li>
+                                <label>
+                                    <input type="checkbox"
+                                           value="{{ $brand }}"
+                                           wire:model="selectedBrands" />
+                                    {{ ucfirst($brand) }}
+                                </label>
+                            </li>
+                        @endforeach
+                    @endif
                 </ul>
                 <ul>
                     <li class="myfilter_inner_title">Цены:</li>
@@ -63,21 +65,27 @@
             </div>
         </div>
         <div class="tovcontent">
-            <table>
-                @foreach($products->chunk($chunkCount) as $chunk)
-                    <tr>
-                        @foreach($chunk as $product)
-                            <livewire:product-intro :viewType="$viewType" :product="$product" :key="time().$product->id" />
-                        @endforeach
-                    </tr>
-                    @if(!$loop->last)
+            @if($products->count())
+                <table>
+                    @foreach($products->chunk($chunkCount) as $chunk)
                         <tr>
-                            <td class="elevation" colspan="3">
-                            </td>
+                            @foreach($chunk as $product)
+                                <livewire:product-intro :viewType="$viewType" :product="$product" :key="time().$product->id" />
+                            @endforeach
                         </tr>
-                    @endif
-                @endforeach
-            </table>
+                        @if(!$loop->last)
+                            <tr>
+                                <td class="elevation" colspan="3">
+                                </td>
+                            </tr>
+                        @endif
+                    @endforeach
+                </table>
+            @else
+                <div style="text-align: center; margin-top: 100px">
+                    Здесь пока товаров нет...
+                </div>
+            @endif
 
             {{ $products->links('livewire.pagination') }}
 

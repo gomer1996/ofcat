@@ -18,6 +18,19 @@ class CheckoutStoreRequest extends FormRequest
     }
 
     /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array
+     */
+    public function messages()
+    {
+        return [
+            'address.required' => 'Необходимо заполнить поле',
+            'company.required_if' => 'Необходимо заполнить поле',
+        ];
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array

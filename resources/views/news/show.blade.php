@@ -9,13 +9,13 @@
                         <a href="#">Главная</a>
                     </td>
                     <td>
-                        <p>-</p>
+                        <p>/</p>
                     </td>
                     <td>
                         <a href="#">Новости</a>
                     </td>
                     <td>
-                        <p>-</p>
+                        <p>/</p>
                     </td>
                     <td>
                         <a href="#">{{ $news->title }}</a>

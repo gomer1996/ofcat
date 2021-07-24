@@ -8,22 +8,24 @@
                         <a href="#">Главная</a>
                     </td>
                     <td>
-                        <p>-</p>
+                        <p>/</p>
                     </td>
                     <td>
                         <a href="#">Каталог</a>
                     </td>
                     <td>
-                        <p>-</p>
+                        <p>/</p>
                     </td>
-                    @foreach($product->categories as $cat)
-                        <td>
-                            <a href="{{ route('categories.index', $cat) }}">{{ $cat->name }}</a>
-                        </td>
-                        @if(!$loop->last)
+                    @foreach($breadcrumbs as $cat)
+                        @if($cat)
                             <td>
-                                <p>-</p>
+                                <a href="{{ route('categories.index', $cat) }}">{{ $cat->name }}</a>
                             </td>
+                            @if(!$loop->last)
+                                <td>
+                                    <p>/</p>
+                                </td>
+                            @endif
                         @endif
                     @endforeach
                 </tr>

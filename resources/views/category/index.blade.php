@@ -9,17 +9,26 @@
                         <a href="/">Главная</a>
                     </td>
                     <td>
-                        <p>-</p>
+                        <p>/</p>
                     </td>
                     <td>
                         <a href="{{ route('categories.all') }}">Каталог</a>
                     </td>
                     <td>
-                        <p>-</p>
+                        <p>/</p>
                     </td>
-                    <td>
-                        <a href="#">{{ $category->name }}</a>
-                    </td>
+                    @foreach($breadcrumbs as $cat)
+                        @if($cat)
+                            <td>
+                                <a href="{{ route('categories.index', $cat) }}">{{ $cat->name }}</a>
+                            </td>
+                            @if(!$loop->last)
+                                <td>
+                                    <p>/</p>
+                                </td>
+                            @endif
+                        @endif
+                    @endforeach
                 </tr>
             </table>
         </div>

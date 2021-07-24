@@ -13,7 +13,7 @@
                         <a href="#">Главная</a>
                     </td>
                     <td>
-                        <p>-</p>
+                        <p>/</p>
                     </td>
                     <td>
                         <a href="#">Моя корзина</a>
@@ -215,6 +215,16 @@
             </table>
                 <input type="hidden" name="user_type" value="{{ $type }}">
             </form>
+
+                @push('scripts')
+                    @if (session('status'))
+                        <script>
+                            var msg = <?php echo json_encode(session('status')); ?>;
+                            toastr['error'](msg);
+                        </script>
+                    @endif
+                @endpush
+
         </div>
     </div>
 </x-app-layout>

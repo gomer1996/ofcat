@@ -20,7 +20,7 @@ class UserCategoryDiscount extends Resource
 
     public function __construct($resource)
     {
-        $this->categories = \App\Models\Category::where('level', '3')->get();
+        $this->categories = \App\Models\Category::whereIn('level', ['3', '4'])->get();
         parent::__construct($resource);
     }
 

@@ -10,7 +10,7 @@
         <td  class="images" colspan="2">
             <div style="min-width: 300px">
                 @if($product->getMedia('product_media_collection')->first())
-                    <a href="#">
+                    <a href="{{ route('products.show', $product->id) }}">
                         <img src="{{ $product->getMedia('product_media_collection')->first()->getFullUrl() }}" alt="Товар" />
                     </a>
                 @endif

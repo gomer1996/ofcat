@@ -8,7 +8,7 @@
                         <a href="/">Главная</a>
                     </td>
                     <td>
-                        <p>-</p>
+                        <p>/</p>
                     </td>
                     <td>
                         <a href="{{ route('products.bestsellers') }}">Хиты продаж</a>

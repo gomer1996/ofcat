@@ -29,8 +29,7 @@ class CartTotal extends Component
 
         $discountParsed = floatval(Cart::discount(2, '.', ''));
         $totalPriceParsed = floatval(Cart::priceTotal(2, '.', ''));
-        $this->discountPercent = $discountParsed ? round($totalPriceParsed / $discountParsed ) : 0;
-
+        $this->discountPercent = $discountParsed ? round((100 * $discountParsed) / $totalPriceParsed ) : 0;
         $this->deliveryPrice = CartHelper::getDelivery();
 
         $this->totalPrice = CartHelper::getTotalWithDelivery();
