@@ -5,10 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Category extends Model
+class IntegrationCategory extends Model
 {
     use HasFactory;
 
@@ -21,7 +20,7 @@ class Category extends Model
      */
     public function children(): HasMany
     {
-        return $this->hasMany(self::class, 'parent_id', 'id');
+        return $this->hasMany(self::class, 'outer_parent_id', 'outer_id');
     }
 
     /**
@@ -29,7 +28,7 @@ class Category extends Model
      */
     public function parent(): BelongsTo
     {
-        return $this->belongsTo(self::class, 'parent_id', 'id');
+        return $this->belongsTo(self::class, 'outer_parent_id', 'outer_id');
     }
 
     /**
@@ -39,14 +38,16 @@ class Category extends Model
      */
     public function products(): HasMany
     {
-        return $this->hasMany(Product::class);
+        return $this->hasMany(Product::class, 'integration_category_id', 'id');
     }
 
-//    /** todo del */
-//     * @return BelongsToMany
-//     */
-//    public function newProducts(): BelongsToMany
-//    {
-//        return $this->belongsToMany(Product::class, 'product_category');
-//    }
+    /**
+     * Get products
+     *
+     * @return HasMany
+     */
+    public function newProducts(): HasMany
+    {
+        return $this->hasMany(Product::class, 'integration_category_id', 'id')->whereNull('category_id');
+    }
 }

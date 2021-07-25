@@ -3,12 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\IntegrationCategory;
 use App\Models\Product;
 
 class CategoryController extends Controller
 {
     public function index(Category $category)
     {
+        $cats = IntegrationCategory::where('level', '3')
+            ->withCount(['newProducts' => function($q){
+                $q->withoutGlobalScopes();
+            }])
+            ->whereHas('newProducts', function ($q) {
+                $q->withoutGlobalScopes();
+            })
+            ->with('parent.parent')
+            ->limit(10)
+            ->get();
+
+        dd($cats);
+
         $category->load('parent.parent.parent');
 
         $breadcrumbs = [

@@ -77,7 +77,7 @@ class Product extends Resource
              ->help('Категории 3 уровня')
              ->displayUsingLabels(),
 
-//            BelongsToMany::make('Категории', 'categories', 'App\Nova\Category'),
+//            BelongsToMany::make('Категории', 'categories', 'App\Nova\Category'), todo del
 
             Number::make('Цена', 'price')
                 ->step(0.01)
@@ -156,21 +156,29 @@ class Product extends Resource
                 ->nullable()
                 ->rules('max:255'),
 
-            Text::make('Рельеф ID', 'relef_guid')
+            Text::make('Внешний ID', 'outer_id')
                 ->hideFromIndex()
                 ->readonly()
-                ->creationRules('unique:products,relef_guid')
-                ->updateRules('unique:products,relef_guid,{{resourceId}}')
+                ->creationRules('unique:products,outer_id')
+                ->updateRules('unique:products,outer_id,{{resourceId}}')
                 ->nullable()
                 ->rules('max:255'),
 
-            Number::make('Самсон ID', 'samson_sku')
-                ->hideFromIndex()
-                ->step(0.01)
-                ->readonly()
-                ->creationRules('unique:products,samson_sku')
-                ->updateRules('unique:products,samson_sku,{{resourceId}}')
-                ->nullable(),
+//            Text::make('Рельеф ID', 'relef_guid') todo del
+//                ->hideFromIndex()
+//                ->readonly()
+//                ->creationRules('unique:products,relef_guid')
+//                ->updateRules('unique:products,relef_guid,{{resourceId}}')
+//                ->nullable()
+//                ->rules('max:255'),
+//
+//            Number::make('Самсон ID', 'samson_sku')
+//                ->hideFromIndex()
+//                ->step(0.01)
+//                ->readonly()
+//                ->creationRules('unique:products,samson_sku')
+//                ->updateRules('unique:products,samson_sku,{{resourceId}}')
+//                ->nullable(),
 
             KeyValue::make('Характеристики', 'properties')
                 ->hideFromIndex()
