@@ -26,7 +26,7 @@ class Product extends Resource
 
     public function __construct($resource)
     {
-        $this->categories = \App\Models\Category::whereIn('level', ['3', '4'])->get();
+        $this->categories = \App\Models\Category::whereIn('level', ['4', '5'])->get();
         parent::__construct($resource);
     }
 

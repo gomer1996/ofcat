@@ -2,10 +2,12 @@
 
 namespace App\Nova;
 
+use App\Nova\Actions\MergeIntegrationProducts;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Http\Requests\ActionRequest;
 
 class IntegrationCategory extends Resource
 {
@@ -46,6 +48,28 @@ class IntegrationCategory extends Resource
             ->with('parent.parent');
     }
 
+    public static function detailQuery(NovaRequest $request, $query)
+    {
+        $query->withCount(['newProducts' => function($q){
+                $q->withoutGlobalScopes();
+            }])
+            ->whereHas('newProducts', function ($q) {
+                $q->withoutGlobalScopes();
+            })
+            ->with('parent.parent');
+    }
+
+    /**
+     * Run actions even when update policy denies
+     *
+     * @param Request $request
+     * @return bool
+     */
+    public function authorizedToUpdate(Request $request)
+    {
+        return $request instanceof ActionRequest;
+    }
+
     /**
      * Get the fields displayed by the resource.
      *
@@ -57,9 +81,16 @@ class IntegrationCategory extends Resource
         return [
             ID::make(__('ID'), 'id')->sortable(),
 
-            Text::make('Name', 'name'),
-            Text::make('Count', 'new_products_count'),
+            Text::make('Категории', function () {
+                return ($this->parent && $this->parent->parent ? $this->parent->parent->name : null)
+                    . "<br> -"
+                    . ($this->parent ? $this->parent->name : null)
+                    . "<br> --"
+                    . $this->name;
 
+            })->asHtml(),
+
+            Text::make('Товаров', 'new_products_count'),
         ];
     }
 
@@ -104,7 +135,9 @@ class IntegrationCategory extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            new MergeIntegrationProducts()
+        ];
     }
 
     /**

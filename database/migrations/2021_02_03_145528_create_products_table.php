@@ -19,14 +19,14 @@ class CreateProductsTable extends Migration
             $table->float('price');
             $table->string('brand')->nullable();
             $table->foreignId('category_id')->nullable()->constrained();
-            $table->bigInteger('code')->unique()->nullable();
+            $table->bigInteger('code')->nullable();
             $table->text('description')->nullable();
             $table->string('manufacturer')->nullable();
             $table->float('weight')->nullable();
             $table->float('volume')->nullable();
             $table->boolean('is_active')->default(1);
-            $table->string('barcode')->unique()->nullable();
-            $table->string('vendor_code')->unique()->nullable();
+            $table->string('barcode')->nullable();
+            $table->string('vendor_code')->nullable();
 //            $table->string('relef_guid')->unique()->nullable(); todo del
 //            $table->bigInteger('samson_sku')->unique()->nullable();
             $table->string('outer_id')->unique()->nullable();
@@ -37,6 +37,12 @@ class CreateProductsTable extends Migration
             $table->boolean('is_hit')->default(false);
 
             $table->timestamps();
+
+            $table->index('barcode');
+            $table->index('vendor_code');
+            $table->index('code');
+            $table->index('outer_id');
+            $table->index('brand');
         });
     }
 

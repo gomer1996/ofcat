@@ -86,12 +86,24 @@ class Category extends Resource
                 ->prunable(),
 
             NovaDependencyContainer::make([
+                Number::make('Процент сверху', 'tax')
+                    ->max(99)
+                    ->default(0)
+                    ->help('в процентах')
+                    ->hideFromIndex()
+            ])->dependsOn('level', 3)
+              ->dependsOn('level', 4)
+              ->dependsOn('level', 5),
+
+            NovaDependencyContainer::make([
                 Number::make('Скидка', 'discount')
                     ->max(99)
                     ->default(0)
                     ->help('в процентах')
                     ->hideFromIndex()
-            ])->dependsOn('level', 3),
+            ])->dependsOn('level', 3)
+              ->dependsOn('level', 4)
+              ->dependsOn('level', 5),
 
 
         ];

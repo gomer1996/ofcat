@@ -8,8 +8,7 @@ use Illuminate\Support\Facades\Http;
 
 
 class SyncSamsonProducts {
-
-    private $url = "https://api.samsonopt.ru/v1/sku/190892?api_key=60769b17043981a854f4d6ac667e5ac5&pagination_count=10&pagination_page=3320";
+    private $url = "https://api.samsonopt.ru/v1/sku/190892?api_key=60769b17043981a854f4d6ac667e5ac5&pagination_count=10";
 
     public function __invoke()
     {
@@ -24,13 +23,15 @@ class SyncSamsonProducts {
         if ($data) {
             foreach ($data["data"] as $sku) {
                 $found = Product::where(['outer_id' => $sku["sku"], 'integration' => 'samson'])->first();
-                //$categories = Category::whereIn('samson_id', $sku["category_list"])->get('id'); todo del
+
                 $category = Category::whereIn('samson_id', $sku["category_list"])->orderBy('level', 'desc')->first();
-                if (!$category) continue;
+
+                if (!$category || !$sku["price_list"][0]["value"]) continue;
+
                 $body = [
                     "name" => $sku["name"],
                     "outer_id" => $sku["sku"],
-                    "price" => $sku["price_list"][0]["value"] || 0, // todo price
+                    "price" => $sku["price_list"][0]["value"] || 0,
                     "brand" => $sku["brand"],
                     "code" => $sku["sku"],
                     "category_id" => $category->id,
@@ -45,11 +46,9 @@ class SyncSamsonProducts {
                 ];
                 if ($found) {
                     $found->update($body);
-                    //if ($categories->count()) $found->categories()->sync($categories->pluck('id')); todo del
                 } else {
                     $product = Product::create($body);
 
-                    //if ($categories->count()) $product->categories()->sync($categories->pluck('id')); todo del
                     if (count($sku["photo_list"])) {
                         foreach ($sku["photo_list"] as $url) {
                             $product->addMediaFromUrl($url)->toMediaCollection('product_media_collection');

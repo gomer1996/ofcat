@@ -68,6 +68,10 @@ class Order extends Resource
                 ->sortable()
                 ->readonly(fn () => true),
 
+            Text::make('Адрес', 'address')
+                ->hideFromIndex()
+                ->readonly(fn () => true),
+
             Text::make('Email')
                 ->sortable()
                 ->rules('required', 'email', 'max:254')

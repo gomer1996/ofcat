@@ -20,11 +20,14 @@ class ProductScope implements Scope
     {
         $userId = auth()->user()->id ?? 0;
 
+        $userDiscount = 'ROUND((products.price + (products.price * (categories.tax / 100))) * (1 - ucd.discount / 100), 2)';
+        $categoryDiscount = 'ROUND((products.price + (products.price * (categories.tax / 100))) * (1 - categories.discount / 100), 2))';
+
         $builder->leftJoin('user_category_discounts as ucd', 'products.category_id', '=', 'ucd.category_id')
             ->join('categories', 'products.category_id', '=', 'categories.id')
             ->select([
                 'products.*',
-                DB::raw('IF(ucd.user_id = '.$userId.', ROUND(products.price * (1 - ucd.discount / 100), 2), ROUND(products.price * (1 - categories.discount / 100), 2)) as calculated_price')
+                DB::raw('IF(ucd.user_id = '.$userId.', '.$userDiscount.', '.$categoryDiscount.' as calculated_price')
             ]);
     }
 }

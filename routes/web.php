@@ -99,7 +99,7 @@ Route::get('/selections/{category}', [\App\Http\Controllers\ProductSelectionCate
 Route::get('/cron/run', function(){
 //    (new SyncSamsonCategories)();
     //(new SyncSamsonProducts)();
-    (new \App\Integrations\Relef\SyncRelefCategories)();
+    //(new \App\Integrations\Relef\SyncRelefCategories)();
     (new \App\Integrations\Relef\SyncRelefProducts)();
     //Mail::to('nasipkaliev96@gmail.com')->send(new \App\Mail\OrderConfirmMail());
 //    \App\Jobs\RunIntegrations::dispatch();

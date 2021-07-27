@@ -21,6 +21,9 @@ class CreateIntegrationCategoriesTable extends Migration
             $table->string('outer_parent_id')->nullable();
             $table->enum('integration', ['relef']);
             $table->timestamps();
+
+            $table->index('outer_id');
+            $table->index('outer_parent_id');
         });
     }
 
