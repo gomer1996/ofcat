@@ -26,7 +26,7 @@ class Product extends Resource
 
     public function __construct($resource)
     {
-        $this->categories = \App\Models\Category::whereIn('level', ['4', '5'])->get();
+        $this->categories = \App\Models\Category::whereIn('level', ['3', '4', '5'])->get();
         parent::__construct($resource);
     }
 
@@ -120,6 +120,10 @@ class Product extends Resource
                 ->default(fn() => true),
 
             Boolean::make('Хит продаж', 'is_hit')
+                ->hideFromIndex()
+                ->default(fn() => false),
+
+            Boolean::make('Новинка', 'is_new')
                 ->hideFromIndex()
                 ->default(fn() => false),
 

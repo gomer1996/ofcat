@@ -26,14 +26,13 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // @todo uncomment
-//        $schedule->call(function () {
-//            (new PruneStaleAttachments)();
-//        })->daily();
-//
-//        $schedule->call(function () {
-//            (new SyncRelefProducts)();
-//        })->everyMinute();
+        $schedule->call(function () {
+            (new PruneStaleAttachments)();
+        })->daily();
+
+        $schedule->call(function () {
+          \App\Jobs\RunIntegrations::dispatch();
+        })->daily();
     }
 
     /**

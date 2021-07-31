@@ -35,6 +35,7 @@ class CreateProductsTable extends Migration
             $table->json('properties')->nullable();
 
             $table->boolean('is_hit')->default(false);
+            $table->boolean('is_new')->default(false);
 
             $table->timestamps();
 
