@@ -98,10 +98,10 @@ Route::get('/pages/{page}', [\App\Http\Controllers\PageController::class, 'show'
 Route::get('/selections/{category}', [\App\Http\Controllers\ProductSelectionCategoryController::class, 'index'])
     ->name('selections.index');
 
-Route::get('/cron/run', function(){
-
-    \App\Jobs\RunIntegrations::dispatch();
-});
+//Route::get('/cron/run', function(){
+//
+//    \App\Jobs\RunIntegrations::dispatch();
+//});
 
 Route::get('/download/excel/category', function() {
     return Excel::download(new CategoryExport, 'categories.xlsx');

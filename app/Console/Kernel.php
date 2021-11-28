@@ -32,7 +32,7 @@ class Kernel extends ConsoleKernel
 
         $schedule->call(function () {
           \App\Jobs\RunIntegrations::dispatch();
-        })->daily();
+        })->dailyAt('03:00');
     }
 
     /**
