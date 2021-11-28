@@ -379,7 +379,7 @@
     "—": "—",
     ":amount Total": ":amount Всего",
     ":resource Details": "Детали",
-    ":resource Details :title": "Детали",
+    ":resource Details: :title": "Детали: :title",
     "*": "*",
     "30 Days": "30 Дней",
     "60 Days": "60 Дней",

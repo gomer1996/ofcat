@@ -16,7 +16,7 @@ class CreateUserCategoryDiscountsTable extends Migration
         Schema::create('user_category_discounts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained();
-            $table->foreignId('category_id')->constrained();
+            $table->foreignId('category_id')->nullable()->constrained();
             $table->float('discount')->default(0);
             $table->timestamps();
         });

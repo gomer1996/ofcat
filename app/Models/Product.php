@@ -35,14 +35,6 @@ class Product extends Model implements HasMedia
         return $this->belongsTo(Category::class);
     }
 
-//    /** todo del
-//     * @return BelongsToMany
-//     */
-//    public function categories(): BelongsToMany
-//    {
-//        return $this->belongsToMany(Category::class,'product_category');
-//    }
-
     public function getPropertiesParsedAttribute(): array
     {
         if ($this->attributes['properties']) {
@@ -76,9 +68,6 @@ class Product extends Model implements HasMedia
     {
         return Cache::get('category_product_unique_brands_'.$categoryId, function () use ($categoryId) {
             $brands = self::withoutGlobalScopes()->where('products.category_id', $categoryId)->whereNotNull('brand')->distinct('brand')->get('brand')->pluck('brand');
-//            $brands = self::whereHas('categories', function($query) use ($categoryId) { todo del
-//                $query->where('id', $categoryId);
-//            })->whereNotNull('brand')->distinct('brand')->get('brand')->pluck('brand');
             Cache::put('category_product_unique_brands_'.$categoryId, $brands, 86400);
             return $brands;
         });

@@ -67,6 +67,9 @@
                                     <li>
                                         <p>Код <span>{{ $product->code }}</span></p>
                                     </li>
+                                    <li style="margin-left: 50px">
+                                        <p>{{ $product->stock }} шт. в наличии</p>
+                                    </li>
                                 </ul>
                             </td>
                         </tr>

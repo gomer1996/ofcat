@@ -38,7 +38,7 @@ class SyncRelefCategories
                     "name" => $category["name"],
                     "level" => $category["level"],
                     "outer_id" => $category["guid"],
-                    "outer_parent_id" => $category["parentGuid"] ? $category["parentGuid"] : null,
+                    "outer_parent_id" => $category["parentGuid"] ?? null,
                     "integration" => "relef"
                 ];
                 if ($found) {

@@ -7,7 +7,7 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Http;
 
 
-class SyncSamsonProducts {
+class SyncSamsonProducts { //&pagination_page=0
     private $url = "https://api.samsonopt.ru/v1/sku/190892?api_key=60769b17043981a854f4d6ac667e5ac5&pagination_count=10";
 
     public function __invoke()
@@ -26,12 +26,12 @@ class SyncSamsonProducts {
 
                 $category = Category::whereIn('samson_id', $sku["category_list"])->orderBy('level', 'desc')->first();
 
-                if (!$category || !$sku["price_list"][0]["value"]) continue;
+                if (!$category || !($sku["price_list"][0]["value"] ?? null)) continue;
 
                 $body = [
                     "name" => $sku["name"],
                     "outer_id" => $sku["sku"],
-                    "price" => $sku["price_list"][0]["value"] || 0,
+                    "price" => $sku["price_list"][0]["value"] ?? 0,
                     "brand" => $sku["brand"],
                     "code" => $sku["sku"],
                     "category_id" => $category->id,
@@ -39,14 +39,21 @@ class SyncSamsonProducts {
                     "manufacturer" => $sku["manufacturer"],
                     "weight" => $sku["weight"],
                     "volume" => $sku["volume"],
-                    "barcode" => $sku["barcode"] ? $sku["barcode"] : null,
-                    "vendor_code" => $sku["vendor_code"] ? $sku["vendor_code"] : null,
+                    "barcode" => $sku["barcode"] ?? null,
+                    "vendor_code" => $sku["vendor_code"] ?? null,
                     "properties" => $sku["facet_list"] ? $this->parseProperties($sku["facet_list"]) : null,
-                    "integration" => "samson"
+                    "integration" => "samson",
+                    "stock" => $this->getStock("idp", $sku["stock_list"])
                 ];
                 if ($found) {
                     $found->update($body);
                 } else {
+                    $found = Product::where('vendor_code', $sku["vendor_code"])
+                        ->orWhere('barcode', $sku["barcode"])
+                        ->first();
+
+                    if ($found) continue;
+
                     $product = Product::create($body);
 
                     if (count($sku["photo_list"])) {
@@ -72,5 +79,18 @@ class SyncSamsonProducts {
         }
 
         return $properties;
+    }
+
+    private function getStock(string $key = '', array $stock = [])
+    {
+        $found = null;
+
+        foreach($stock as $s){
+            if ($s["type"] == $key) $found = $s;
+        }
+        if ($found && $found["value"]) {
+            return $found["value"];
+        }
+        return 0;
     }
 }

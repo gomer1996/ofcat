@@ -55,6 +55,18 @@ class Product extends Resource
     ];
 
     /**
+     * Build an "index" query for the given resource.
+     *
+     * @param  \Laravel\Nova\Http\Requests\NovaRequest  $request
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public static function indexQuery(NovaRequest $request, $query)
+    {
+        return $query->withoutGlobalScopes()->whereNotNull('category_id');
+    }
+
+    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -115,6 +127,14 @@ class Product extends Resource
                 ->step(0.01)
                 ->nullable(),
 
+            Number::make('Остаток', 'stock')
+                ->hideFromIndex()
+                ->nullable(),
+
+            Boolean::make('Не учитывать проценты для этого товара', 'ignore_tax')
+                ->hideFromIndex()
+                ->default(fn() => false),
+
             Boolean::make('Активен', 'is_active')
                 ->hideFromIndex()
                 ->default(fn() => true),
@@ -167,22 +187,6 @@ class Product extends Resource
                 ->updateRules('unique:products,outer_id,{{resourceId}}')
                 ->nullable()
                 ->rules('max:255'),
-
-//            Text::make('Рельеф ID', 'relef_guid') todo del
-//                ->hideFromIndex()
-//                ->readonly()
-//                ->creationRules('unique:products,relef_guid')
-//                ->updateRules('unique:products,relef_guid,{{resourceId}}')
-//                ->nullable()
-//                ->rules('max:255'),
-//
-//            Number::make('Самсон ID', 'samson_sku')
-//                ->hideFromIndex()
-//                ->step(0.01)
-//                ->readonly()
-//                ->creationRules('unique:products,samson_sku')
-//                ->updateRules('unique:products,samson_sku,{{resourceId}}')
-//                ->nullable(),
 
             KeyValue::make('Характеристики', 'properties')
                 ->hideFromIndex()

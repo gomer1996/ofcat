@@ -7,7 +7,6 @@
             <div class="catalog_menu_dropdown">
                 <div class="dropdown_wrapper">
                     <ul class="catalog_menu_list">
-                        {{--            todo provide links            --}}
                         @foreach($categories as $category)
                             <li class="catalog_menu_item">
                                 <a href="{{ route('categories.index', $category) }}" class="catalog_menu_item_link">{{ $category->name }}</a>

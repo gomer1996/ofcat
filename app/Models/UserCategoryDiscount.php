@@ -13,7 +13,7 @@ class UserCategoryDiscount extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->where('type', 'person');
     }
 
     public function category(): BelongsTo

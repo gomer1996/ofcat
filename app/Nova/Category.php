@@ -2,6 +2,8 @@
 
 namespace App\Nova;
 
+use App\Nova\Actions\ExportCategories;
+use App\Nova\Actions\ImportCategories;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
@@ -150,7 +152,10 @@ class Category extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            ExportCategories::make()->standalone(),
+            ImportCategories::make()->standalone(),
+        ];
     }
 
     /**

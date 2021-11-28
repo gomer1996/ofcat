@@ -2,6 +2,8 @@
 
 namespace App\Jobs;
 
+use App\Integrations\Relef\SyncRelefCategories;
+use App\Integrations\Relef\SyncRelefProducts;
 use App\Integrations\Samson\SyncSamsonCategories;
 use App\Integrations\Samson\SyncSamsonProducts;
 use Illuminate\Bus\Queueable;
@@ -34,5 +36,8 @@ class RunIntegrations implements ShouldQueue
     {
         (new SyncSamsonCategories)();
         (new SyncSamsonProducts)();
+
+        (new SyncRelefCategories())();
+        (new SyncRelefProducts)();
     }
 }

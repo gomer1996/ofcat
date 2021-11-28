@@ -34,28 +34,33 @@ class SyncRelefProducts
                     ->orderBy('level', 'desc')
                     ->first();
 
-                if (!$category || !$product["prices"][2]["value"]) continue;
+                if (!$category || !($product["prices"][2]["value"] ?? null)) continue;
 
                 $found = Product::where(['outer_id' => $product["guid"], 'integration' => 'relef'])->first();
 
                 $body = [
                     "name" => $product["name"],
                     "outer_id" => $product["guid"],
-                    "price" => $product["prices"][0]["value"] || 0,
-                    "brand" => $product["brand"]["name"],
-                    //"code" => $product["code"], todo conflicts with samson sku
+                    "price" => $product["prices"][2]["value"] ?? 0,
+                    "brand" => $product["brand"]["name"] ?? null,
+                    "code" => $product["code"],
                     "integration_category_id" => $category->id,
                     "description" => $product["description"],
-                    "manufacturer" => $product["manufacturer"]["name"],
-//                    "weight" => $product["weight"], todo see
-//                    "volume" => $product["volume"],
-//                    "vendor_code" => $product["vendorCode"] ? $product["vendorCode"] : null,
+                    "manufacturer" => $product["manufacturer"]["name"] ?? null,
+                    "weight" => $product["weight"],
+                    "volume" => $product["volume"],
+                    "vendor_code" => $product["vendorCode"] ?? null,
                     "properties" => $product["properties"] ? $this->parseProperties($product["properties"]) : null,
-                    "integration" => "relef"
+                    "integration" => "relef",
+                    "stock" => $this->getStock('Новосибирск', $product["remains"])
                 ];
                 if ($found) {
                     $found->update($body);
                 } else {
+                    $found = Product::where('vendor_code', $product["vendorCode"])->first();
+
+                    if ($found) continue;
+
                     $newProduct = Product::create($body);
 
                     if (count($product["images"])) {
@@ -83,5 +88,18 @@ class SyncRelefProducts
         }
 
         return $properties;
+    }
+
+    private function getStock(string $key = '', array $stock = [])
+    {
+        $found = null;
+
+        foreach($stock as $s){
+            if ($s["store"] == $key) $found = $s;
+        }
+        if ($found && $found["quantity"]) {
+            return $found["quantity"];
+        }
+        return 0;
     }
 }

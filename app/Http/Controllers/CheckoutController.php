@@ -30,11 +30,11 @@ class CheckoutController extends Controller
         if (Auth::user()) $request->request->add(['user_id' => Auth::user()->id]);
         $request->request->add(['cart' => $cart->toJson()]);
         $request->request->add(['price' => CartHelper::getTotalWithDelivery()]);
-        $request->request->add(['discount' => Cart::discount()]);
+        $request->request->add(['discount' => floatval(Cart::discount(2, '.', ''))]);
 
         if (Order::create($request->all())) {
+            NewOrder::dispatch(Auth::user());
             Cart::destroy();
-            NewOrder::dispatch();
             return redirect()->route('checkout.success');
         }
         return view('checkout.index')->with('status', 'Что-то пошло не так');

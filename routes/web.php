@@ -1,11 +1,13 @@
 <?php
 
+use App\Exports\CategoryExport;
 use App\Integrations\Relef\SyncRelefProducts;
 use App\Integrations\Samson\SyncSamsonCategories;
 use App\Integrations\Samson\SyncSamsonProducts;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
+use Maatwebsite\Excel\Facades\Excel;
 
 /*
 |--------------------------------------------------------------------------
@@ -97,13 +99,12 @@ Route::get('/selections/{category}', [\App\Http\Controllers\ProductSelectionCate
     ->name('selections.index');
 
 Route::get('/cron/run', function(){
-//    (new SyncSamsonCategories)();
-    //(new SyncSamsonProducts)();
-    //(new \App\Integrations\Relef\SyncRelefCategories)();
-    (new \App\Integrations\Relef\SyncRelefProducts)();
-    //Mail::to('nasipkaliev96@gmail.com')->send(new \App\Mail\OrderConfirmMail());
-//    \App\Jobs\RunIntegrations::dispatch();
+
+    \App\Jobs\RunIntegrations::dispatch();
 });
 
+Route::get('/download/excel/category', function() {
+    return Excel::download(new CategoryExport, 'categories.xlsx');
+})->middleware('auth')->name('download.excel.category');
 
 require __DIR__.'/auth.php';

@@ -23,7 +23,7 @@ class NewOrder
      * @param User $user
      * @return void
      */
-    public function __construct(User $user)
+    public function __construct(?User $user)
     {
         $this->user = $user;
     }

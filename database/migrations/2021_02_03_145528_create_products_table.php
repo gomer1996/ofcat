@@ -27,15 +27,15 @@ class CreateProductsTable extends Migration
             $table->boolean('is_active')->default(1);
             $table->string('barcode')->nullable();
             $table->string('vendor_code')->nullable();
-//            $table->string('relef_guid')->unique()->nullable(); todo del
-//            $table->bigInteger('samson_sku')->unique()->nullable();
-            $table->string('outer_id')->unique()->nullable();
+            $table->string('outer_id')->nullable();
             $table->foreignId('integration_category_id')->nullable()->constrained();
             $table->enum('integration', ['samson', 'relef'])->nullable();
             $table->json('properties')->nullable();
 
             $table->boolean('is_hit')->default(false);
             $table->boolean('is_new')->default(false);
+            $table->boolean('ignore_tax')->default(false);
+            $table->bigInteger('stock')->default(0);
 
             $table->timestamps();
 

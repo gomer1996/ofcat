@@ -23,14 +23,7 @@
                     </td>
                     @endforeach
 
-                    <td  class="news_right subscr">
-                        <p>ХОТИТЕ ПЛАТИТЬ<br />МЕНЬШЕ?</P>
-                        <form name="subscription" action="#" method="post">
-                            <p><input type="text" name="Name" placeholder="Ваше имя" /></p>
-                            <p><input type="email" name="email" required="required" placeholder="Ваш e-mail" /></p>
-                            <p><input type="submit" name="subscription" value="ПОДПИШУСЬ Я НА РАССЫЛКУ КОТА" /></p>
-                        </form>
-                    </td>
+                    <livewire:newsletter-form />
                 </tr>
             </table>
         </article>

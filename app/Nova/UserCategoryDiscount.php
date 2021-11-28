@@ -17,10 +17,12 @@ class UserCategoryDiscount extends Resource
     use CommonTrait;
 
     private $categories;
+    private $users;
 
     public function __construct($resource)
     {
         $this->categories = \App\Models\Category::whereIn('level', ['3', '4'])->get();
+        $this->users = \App\Models\User::where('type', 'company')->get();
         parent::__construct($resource);
     }
 
@@ -58,13 +60,27 @@ class UserCategoryDiscount extends Resource
         return [
             ID::make(__('ID'), 'id')->sortable(),
 
-            BelongsTo::make('Пользователь', 'user', 'App\Nova\User')
+//            BelongsTo::make('Пользователь', 'user', 'App\Nova\User')
+//                ->rules('required', function($attribute, $value, $fail) use ($request){
+//                    $exists = UCDModel::where(['user_id' => $value, 'category_id' => $request->category_id])->exists();
+//                    if ($exists) {
+//                        return $fail('Для этого пользователя уже есть скидка на эту категории');
+//                    }
+//                })->readonly(function($request) {
+//                    return $request->isUpdateOrUpdateAttachedRequest();
+//                }),
+
+            Select::make('Пользователь', 'user_id')->options(
+                $this->users->pluck('name', 'id')
+            )->searchable()
+                ->displayUsingLabels()
                 ->rules('required', function($attribute, $value, $fail) use ($request){
                     $exists = UCDModel::where(['user_id' => $value, 'category_id' => $request->category_id])->exists();
                     if ($exists) {
                         return $fail('Для этого пользователя уже есть скидка на эту категории');
                     }
-                })->readonly(function($request) {
+                })
+                ->readonly(function($request) {
                     return $request->isUpdateOrUpdateAttachedRequest();
                 }),
 
@@ -72,7 +88,7 @@ class UserCategoryDiscount extends Resource
                 $this->categories->pluck('name', 'id')
             )->searchable()
                 ->displayUsingLabels()
-                ->rules('required')
+                ->nullable()
                 ->readonly(function($request) {
                     return $request->isUpdateOrUpdateAttachedRequest();
                 }),

@@ -39,7 +39,10 @@ class ProductController extends Controller
         $searchString = request()->get('q');
 
         return view('product.search-results', [
-            'products' => Product::whereNotNull('products.category_id')->where('products.name', 'like', "%$searchString%")->limit(10)->get()
+            'products' => Product::whereNotNull('products.category_id')
+                ->where('products.name', 'like', "%$searchString%")
+                ->orWhere('products.vendor_code', $searchString)
+                ->limit(10)->get()
         ]);
     }
 }
