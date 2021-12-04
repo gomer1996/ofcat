@@ -5,6 +5,7 @@ namespace App\Integrations\Samson;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 
 class SyncSamsonProducts { //&pagination_page=0
@@ -22,45 +23,50 @@ class SyncSamsonProducts { //&pagination_page=0
 
         if ($data) {
             foreach ($data["data"] as $sku) {
-                $found = Product::where(['outer_id' => $sku["sku"], 'integration' => 'samson'])->first();
+                try {
+                    $found = Product::where(['outer_id' => $sku["sku"], 'integration' => 'samson'])->first();
 
-                $category = Category::whereIn('samson_id', $sku["category_list"])->orderBy('level', 'desc')->first();
+                    $category = Category::whereIn('samson_id', $sku["category_list"])->orderBy('level', 'desc')->first();
 
-                if (!$category || !($sku["price_list"][0]["value"] ?? null)) continue;
+                    if (!$category || !($sku["price_list"][0]["value"] ?? null)) continue;
 
-                $body = [
-                    "name" => $sku["name"],
-                    "outer_id" => $sku["sku"],
-                    "price" => $sku["price_list"][0]["value"] ?? 0,
-                    "brand" => $sku["brand"],
-                    "code" => $sku["sku"],
-                    "category_id" => $category->id,
-                    "description" => $sku["description"],
-                    "manufacturer" => $sku["manufacturer"],
-                    "weight" => $sku["weight"],
-                    "volume" => $sku["volume"],
-                    "barcode" => $sku["barcode"] ?? null,
-                    "vendor_code" => $sku["vendor_code"] ?? null,
-                    "properties" => $sku["facet_list"] ? $this->parseProperties($sku["facet_list"]) : null,
-                    "integration" => "samson",
-                    "stock" => $this->getStock("idp", $sku["stock_list"])
-                ];
-                if ($found) {
-                    $found->update($body);
-                } else {
-                    $found = Product::where('vendor_code', $sku["vendor_code"])
-                        ->orWhere('barcode', $sku["barcode"])
-                        ->first();
+                    $body = [
+                        "name" => $sku["name"],
+                        "outer_id" => $sku["sku"],
+                        "price" => $sku["price_list"][0]["value"] ?? 0,
+                        "brand" => $sku["brand"],
+                        "code" => $sku["sku"],
+                        "category_id" => $category->id,
+                        "description" => $sku["description"],
+                        "manufacturer" => $sku["manufacturer"],
+                        "weight" => $sku["weight"],
+                        "volume" => $sku["volume"],
+                        "barcode" => $sku["barcode"] ?? null,
+                        "vendor_code" => $sku["vendor_code"] ?? null,
+                        "properties" => $sku["facet_list"] ? $this->parseProperties($sku["facet_list"]) : null,
+                        "integration" => "samson",
+                        "stock" => $this->getStock("idp", $sku["stock_list"])
+                    ];
+                    if ($found) {
+                        $found->update($body);
+                    } else {
+                        $found = Product::where('vendor_code', $sku["vendor_code"])
+                            ->orWhere('barcode', $sku["barcode"])
+                            ->first();
 
-                    if ($found) continue;
+                        if ($found) continue;
 
-                    $product = Product::create($body);
+                        $product = Product::create($body);
 
-                    if (count($sku["photo_list"])) {
-                        foreach ($sku["photo_list"] as $url) {
-                            $product->addMediaFromUrl($url)->toMediaCollection('product_media_collection');
+                        if (count($sku["photo_list"])) {
+                            foreach ($sku["photo_list"] as $url) {
+                                $product->addMediaFromUrl($url)->toMediaCollection('product_media_collection');
+                            }
                         }
                     }
+                } catch (\Exception $e) {
+                    Log::error('Samson product sync error msg: ' . $e->getMessage() . serialize($sku));
+                    continue;
                 }
             }
         }

@@ -1,11 +1,7 @@
 <?php
 
 use App\Exports\CategoryExport;
-use App\Integrations\Relef\SyncRelefProducts;
-use App\Integrations\Samson\SyncSamsonCategories;
-use App\Integrations\Samson\SyncSamsonProducts;
-use Gloudemans\Shoppingcart\Facades\Cart;
-use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
 

@@ -4,6 +4,7 @@ namespace App\Integrations\Relef;
 
 use App\Models\IntegrationCategory;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class SyncRelefCategories
 {
@@ -29,22 +30,27 @@ class SyncRelefCategories
 
         if ($data) {
             foreach ($data["list"] as $category) {
-                $found = IntegrationCategory::where([
-                    "integration" => "relef",
-                    "outer_id" => $category["guid"]
-                ])->first();
+                try {
+                    $found = IntegrationCategory::where([
+                        "integration" => "relef",
+                        "outer_id" => $category["guid"]
+                    ])->first();
 
-                $body = [
-                    "name" => $category["name"],
-                    "level" => $category["level"],
-                    "outer_id" => $category["guid"],
-                    "outer_parent_id" => $category["parentGuid"] ?? null,
-                    "integration" => "relef"
-                ];
-                if ($found) {
-                    $found->update($body);
-                } else {
-                    IntegrationCategory::create($body);
+                    $body = [
+                        "name" => $category["name"],
+                        "level" => $category["level"],
+                        "outer_id" => $category["guid"],
+                        "outer_parent_id" => $category["parentGuid"] ?? null,
+                        "integration" => "relef"
+                    ];
+                    if ($found) {
+                        $found->update($body);
+                    } else {
+                        IntegrationCategory::create($body);
+                    }
+                } catch (\Exception $e) {
+                    Log::error('Relef category sync error msg: ' . $e->getMessage() . serialize($category));
+                    continue;
                 }
             }
         }

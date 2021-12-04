@@ -2,10 +2,6 @@
 
 namespace App\Jobs;
 
-use App\Integrations\Relef\SyncRelefCategories;
-use App\Integrations\Relef\SyncRelefProducts;
-use App\Integrations\Samson\SyncSamsonCategories;
-use App\Integrations\Samson\SyncSamsonProducts;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,7 +9,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class RunIntegrations implements ShouldQueue
+class SyncSamsonProductsJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -34,6 +30,6 @@ class RunIntegrations implements ShouldQueue
      */
     public function handle()
     {
-
+        (new \App\Integrations\Samson\SyncSamsonProducts)();
     }
 }

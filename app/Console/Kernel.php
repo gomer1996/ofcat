@@ -2,10 +2,13 @@
 
 namespace App\Console;
 
+use App\Jobs\SyncRelefCategoriesJob;
+use App\Jobs\SyncRelefProductsJob;
+use App\Jobs\SyncSamsonCategoriesJob;
+use App\Jobs\SyncSamsonProductsJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use Laravel\Nova\Trix\PruneStaleAttachments;
-use App\Integrations\Relef\SyncRelefProducts;
 
 class Kernel extends ConsoleKernel
 {
@@ -31,8 +34,14 @@ class Kernel extends ConsoleKernel
         })->daily();
 
         $schedule->call(function () {
-          \App\Jobs\RunIntegrations::dispatch();
-        })->dailyAt('03:00');
+          SyncSamsonCategoriesJob::dispatch();
+
+          SyncSamsonProductsJob::dispatch();
+
+          SyncRelefCategoriesJob::dispatch();
+
+          SyncRelefProductsJob::dispatch();
+        })->dailyAt('22:35');
     }
 
     /**
