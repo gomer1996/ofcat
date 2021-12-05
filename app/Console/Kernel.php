@@ -41,7 +41,7 @@ class Kernel extends ConsoleKernel
           SyncRelefCategoriesJob::dispatch();
 
           SyncRelefProductsJob::dispatch();
-        })->dailyAt('22:35');
+        })->dailyAt('22:10');
     }
 
     /**

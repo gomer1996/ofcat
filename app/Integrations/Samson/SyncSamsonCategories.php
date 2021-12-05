@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 
 class SyncSamsonCategories
 {
-    private $url = 'https://api.samsonopt.ru/v1/category/?api_key=60769b17043981a854f4d6ac667e5ac5&pagination_count=100';
+    private $url = 'https://api.samsonopt.ru/v1/category/?api_key=60769b17043981a854f4d6ac667e5ac5&pagination_count=10';
 
     /**
      * Prune the stale attachments from the system.
@@ -64,7 +64,7 @@ class SyncSamsonCategories
     private function setParentIds()
     {
         Category::whereNotNull('samson_id')
-            ->chunkById(100, function ($categories) {
+            ->chunkById(10, function ($categories) {
                 foreach ($categories as $category) {
                     try {
                         if ($category->samson_parent_id !== 0) {

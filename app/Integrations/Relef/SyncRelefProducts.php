@@ -22,7 +22,7 @@ class SyncRelefProducts
         $res = Http::withHeaders([
             "apikey" => "f9f84dcf7bd647389500dc3ee23d6a25"
         ])->post($url, [
-            "limit" => 100,
+            "limit" => 5,
             "offset" => $this->offset
         ]);
 
@@ -32,7 +32,7 @@ class SyncRelefProducts
             foreach ($data["list"] as $product) {
                 try {
                     $category = IntegrationCategory::where('integration', 'relef')
-                        ->whereIn('outer_id', $product["sections"])
+                        ->whereIn('outer_id', $product["sections"] ?? [])
                         ->orderBy('level', 'desc')
                         ->first();
 
