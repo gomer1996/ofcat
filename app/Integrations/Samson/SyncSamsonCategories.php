@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Storage;
 
 class SyncSamsonCategories
 {
-    private $url = 'https://api.samsonopt.ru/v1/category/?api_key=60769b17043981a854f4d6ac667e5ac5&pagination_count=10';
+    private $url = 'https://api.samsonopt.ru/v1/category/?api_key=60769b17043981a854f4d6ac667e5ac5&pagination_count=100';
 
     /**
      * Prune the stale attachments from the system.
@@ -57,6 +57,7 @@ class SyncSamsonCategories
         }
 
         if (isset($data["meta"]["pagination"]["next"])) {
+            usleep( 2 * 1000 );
             $this->syncCategories($data["meta"]["pagination"]["next"]);
         }
     }
