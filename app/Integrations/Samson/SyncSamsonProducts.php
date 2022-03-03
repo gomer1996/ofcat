@@ -3,6 +3,7 @@
 namespace App\Integrations\Samson;
 
 use App\Models\Category;
+use App\Models\LinkedCategory;
 use App\Models\Product;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -26,7 +27,14 @@ class SyncSamsonProducts { //&pagination_page=0
                 try {
                     $found = Product::where(['outer_id' => $sku["sku"], 'integration' => 'samson'])->first();
 
-                    $category = Category::whereIn('samson_id', $sku["category_list"])->orderBy('level', 'desc')->first();
+                    $categoriesIds = $sku["category_list"];
+                    $mainCategoryId = $categoriesIds[0] ?? null;
+
+                    if (!$mainCategoryId) {
+                        continue;
+                    }
+
+                    $category = Category::where('samson_id', $mainCategoryId)->first();
 
                     if (!$category || !($sku["price_list"][0]["value"] ?? null)) continue;
 
@@ -64,6 +72,8 @@ class SyncSamsonProducts { //&pagination_page=0
                             }
                         }
                     }
+                    $this->updateLinkedCategories($category, $categoriesIds);
+
                 } catch (\Exception $e) {
                     Log::error('Samson product sync error msg: ' . $e->getMessage() . serialize($sku));
                     continue;
@@ -99,5 +109,31 @@ class SyncSamsonProducts { //&pagination_page=0
             return $found["value"];
         }
         return 0;
+    }
+
+    private function updateLinkedCategories(Category $category, $categoriesIds): void
+    {
+        array_shift($categoriesIds);
+        if (!count($categoriesIds)) {
+            return;
+        }
+        $categories = Category::whereIn('samson_id', $categoriesIds)->get();
+
+        $cats = LinkedCategory::where('category_id', $category->id)
+            ->whereIn('linked_category_id', $categories->pluck('id')->all())
+            ->select('id')
+            ->get();
+
+        $newCategoriesIds = array_diff($categories->pluck('id')->all(), $cats->pluck('id')->all());
+        foreach ($newCategoriesIds as $newCategoryId) {
+            LinkedCategory::create([
+                'category_id' => $category->id,
+                'linked_category_id' => $newCategoryId
+            ]);
+        }
+
+        Category::whereIn('samson_id', $categoriesIds)->update([
+            'is_link' => true
+        ]);
     }
 }
