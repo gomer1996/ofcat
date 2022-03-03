@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Log;
 
 
 class SyncSamsonProducts { //&pagination_page=0
-    private $url = "https://api.samsonopt.ru/v1/sku/190892?api_key=60769b17043981a854f4d6ac667e5ac5&pagination_count=5";
+    private $url = "https://api.samsonopt.ru/v1/sku/190892?api_key=60769b17043981a854f4d6ac667e5ac5&pagination_count=50";
 
     public function __invoke()
     {
@@ -72,6 +72,7 @@ class SyncSamsonProducts { //&pagination_page=0
         }
 
         if (isset($data["meta"]["pagination"]["next"])) {
+            usleep( 2 * 1000 );
             $this->syncProducts($data["meta"]["pagination"]["next"]);
         }
     }
