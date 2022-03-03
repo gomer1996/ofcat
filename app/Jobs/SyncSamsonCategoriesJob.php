@@ -20,7 +20,7 @@ class SyncSamsonCategoriesJob implements ShouldQueue
      */
     public function __construct()
     {
-        //
+        // constructor
     }
 
     /**
