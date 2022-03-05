@@ -5,6 +5,7 @@ namespace App\Integrations\Samson;
 use App\Models\Category;
 use App\Models\LinkedCategory;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -25,8 +26,6 @@ class SyncSamsonProducts { //&pagination_page=0
         if ($data) {
             foreach ($data["data"] as $sku) {
                 try {
-                    $found = Product::where(['outer_id' => $sku["sku"], 'integration' => 'samson'])->first();
-
                     $categoriesIds = $sku["category_list"];
                     $mainCategoryId = $categoriesIds[0] ?? null;
 
@@ -38,31 +37,18 @@ class SyncSamsonProducts { //&pagination_page=0
 
                     if (!$category || !($sku["price_list"][0]["value"] ?? null)) continue;
 
-                    $body = [
-                        "name" => $sku["name"],
-                        "outer_id" => $sku["sku"],
-                        "price" => $sku["price_list"][0]["value"] ?? 0,
-                        "brand" => $sku["brand"],
-                        "code" => $sku["sku"],
-                        "category_id" => $category->id,
-                        "description" => $sku["description"],
-                        "manufacturer" => $sku["manufacturer"],
-                        "weight" => $sku["weight"],
-                        "volume" => $sku["volume"],
-                        "barcode" => $sku["barcode"] ?? null,
-                        "vendor_code" => $sku["vendor_code"] ?? null,
-                        "properties" => $sku["facet_list"] ? $this->parseProperties($sku["facet_list"]) : null,
-                        "integration" => "samson",
-                        "stock" => $this->getStock("idp", $sku["stock_list"])
-                    ];
-                    if ($found) {
-                        $found->update($body);
+                    $body = $this->buildBody($sku, $category);
+
+                    $existingProduct = Product::where(['outer_id' => $sku["sku"], 'integration' => 'samson'])->first();
+
+                    if ($existingProduct) {
+                        $existingProduct->update($body);
                     } else {
-                        $found = Product::where('vendor_code', $sku["vendor_code"])
+                        $existingProduct = Product::where('vendor_code', $sku["vendor_code"])
                             ->orWhere('barcode', $sku["barcode"])
                             ->first();
 
-                        if ($found) continue;
+                        if ($existingProduct) continue;
 
                         $product = Product::create($body);
 
@@ -75,7 +61,7 @@ class SyncSamsonProducts { //&pagination_page=0
                     $this->updateLinkedCategories($category, $categoriesIds);
 
                 } catch (\Exception $e) {
-                    Log::error('Samson product sync error msg: ' . $e->getMessage() . serialize($sku));
+                    Log::error('Samson product sync error msg: ' . $e->getMessage() . json_encode($sku));
                     continue;
                 }
             }
@@ -111,29 +97,82 @@ class SyncSamsonProducts { //&pagination_page=0
         return 0;
     }
 
-    private function updateLinkedCategories(Category $category, $categoriesIds): void
+    private function updateLinkedCategories(Category $category, array $samsonCategoriesIds): void
     {
-        array_shift($categoriesIds);
-        if (!count($categoriesIds)) {
+        // we cut the first because we assume that first category is main and others are linked categories
+        array_shift($samsonCategoriesIds);
+        if (!count($samsonCategoriesIds)) {
             return;
         }
-        $categories = Category::whereIn('samson_id', $categoriesIds)->get();
+        $categories = Category::whereIn('samson_id', $samsonCategoriesIds)->get();
+        // we should add to LinkedCategory other categories from categoriesIds
+        foreach ($samsonCategoriesIds as $id) {
+            $cat = Category::where('samson_id', $id)->first();
 
-        $cats = LinkedCategory::where('category_id', $category->id)
-            ->whereIn('linked_category_id', $categories->pluck('id')->all())
-            ->select('id')
-            ->get();
+            if (!$cat) {
+                continue;
+            }
 
-        $newCategoriesIds = array_diff($categories->pluck('id')->all(), $cats->pluck('id')->all());
-        foreach ($newCategoriesIds as $newCategoryId) {
-            LinkedCategory::create([
-                'category_id' => $category->id,
-                'linked_category_id' => $newCategoryId
-            ]);
+            $data = [
+                'category_id' => $category->getAttribute('id'),
+                'linked_category_id' => $cat->getAttribute('id')
+            ];
+            LinkedCategory::updateOrCreate($data, $data);
         }
 
-        Category::whereIn('samson_id', $categoriesIds)->update([
+        $this->setCategoriesAsLinked($samsonCategoriesIds, $categories);
+    }
+
+    private function buildBody(array $sku, Category $category): array
+    {
+        return [
+            "name" => $sku["name"],
+            "outer_id" => $sku["sku"],
+            "price" => $sku["price_list"][0]["value"] ?? 0,
+            "brand" => $sku["brand"],
+            "code" => $sku["sku"],
+            "category_id" => $category->getAttribute('id'),
+            "description" => $sku["description"],
+            "manufacturer" => $sku["manufacturer"],
+            "weight" => $sku["weight"],
+            "volume" => $sku["volume"],
+            "barcode" => $sku["barcode"] ?? null,
+            "vendor_code" => $sku["vendor_code"] ?? null,
+            "properties" => $sku["facet_list"] ? $this->parseProperties($sku["facet_list"]) : null,
+            "integration" => "samson",
+            "stock" => $this->getStock("idp", $sku["stock_list"])
+        ];
+    }
+
+    /**
+     * @param array $samsonCategoriesIds
+     * @param Collection $categories
+     */
+    private function setCategoriesAsLinked(array $samsonCategoriesIds, Collection $categories): void
+    {
+        Category::whereIn('samson_id', $samsonCategoriesIds)->update([
             'is_link' => true
         ]);
+
+        foreach ($categories as $category) {
+            $this->setParentCategoriesAsLinked($category);
+        }
+    }
+
+    private function setParentCategoriesAsLinked(Category $category): void
+    {
+        $parentCategory = Category::where([
+            'id' => $category->getAttribute('parent_id'),
+            'is_link' => false
+        ])->first();
+
+        if ($parentCategory) {
+            $parentCategory->setAttribute('is_link', true);
+            $parentCategory->save();
+
+            if ($parentCategory->getAttribute('parent_id')) {
+                $this->setParentCategoriesAsLinked($parentCategory);
+            }
+        }
     }
 }

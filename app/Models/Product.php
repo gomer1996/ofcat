@@ -62,6 +62,20 @@ class Product extends Model implements HasMedia
         $this->addMediaCollection('product_media_collection');
     }
 
+    public function getLink(?Category $linkedCategory = null): string
+    {
+        $params = [$this->getAttribute('id')];
+
+        if ($linkedCategory) {
+            $params['cat'] = $linkedCategory->getAttribute('id');
+        }
+
+        return route(
+            'products.show',
+            $params
+        );
+    }
+
     //---------------------------------------------------------------------------------------------------------
 
     public static function getUniqueBrands($categoryId)

@@ -8,7 +8,7 @@
             </td>
             <td class="tovgoz" rowspan="2" style="width: 700px">
                 <p>
-                    <a href="{{ route('products.show', $product->id) }}">{{ $product->name }}</a>
+                    <a href="{{ $product->getLink($linkedCategory) }}">{{ $product->name }}</a>
                 </p>
                 <p class="kod">Код {{ $product->code }}</p>
                 <div>
@@ -38,7 +38,7 @@
         <tr>
             <td  class="imagesgoz" style="width: 130px">
                 <div>
-                    <a href="{{ route('products.show', $product->id) }}">
+                    <a href="{{ $product->getLink($linkedCategory) }}">
                         <img src="{{ $product->thumbnail }}" style="width: 100px; height: auto" alt="Товар" />
                     </a>
                 </div>

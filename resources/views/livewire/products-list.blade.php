@@ -70,7 +70,12 @@
                     @foreach($products->chunk($chunkCount) as $chunk)
                         <tr>
                             @foreach($chunk as $product)
-                                <livewire:product-intro :viewType="$viewType" :product="$product" :key="time().$product->id" />
+                                <livewire:product-intro
+                                    :viewType="$viewType"
+                                    :product="$product"
+                                    :key="time().$product->id"
+                                    :linkedCategory="$linkedCategory"
+                                />
                             @endforeach
                         </tr>
                         @if(!$loop->last)

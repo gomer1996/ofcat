@@ -41,4 +41,23 @@ class Category extends Model
     {
         return $this->hasMany(Product::class);
     }
+
+    /**
+     * @return BelongsTo
+     */
+    public function linkedCategory(): BelongsTo
+    {
+        return $this->belongsTo(LinkedCategory::class, 'id', 'linked_category_id');
+    }
+
+    /**
+     * @param Category $category
+     * @return $this
+     */
+    public function getLinkedCategory(Category $category): self
+    {
+        $category->load('linkedCategory', 'linkedCategory.category');
+
+        return $category->getRelation('linkedCategory')->getRelation('category');
+    }
 }

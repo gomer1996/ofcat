@@ -11,7 +11,7 @@
             <td class="images" colspan="2">
 {{--                <div style="max-width: 300px; overflow: hidden; margin: auto;">--}}
                 <div>
-                    <a href="{{ route('products.show', $product->id) }}">
+                    <a href="{{ $product->getLink($linkedCategory) }}">
                         <img src="{{ $product->thumbnail }}" alt="Товар" />
                     </a>
                 </div>
@@ -20,7 +20,7 @@
         <tr>
             <td class="tov" colspan="2">
                 <p>
-                    <a href="{{ route('products.show', $product->id) }}">{{ $product->name }}</a>
+                    <a href="{{ $product->getLink($linkedCategory) }}">**{{ $product->name }}</a>
                 </p>
                 <p class="kod">Код {{ $product->code }}</p>
             </td>

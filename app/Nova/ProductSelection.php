@@ -45,7 +45,7 @@ class ProductSelection extends Resource
         return [
             ID::make(__('ID'), 'id')->sortable(),
 
-            BelongsTo::make('Продукт', 'product', 'App\Nova\Product')->sortable(),
+            BelongsTo::make('Продукт', 'product', 'App\Nova\Product')->searchable(),
 
             BelongsTo::make('Категория', 'productSelectionCategory', 'App\Nova\ProductSelectionCategory')->sortable()
         ];

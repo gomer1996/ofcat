@@ -12,6 +12,7 @@ class ProductIntro extends Component
     public $cartQty = 1;
     public $viewType;
     public $productCalculatedPrice;
+    public $linkedCategory;
 
     public function mount()
     {
@@ -44,7 +45,8 @@ class ProductIntro extends Component
         return view("livewire.{$view}", [
             'product' => $this->product,
             'viewType' => $this->viewType,
-            'productCalculatedPrice' => $this->productCalculatedPrice
+            'productCalculatedPrice' => $this->productCalculatedPrice,
+            'linkedCategory' => $this->linkedCategory
         ]);
     }
 }

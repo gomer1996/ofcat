@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Mail\OrderConfirmMail;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\Settings;
 use Illuminate\Http\Request;
@@ -11,21 +12,21 @@ use Illuminate\Support\Facades\Mail;
 
 class ProductController extends Controller
 {
-    public function show($id)
+    public function show($id, Request $request)
     {
         $product = Product::where('products.id', $id)->firstOrFail();
         $settings = Settings::first();
 
-        $category = $product->category;
+        $category = $request->get('cat')
+            ? Category::find($request->get('cat'))
+            : $product->category;
 
-        $category->load('parent.parent.parent');
-
-        $breadcrumbs = [
+        $breadcrumbs = $category ? [
             $category->parent && $category->parent->parent ? $category->parent->parent->parent : null,
             $category->parent ? $category->parent->parent : null,
             $category->parent,
             $category
-        ];
+        ] : [];
 
         return view('product.single', [
             'product' => $product,

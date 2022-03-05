@@ -12,6 +12,8 @@ class ProductsList extends Component
 
     public $category;
 
+    public $linkedCategory;
+
     public $sort = 'price_asc';
 
     public $type = 'block';
@@ -76,10 +78,11 @@ class ProductsList extends Component
 
         return view('livewire.products-list', [
             'products' => $products,
-            'title' => $this->category->name,
+            'title' => $this->linkedCategory ? $this->linkedCategory->name : $this->category->name,
             'viewType' => $this->type,
             'chunkCount' => $this->type === 'block' ? 3 : 1,
-            'brands' => $this->brands
+            'brands' => $this->brands,
+            'linkedCategory' => $this->linkedCategory
         ]);
     }
 }

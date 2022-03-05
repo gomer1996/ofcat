@@ -19,7 +19,7 @@ class CategoryController extends Controller
             $category
         ];
 
-        if (in_array($category->level, ['1', '2', '3'])) {
+        if (in_array($category->getAttribute('level'), ['1', '2', '3'])) {
 
             $category->load('children.children');
 
@@ -33,6 +33,16 @@ class CategoryController extends Controller
                 'category' => $category,
                 'breadcrumbs' => $breadcrumbs
             ]);
+        }
+
+        if ($category->getAttribute('is_link')) {
+            $category->load('linkedCategory', 'linkedCategory.category');
+            if ($category->getRelation('linkedCategory')->getRelation('category')) {
+                return view('product.category', [
+                    'category' => $category->getRelation('linkedCategory')->getRelation('category'),
+                    'linkedCategory' => $category
+                ]);
+            }
         }
 
         return view('product.category', [
