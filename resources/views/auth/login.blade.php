@@ -11,7 +11,7 @@
                         <p>/</p>
                     </td>
                     <td>
-                        <a href="#">Вход</a>
+                        <a href="{{ route('login') }}">Вход</a>
                     </td>
                 </tr>
             </table>

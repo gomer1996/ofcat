@@ -6,13 +6,13 @@
             <table>
                 <tr>
                     <td>
-                        <a href="#">Главная</a>
+                        <a href="/">Главная</a>
                     </td>
                     <td>
                         <p>/</p>
                     </td>
                     <td>
-                        <a href="#">Новости</a>
+                        <a href="{{ route('news.index') }}">Новости</a>
                     </td>
                     <td>
                         <p>/</p>

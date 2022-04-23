@@ -6,13 +6,13 @@
             <table>
                 <tr>
                     <td>
-                        <a href="#">Главная</a>
+                        <a href="/">Главная</a>
                     </td>
                     <td>
                         <p>/</p>
                     </td>
                     <td>
-                        <a href="#">Моя корзина</a>
+                        <a href="{{ route('cart.index') }}">Моя корзина</a>
                     </td>
                 </tr>
             </table>

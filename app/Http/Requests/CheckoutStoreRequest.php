@@ -41,7 +41,7 @@ class CheckoutStoreRequest extends FormRequest
             'name' => 'required',
             'email' => 'required|email',
             'phone' => 'required',
-            'address' => 'required',
+            'address' => 'required_if|delivery,delivery',
             'company' => 'required_if:user_type,company',
             'user_type' => [
                 'required',

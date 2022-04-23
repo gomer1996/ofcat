@@ -35,7 +35,8 @@ class CategoryController extends Controller
                 }
 
                 return view('product.category', [
-                    'category' => $category
+                    'category' => $category,
+                    'breadcrumbs' => $breadcrumbs
                 ]);
             }
 
@@ -55,8 +56,11 @@ class CategoryController extends Controller
             }
         }
 
+
+
         return view('product.category', [
-            'category' => $category
+            'category' => $category,
+            'breadcrumbs' => $breadcrumbs
         ]);
     }
 

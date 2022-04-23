@@ -41,15 +41,15 @@
             <div class="blocright">
                 <div class="header_mail">
                     <p>Напишите нам:</p>
-                    <p><span>ofcat@gmail.com</span></P>
+                    <p><span>zakaz@ofcat.ru</span></P>
                 </div>
                 <div class="header_tel">
                     <p>Есть вопрос?</p>
-                    <p><span>8-913-000-00-00</span></P>
+                    <p><span>+7 (383) 281-90-01</span></P>
                 </div>
                 <div class="contact_cent">
-                    <a href="#">
-                        <span>ОНЛАЙН-КОНСУЛЬТАНТ</span>
+                    <a href="https://wa.me/79830029001">
+                        <span>Написать в WhatsApp</span>
                     </a>
                 </div>
             </div>

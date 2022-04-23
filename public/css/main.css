@@ -1307,6 +1307,12 @@ input:active{ outline: none; }
 	font-size: 75%;
 	color: #7c7c7c;
 }
+
+.registr_pass a {
+    font-size: 75%;
+    color: #7c7c7c;
+}
+
 .registr_top p {
 	line-height: 1.5;
 	word-wrap: break-word;
@@ -2421,4 +2427,10 @@ input:active{ outline: none; }
     text-align: center;
     border: 1px solid #c4c4c4;
     border-radius: 3px;
+}
+
+.tovstepper__controls button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

@@ -5,13 +5,13 @@
             <table>
                 <tr>
                     <td>
-                        <a href="#">Главная</a>
+                        <a href="/">Главная</a>
                     </td>
                     <td>
                         <p>/</p>
                     </td>
                     <td>
-                        <a href="#">Каталог</a>
+                        <a href="{{ route('categories.all') }}">Каталог</a>
                     </td>
                     <td>
                         <p>/</p>

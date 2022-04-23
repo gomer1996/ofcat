@@ -18,6 +18,8 @@ class ProductsList extends Component
 
     public $type = 'block';
 
+    public $breadcrumbs = [];
+
     private $orderState = [
         "price_asc" => [ "field" => "price", "type" => "ASC" ],
         "price_desc" => [ "field" => "price", "type" => "DESC" ],
@@ -74,7 +76,7 @@ class ProductsList extends Component
         $products = $query->orderBy(
             $this->orderState[$this->sort]["field"],
             $this->orderState[$this->sort]["type"]
-        )->paginate(3);
+        )->paginate(24);
 
         return view('livewire.products-list', [
             'products' => $products,
@@ -82,7 +84,8 @@ class ProductsList extends Component
             'viewType' => $this->type,
             'chunkCount' => $this->type === 'block' ? 3 : 1,
             'brands' => $this->brands,
-            'linkedCategory' => $this->linkedCategory
+            'linkedCategory' => $this->linkedCategory,
+            'breadcrumbs' => $this->breadcrumbs
         ]);
     }
 }

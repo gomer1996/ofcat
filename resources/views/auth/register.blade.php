@@ -8,13 +8,13 @@
             <table>
                 <tr>
                     <td>
-                        <a href="#">Главная</a>
+                        <a href="/">Главная</a>
                     </td>
                     <td>
                         <p>/</p>
                     </td>
                     <td>
-                        <a href="#">Регистрация</a>
+                        <a href="{{ route('register') }}">Регистрация</a>
                     </td>
                 </tr>
             </table>

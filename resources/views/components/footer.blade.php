@@ -14,10 +14,10 @@
                     <p>Интернет-магазин товаров<br />для дома и офиса</p>
                     <div class="footer_social">
                         <a href="#">
-                            <img src="images/hed_vk.png" alt="Вконтакте" />
+                            <img src="/images/hed_vk.png" alt="Вконтакте" />
                         </a>
                         <a class="social_last" href="#">
-                            <img src="images/hed_insta.png" alt="Инстаграмм" />
+                            <img src="/images/hed_insta.png" alt="Инстаграмм" />
                         </a>
                     </div>
                 </td>
