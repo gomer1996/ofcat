@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Product;
+use App\Models\Category;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -17,8 +18,6 @@ class ProductsList extends Component
     public $sort = 'price_asc';
 
     public $type = 'block';
-
-    public $breadcrumbs = [];
 
     private $orderState = [
         "price_asc" => [ "field" => "price", "type" => "ASC" ],
@@ -76,7 +75,7 @@ class ProductsList extends Component
         $products = $query->orderBy(
             $this->orderState[$this->sort]["field"],
             $this->orderState[$this->sort]["type"]
-        )->paginate(24);
+        )->paginate(33);
 
         return view('livewire.products-list', [
             'products' => $products,
@@ -84,8 +83,7 @@ class ProductsList extends Component
             'viewType' => $this->type,
             'chunkCount' => $this->type === 'block' ? 3 : 1,
             'brands' => $this->brands,
-            'linkedCategory' => $this->linkedCategory,
-            'breadcrumbs' => $this->breadcrumbs
+            'linkedCategory' => $this->linkedCategory
         ]);
     }
 }

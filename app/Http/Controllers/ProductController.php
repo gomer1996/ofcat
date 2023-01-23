@@ -42,7 +42,7 @@ class ProductController extends Controller
         return view('product.search-results', [
             'products' => Product::whereNotNull('products.category_id')
                 ->where('products.name', 'like', "%$searchString%")
-                ->orWhere('products.vendor_code', $searchString)
+                ->orWhere('products.code', $searchString)
                 ->limit(10)->get()
         ]);
     }

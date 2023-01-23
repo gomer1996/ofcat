@@ -1,36 +1,5 @@
+<div>
 <div class="cleaner"></div>
-<div id="hornav">
-    <div class="field">
-        <table>
-            <tr>
-                <td>
-                    <a href="/">Главная</a>
-                </td>
-                <td>
-                    <p>/</p>
-                </td>
-                <td>
-                    <a href="{{ route('categories.all') }}">Каталог</a>
-                </td>
-                <td>
-                    <p>/</p>
-                </td>
-                @foreach($breadcrumbs as $cat)
-                    @if($cat)
-                        <td>
-                            <a href="{{ route('categories.index', $cat) }}">{{ $cat->name }}</a>
-                        </td>
-                        @if(!$loop->last)
-                            <td>
-                                <p>/</p>
-                            </td>
-                        @endif
-                    @endif
-                @endforeach
-            </tr>
-        </table>
-    </div>
-</div>
 <div id="productgroup" class="field">
     <div class="subproductgroup">
         <h1>{{ $title }}</h1>
@@ -129,4 +98,5 @@
 
         </div>
     </div>
+</div>
 </div>
