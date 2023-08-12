@@ -2,6 +2,7 @@
 
 namespace App\Nova;
 
+use App\Nova\Actions\ExportProducts;
 use Hubertnnn\LaravelNova\Fields\DynamicSelect\DynamicSelect;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
@@ -16,7 +17,7 @@ use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Ebess\AdvancedNovaMediaLibrary\Fields\Images;
-use function PHPUnit\Framework\isNull;
+use App\Nova\Actions\ImportProducts;
 
 class Product extends Resource
 {
@@ -238,7 +239,10 @@ class Product extends Resource
      */
     public function actions(Request $request)
     {
-        return [];
+        return [
+            ImportProducts::make()->standalone(),
+            ExportProducts::make()->standalone(),
+        ];
     }
 
     public static function fill(NovaRequest $request, $model)

@@ -10,7 +10,10 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 
-class SyncSamsonProducts { //&pagination_page=0
+class SyncSamsonProducts
+{ //&pagination_page=0
+    private $baseUrl = "https://api.samsonopt.ru/";
+    private $apiKey = "e6f2f9ce0d1bfe7ed8a1fd8658921470";
     private $url = "https://api.samsonopt.ru/v1/sku/190892?api_key=60769b17043981a854f4d6ac667e5ac5&pagination_count=50";
 
     public function __invoke()
@@ -68,9 +71,24 @@ class SyncSamsonProducts { //&pagination_page=0
         }
 
         if (isset($data["meta"]["pagination"]["next"])) {
-            usleep( 2 * 1000 );
+            usleep(2 * 1000);
             $this->syncProducts($data["meta"]["pagination"]["next"]);
         }
+    }
+
+    public function fetchSku(string $sku, int $categoryId): void
+    {
+        $url = $this->buildUrl("v1/sku/" . $sku . '/');
+        $res = Http::get($url);
+        $data = $res->json();
+
+        $skuData = $data["data"][0] ?? null;
+
+        if (!$skuData) {
+            return;
+        }
+
+        $this->createOrUpdateProduct($skuData, $categoryId);
     }
 
     public function parseProperties(array $props): array
@@ -88,13 +106,40 @@ class SyncSamsonProducts { //&pagination_page=0
     {
         $found = null;
 
-        foreach($stock as $s){
+        foreach ($stock as $s) {
             if ($s["type"] == $key) $found = $s;
         }
         if ($found && $found["value"]) {
             return $found["value"];
         }
         return 0;
+    }
+
+    private function createOrUpdateProduct(array $sku, int $categoryId): void
+    {
+        $body = $this->buildBody($sku, $categoryId);
+
+        $existingProduct = Product::where(['outer_id' => $sku["sku"], 'integration' => 'samson'])->first();
+
+        if ($existingProduct) {
+            $existingProduct->update($body);
+        } else {
+            $existingProduct = Product::where('vendor_code', $sku["vendor_code"])
+                ->orWhere('barcode', $sku["barcode"])
+                ->first();
+
+            if ($existingProduct) {
+                return;
+            }
+
+            $product = Product::create($body);
+
+            if (count($sku["photo_list"])) {
+                foreach ($sku["photo_list"] as $url) {
+                    $product->addMediaFromUrl($url)->toMediaCollection('product_media_collection');
+                }
+            }
+        }
     }
 
     private function updateLinkedCategories(Category $category, array $samsonCategoriesIds): void
@@ -123,7 +168,7 @@ class SyncSamsonProducts { //&pagination_page=0
         $this->setCategoriesAsLinked($samsonCategoriesIds, $categories);
     }
 
-    private function buildBody(array $sku, Category $category): array
+    private function buildBody(array $sku, int $categoryId): array
     {
         return [
             "name" => $sku["name"],
@@ -131,7 +176,7 @@ class SyncSamsonProducts { //&pagination_page=0
             "price" => $sku["price_list"][0]["value"] ?? 0,
             "brand" => $sku["brand"],
             "code" => $sku["sku"],
-            "category_id" => $category->getAttribute('id'),
+            "category_id" => $categoryId,
             "description" => $sku["description"],
             "manufacturer" => $sku["manufacturer"],
             "weight" => $sku["weight"],
@@ -174,5 +219,15 @@ class SyncSamsonProducts { //&pagination_page=0
                 $this->setParentCategoriesAsLinked($parentCategory);
             }
         }
+    }
+
+    private function buildUrl(string $url, string $queryParams = ''): string
+    {
+        return sprintf(
+            $this->baseUrl . '%s?api_key=%s%s',
+            $url,
+            $this->apiKey,
+            $queryParams
+        );
     }
 }

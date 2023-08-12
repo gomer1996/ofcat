@@ -85,6 +85,60 @@ class SyncRelefProducts
         }
     }
 
+    public function fetchProduct(string $guid, int $categoryId): void
+    {
+        $res = Http::withHeaders([
+            "apikey" => "f9f84dcf7bd647389500dc3ee23d6a25"
+        ])->post($this->url, [
+            "filter" => [
+              "guid" => $guid
+            ],
+            "limit" => 1
+        ]);
+
+        $data = $res->json();
+
+        $product = $data["list"][0] ?? null;
+
+        if (!$product) {
+            return;
+        }
+
+        $found = Product::where(['outer_id' => $product["guid"], 'integration' => 'relef'])->first();
+
+        $body = [
+            "name" => $product["name"],
+            "outer_id" => $product["guid"],
+            "price" => $product["prices"][0]["value"] ?? 0,
+            "brand" => $product["brand"]["name"] ?? null,
+            "code" => $product["code"],
+            "category_id" => $categoryId,
+            "description" => $product["description"] ?? null,
+            "manufacturer" => $product["manufacturer"]["name"] ?? null,
+            "weight" => $product["weight"] ?? 0,
+            "volume" => $product["volume"] ?? 0,
+            "vendor_code" => $product["vendorCode"] ?? null,
+            "properties" => $product["properties"] ? $this->parseProperties($product["properties"]) : null,
+            "integration" => "relef",
+            "stock" => $this->getStock('Новосибирск', $product["remains"])
+        ];
+        if ($found) {
+            $found->update($body);
+        } else {
+            $found = Product::where('vendor_code', $product["vendorCode"])->first();
+
+            if ($found) return;
+
+            $newProduct = Product::create($body);
+
+            if (count($product["images"])) {
+                foreach ($product["images"] as $img) {
+                    $newProduct->addMediaFromUrl($img["path"])->toMediaCollection('product_media_collection');
+                }
+            }
+        }
+    }
+
     public function parseProperties(array $props): array
     {
         $properties = [];
