@@ -78,7 +78,7 @@ class ImportProductsJob implements ShouldQueue
             if (!$item || $index === 0) {
                 continue;
             }
-            $params = explode(',', $item);
+            $params = str_getcsv($item);
 
             $row = \App\Jobs\ExportProductsJob::mapFields($params);
 
@@ -87,11 +87,12 @@ class ImportProductsJob implements ShouldQueue
             }
 
             if (!$row["id"] && !$row["outer_id"]) {
-                continue;
+                $this->createNewProduct($row);
             }
 
             if (!$row["id"] && $row["outer_id"]) {
                 if ($row["integration"] == "samson") {
+
                     $this->fetchSamsonSku($row["outer_id"], (int)$row["category_id"]);
                 }
 
@@ -100,7 +101,8 @@ class ImportProductsJob implements ShouldQueue
                 }
             }
 
-            if ($row["id"] && $row["outer_id"]) {
+
+            if ($row["id"]) {
                 $this->updateProduct($row);
             }
 
@@ -166,5 +168,23 @@ class ImportProductsJob implements ShouldQueue
         $product->is_new = $productCsvJson["is_new"] ?: $product->is_new;
 
         $product->save();
+    }
+
+    private function createNewProduct(array $productCsvJson): void
+    {
+        $productCsvJson["integration"] = null;
+        unset($productCsvJson["id"]);
+        unset($productCsvJson["is_update"]);
+
+        $data = [];
+
+        foreach ($productCsvJson as $field => $value) {
+            if (is_null($value)) {
+                continue;
+            }
+            $data[$field] = $value;
+        }
+
+        Product::create($data);
     }
 }

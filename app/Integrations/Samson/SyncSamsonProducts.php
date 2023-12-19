@@ -18,77 +18,65 @@ class SyncSamsonProducts
 
     public function __invoke()
     {
-        $this->syncProducts($this->url);
+        $this->syncProducts();
     }
 
-    private function syncProducts(string $url)
+    private function syncProducts(): void
     {
-        $res = Http::get($url);
-        $data = $res->json();
+        $products = Product::where('integration', 'samson')->get();
 
-        if ($data) {
-            foreach ($data["data"] as $sku) {
-                try {
-                    $categoriesIds = $sku["category_list"];
-                    $mainCategoryId = $categoriesIds[0] ?? null;
+        foreach ($products as $i => $product) {
+            try {
+                if (!$product->outer_id) {
+                    return;
+                }
 
-                    if (!$mainCategoryId) {
-                        continue;
-                    }
+                $skuData = $this->getSamsonProduct($product->outer_id);
 
-                    $category = Category::where('samson_id', $mainCategoryId)->first();
+                if (!$skuData) {
+                    return;
+                }
 
-                    if (!$category || !($sku["price_list"][0]["value"] ?? null)) continue;
+                $stock = $this->getStock("idp", $skuData["stock_list"]);
+                $price = $skuData["price_list"][0]["value"] ?? 0;
 
-                    $body = $this->buildBody($sku, $category);
-
-                    $existingProduct = Product::where(['outer_id' => $sku["sku"], 'integration' => 'samson'])->first();
-
-                    if ($existingProduct) {
-                        $existingProduct->update($body);
-                    } else {
-                        $existingProduct = Product::where('vendor_code', $sku["vendor_code"])
-                            ->orWhere('barcode', $sku["barcode"])
-                            ->first();
-
-                        if ($existingProduct) continue;
-
-                        $product = Product::create($body);
-
-                        if (count($sku["photo_list"])) {
-                            foreach ($sku["photo_list"] as $url) {
-                                $product->addMediaFromUrl($url)->toMediaCollection('product_media_collection');
-                            }
-                        }
-                    }
-                    $this->updateLinkedCategories($category, $categoriesIds);
-
-                } catch (\Exception $e) {
-                    Log::error('Samson product sync error msg: ' . $e->getMessage() . json_encode($sku));
+                if ($price <= 0) {
                     continue;
                 }
-            }
-        }
 
-        if (isset($data["meta"]["pagination"]["next"])) {
-            usleep(2 * 1000);
-            $this->syncProducts($data["meta"]["pagination"]["next"]);
+                $product->price = $price;
+                $product->stock = $stock;
+
+                if ($stock == 0) {
+                    $product->is_active = 0;
+                }
+
+                $product->save();
+            } catch (\Exception $E) {
+                // do nothing
+            }
+            usleep(1000);
         }
     }
 
     public function fetchSku(string $sku, int $categoryId): void
     {
-        $url = $this->buildUrl("v1/sku/" . $sku . '/');
-        $res = Http::get($url);
-        $data = $res->json();
-
-        $skuData = $data["data"][0] ?? null;
+        $skuData = $this->getSamsonProduct($sku);
 
         if (!$skuData) {
             return;
         }
 
         $this->createOrUpdateProduct($skuData, $categoryId);
+    }
+
+    private function getSamsonProduct(string $sku): ?array
+    {
+        $url = $this->buildUrl("v1/sku/" . $sku . '/');
+        $res = Http::get($url);
+        $data = $res->json();
+
+        return $data["data"][0] ?? null;
     }
 
     public function parseProperties(array $props): array

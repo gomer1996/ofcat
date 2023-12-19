@@ -2,6 +2,10 @@
 
 namespace App\Nova\Actions;
 
+use App\Jobs\ImportCategoriesJob;
+use App\Jobs\ImportProductsJob;
+use App\Models\ImportCategoriesQueue;
+use App\Models\ImportProductsQueue;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -27,7 +31,25 @@ class ImportCategories extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        Excel::import(new CategoriesImport, request()->file('file'));
+        $filename = 'importCategories.csv';
+        $fields->importFile->storeAs(
+            'import', $filename, 'local'
+        );
+
+        $importCategoriesQueue = ImportCategoriesQueue::first();
+
+        if (!$importCategoriesQueue) {
+            $importCategoriesQueue = ImportCategoriesQueue::create([
+                'status' => 'pending'
+            ]);
+        }
+        $importCategoriesQueue->url = $filename;
+        $importCategoriesQueue->status = 'pending';
+        $importCategoriesQueue->save();
+
+        ImportCategoriesJob::dispatch();
+
+        return Action::redirect(url("/admin/resources/import-categories-queues"));
     }
 
     /**
@@ -38,10 +60,9 @@ class ImportCategories extends Action
     public function fields()
     {
         return [
-            File::make('Файл', 'file')->rules([
-                'file',
-                'mimes:xlsx,csv,xls'
-            ]),
+            File::make('Файл импорта', 'importFile')
+                ->acceptedTypes('.csv')
+                ->required(true)
         ];
     }
 }

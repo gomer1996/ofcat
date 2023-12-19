@@ -12,7 +12,11 @@
 {{--                <div style="max-width: 300px; overflow: hidden; margin: auto;">--}}
                 <div>
                     <a href="{{ $product->getLink($linkedCategory) }}">
-                        <img src="{{ $product->thumbnail }}" alt="Товар" />
+                        @if($product->thumbnail)
+                            <img src="{{ $product->thumbnail }}" alt="Товар" />
+                        @else
+                            <img src="/images/default-product.jpg" alt="Товар" />
+                        @endif
                     </a>
                 </div>
             </td>

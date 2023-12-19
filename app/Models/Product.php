@@ -27,6 +27,14 @@ class Product extends Model implements HasMedia
         'properties' => 'json',
     ];
 
+    protected $attributes = [
+        'is_hit' => 0,
+        'is_new' => 0,
+        'is_active' => 0,
+        'stock' => 0,
+        'ignore_tax' => 0,
+    ];
+
     /**
      * @return BelongsTo
      */

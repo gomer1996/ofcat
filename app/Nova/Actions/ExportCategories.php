@@ -3,6 +3,8 @@
 namespace App\Nova\Actions;
 
 use App\Exports\CategoryExport;
+use App\Jobs\ExportCategoriesJob;
+use App\Models\ExportCategoriesQueue;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -31,7 +33,14 @@ class ExportCategories extends Action
      */
     public function handle(ActionFields $fields, Collection $models)
     {
-        return Action::redirect('/download/excel/category');
+        $exportCategoriesQueue = ExportCategoriesQueue::first();
+        if ($exportCategoriesQueue) {
+            $exportCategoriesQueue->delete();
+        }
+
+        ExportCategoriesJob::dispatch();
+
+        return Action::redirect(url("/admin/resources/export-categories-queues"));
     }
 
     /**

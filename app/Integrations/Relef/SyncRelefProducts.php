@@ -14,91 +14,66 @@ class SyncRelefProducts
 
     public function __invoke()
     {
-        $this->syncProducts($this->url);
+        $this->syncProducts();
     }
 
-    private function syncProducts(string $url)
+    private function syncProducts(): void
     {
-        $res = Http::withHeaders([
-            "apikey" => "f9f84dcf7bd647389500dc3ee23d6a25"
-        ])->post($url, [
-            "limit" => 5,
-            "offset" => $this->offset
-        ]);
+        $products = Product::where('integration', 'relef')->get();
 
-        $data = $res->json();
+        foreach ($products as $i => $product) {
+            try {
+                if (!$product->outer_id) {
+                    return;
+                }
 
-        if ($data) {
-            foreach ($data["list"] as $product) {
-                try {
-                    $category = IntegrationCategory::where('integration', 'relef')
-                        ->whereIn('outer_id', $product["sections"] ?? [])
-                        ->orderBy('level', 'desc')
-                        ->first();
+                $relefProduct = $this->getRelefProduct($product->outer_id);
 
-                    if (!$category || !($product["prices"][2]["value"] ?? null)) continue;
+                if (!$relefProduct) {
+                    return;
+                }
 
-                    $found = Product::where(['outer_id' => $product["guid"], 'integration' => 'relef'])->first();
+                $stock = $this->getStock('Новосибирск', $relefProduct["remains"]);
+                $price = $relefProduct["prices"][0]["value"] ?? 0;
 
-                    $body = [
-                        "name" => $product["name"],
-                        "outer_id" => $product["guid"],
-                        "price" => $product["prices"][2]["value"] ?? 0,
-                        "brand" => $product["brand"]["name"] ?? null,
-                        "code" => $product["code"],
-                        "integration_category_id" => $category->id,
-                        "description" => $product["description"],
-                        "manufacturer" => $product["manufacturer"]["name"] ?? null,
-                        "weight" => $product["weight"],
-                        "volume" => $product["volume"],
-                        "vendor_code" => $product["vendorCode"] ?? null,
-                        "properties" => $product["properties"] ? $this->parseProperties($product["properties"]) : null,
-                        "integration" => "relef",
-                        "stock" => $this->getStock('Новосибирск', $product["remains"])
-                    ];
-                    if ($found) {
-                        $found->update($body);
-                    } else {
-                        $found = Product::where('vendor_code', $product["vendorCode"])->first();
-
-                        if ($found) continue;
-
-                        $newProduct = Product::create($body);
-
-                        if (count($product["images"])) {
-                            foreach ($product["images"] as $img) {
-                                $newProduct->addMediaFromUrl($img["path"])->toMediaCollection('product_media_collection');
-                            }
-                        }
-                    }
-                } catch (\Exception $e) {
-                    Log::error('Relef product sync error msg: ' . $e->getMessage() . serialize($product));
+                if ($price <= 0) {
                     continue;
                 }
-            }
-            $this->offset = $this->offset + count($data["list"]);
 
-            if ($data["count"] > $this->offset) {
-                $this->syncProducts($this->url);
+                $product->price = $price;
+                $product->stock = $stock;
+
+                if ($stock == 0) {
+                    $product->is_active = 0;
+                }
+
+                $product->save();
+            } catch (\Exception $E) {
+                // do nothing
             }
-            $this->offset = 0;
+            usleep(1000);
         }
     }
 
-    public function fetchProduct(string $guid, int $categoryId): void
+    private function getRelefProduct(string $guid): ?array
     {
         $res = Http::withHeaders([
             "apikey" => "f9f84dcf7bd647389500dc3ee23d6a25"
         ])->post($this->url, [
             "filter" => [
-              "guid" => $guid
+                "guid" => $guid
             ],
             "limit" => 1
         ]);
 
         $data = $res->json();
 
-        $product = $data["list"][0] ?? null;
+        return $data["list"][0] ?? null;
+    }
+
+    public function fetchProduct(string $guid, int $categoryId): void
+    {
+        $product = $this->getRelefProduct($guid);
 
         if (!$product) {
             return;

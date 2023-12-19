@@ -39,7 +39,12 @@
             <td  class="imagesgoz" style="width: 130px">
                 <div>
                     <a href="{{ $product->getLink($linkedCategory) }}">
-                        <img src="{{ $product->thumbnail }}" style="width: 100px; height: auto" alt="Товар" />
+
+                        @if($product->thumbnail)
+                            <img src="{{ $product->thumbnail }}" style="width: 100px; height: auto" alt="Товар" />
+                        @else
+                            <img src="/images/default-product.jpg" style="width: 100px; height: auto" alt="Товар" />
+                        @endif
                     </a>
                 </div>
             </td>

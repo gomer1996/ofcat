@@ -1,7 +1,11 @@
 <?php
 
 use App\Exports\CategoryExport;
+use App\Jobs\SyncRelefProductsJob;
+use App\Jobs\SyncSamsonProductsJob;
+use App\Models\Category;
 use App\Models\ExportProductsQueue;
+use App\Models\ImportCategoriesQueue;
 use App\Models\ImportProductsQueue;
 use App\Models\Product;
 use Illuminate\Support\Facades\DB;
@@ -22,6 +26,54 @@ use Maatwebsite\Excel\Facades\Excel;
 */
 
 Route::get('/', function () {
+
+//    $queue = ImportProductsQueue::first();
+//    if (!$queue) {
+//        return;
+//    }
+//    $dataR = Storage::disk('local')->get('import/' . $queue->url);
+//
+//    $csvRows = explode(PHP_EOL, $dataR);
+//
+//    foreach ($csvRows as $index => $item) {
+//        if (!$item || $index === 0) {
+//            continue;
+//        }
+//        $params = str_getcsv($item);
+//
+//        $row = \App\Jobs\ExportProductsJob::mapFields($params);
+//
+//
+//
+//        if ($row["id"] && $row["is_update"] == 0) {
+//            continue;
+//        }
+//
+//        if (!$row["id"] && !$row["outer_id"]) {
+//            dd('create', $row);
+//        }
+//
+//        if (!$row["id"] && $row["outer_id"]) {
+//            if ($row["integration"] == "samson") {
+//                dd('samson', $row);
+//            }
+//
+//            if ($row["integration"] == "relef") {
+//                dd('create', $row);
+//            }
+//        }
+//
+//
+//        if ($row["id"]) {
+//            dd('update', $row);
+//        }
+//
+//
+//
+//    }
+//
+//    dd($csvRows);
+
     return view('home');
 });
 

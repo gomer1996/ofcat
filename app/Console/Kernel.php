@@ -34,11 +34,11 @@ class Kernel extends ConsoleKernel
         })->daily();
 
         $schedule->call(function () {
-          //SyncSamsonCategoriesJob::dispatch();
+          //SyncSamsonCategoriesJob::dispatch(); we dont sync categories anymore since august 2023
 
           SyncSamsonProductsJob::dispatch();
 
-          //SyncRelefCategoriesJob::dispatch();
+          //SyncRelefCategoriesJob::dispatch(); we dont sync categories anymore since august
 
           SyncRelefProductsJob::dispatch();
         })->dailyAt('03:00');

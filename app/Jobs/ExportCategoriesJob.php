@@ -2,8 +2,8 @@
 
 namespace App\Jobs;
 
-use App\Models\ExportProductsQueue;
-use App\Models\Product;
+use App\Models\Category;
+use App\Models\ExportCategoriesQueue;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -11,13 +11,12 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Laravel\Nova\Actions\Action;
 
-class ExportProductsJob implements ShouldQueue
+class ExportCategoriesJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $exportProductsQueue;
+    protected $exportCategoriesQueue;
 
     /**
      * Create a new job instance.
@@ -35,7 +34,7 @@ class ExportProductsJob implements ShouldQueue
      */
     public function handle()
     {
-        $exportProductsQueue = ExportProductsQueue::create([
+        $exportProductsQueue = ExportCategoriesQueue::create([
             'status' => 'pending'
         ]);
 
@@ -52,22 +51,30 @@ class ExportProductsJob implements ShouldQueue
         }
     }
 
+    public function failed(\Throwable $exception)
+    {
+        $exportProductsQueue = ExportCategoriesQueue::first();
+        $exportProductsQueue->message = $exception->getMessage();
+        $exportProductsQueue->status = 'failed';
+        $exportProductsQueue->save();
+    }
+
     private function handleExport()
     {
         $output='';
         $output.=  implode(';', $this->generateHeader()) . PHP_EOL;
 
-        Product::chunk(100, function ($products) use (&$output) {
-            foreach ($products as $row) {
+        Category::chunk(100, function ($categories) use (&$output) {
+            foreach ($categories as $row) {
                 $output.=  implode(';', $this->generateRow($row)) . PHP_EOL;
             }
         });
 
-        $filename = 'Экспорт товаров ' . date('Y-m-d') . '.csv';
+        $filename = 'Экспорт категорий ' . date('Y-m-d') . '.csv';
 
         Storage::disk('public')->put($filename, "\xEF\xBB\xBF" . $output);
 
-        $exportProductsQueue = ExportProductsQueue::first();
+        $exportProductsQueue = ExportCategoriesQueue::first();
         $exportProductsQueue->url = $filename;
         $exportProductsQueue->status = 'finished';
         $exportProductsQueue->save();
@@ -76,24 +83,12 @@ class ExportProductsJob implements ShouldQueue
     public static function getFieldsMapped(): array
     {
         return [
-            ['id'           => 'ID товара'],
-            ['outer_id'     => 'ID поставщика'],
-            ['integration'  => 'Поставщик'],
-            ['category_id'  => 'Категория'],
-            ['code'         => 'Код'],
-            ['name'         => 'Наименование'],
-            ['price'        => 'Цена'],
-            ['brand'        => 'Бренд'],
-            ['manufacturer' => 'Производитель'],
-            ['barcode'      => 'Штрих-код'],
-            ['vendor_code'  => 'Артикул'],
-            ['weight'       => 'Вес'],
-            ['volume'       => 'Объем'],
-            ['stock'        => 'Остаток'],
-            ['is_hit'       => 'Хит продаж'],
-            ['is_active'    => 'Активный'],
-            ['is_new'       => 'Новинка'],
-            ['is_update'    => 'Обновить']
+            ['id'         => 'ID товара'],
+            ['name'       => 'Наименование'],
+            ['parent_id'  => 'Родитель'],
+            ['tax'        => 'Наценка'],
+            ['discount'   => 'Скидка'],
+            ['is_update'  => 'Обновить']
         ];
     }
 
@@ -105,7 +100,7 @@ class ExportProductsJob implements ShouldQueue
             if (!array_key_exists($index, $row)) {
                 continue;
             }
-            $result[$label] = $row[$index] === '' ? null : $row[$index];
+            $result[$label] = $row[$index];
         }
 
         return $result;
@@ -141,26 +136,14 @@ class ExportProductsJob implements ShouldQueue
         return $header;
     }
 
-    private function generateRow(Product $product): array
+    private function generateRow(Category $category): array
     {
         return [
-            $product->id,
-            $product->outer_id,
-            $product->integration,
-            $product->category_id,
-            $product->code,
-            $product->name,
-            $product->price,
-            $product->brand,
-            $product->manufacturer,
-            $product->barcode,
-            $product->vendor_code,
-            $product->weight,
-            $product->volume,
-            $product->stock,
-            $product->is_hit,
-            $product->is_active,
-            $product->is_new,
+            $category->id,
+            $category->name,
+            $category->parent_id,
+            $category->tax,
+            $category->discount,
             0
         ];
     }
