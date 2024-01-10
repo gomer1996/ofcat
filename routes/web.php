@@ -26,7 +26,7 @@ use Maatwebsite\Excel\Facades\Excel;
 */
 
 Route::get('/', function () {
-
+//
 //    $queue = ImportProductsQueue::first();
 //    if (!$queue) {
 //        return;
@@ -36,7 +36,7 @@ Route::get('/', function () {
 //    $csvRows = explode(PHP_EOL, $dataR);
 //
 //    foreach ($csvRows as $index => $item) {
-//        if (!$item || $index === 0) {
+//        if (!$item || $index === 0 || $index !== 6) {
 //            continue;
 //        }
 //        $params = str_getcsv($item);
@@ -62,7 +62,6 @@ Route::get('/', function () {
 //                dd('create', $row);
 //            }
 //        }
-//
 //
 //        if ($row["id"]) {
 //            dd('update', $row);

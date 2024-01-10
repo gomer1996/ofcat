@@ -126,6 +126,21 @@ class ExportProductsJob implements ShouldQueue
         return $labels;
     }
 
+    public static function getFieldsValues(): array
+    {
+        $labels = [];
+
+        foreach (self::getFieldsMapped() as $index => $field) {
+            $labelField = null;
+            foreach ($field as $name) {
+                $labelField = $name;
+            }
+            $labels[$index] = $labelField;
+        }
+
+        return $labels;
+    }
+
     private function generateHeader(): array
     {
         $header = [];

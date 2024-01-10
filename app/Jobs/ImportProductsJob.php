@@ -63,7 +63,7 @@ class ImportProductsJob implements ShouldQueue
             $queue->status = 'finished';
             $queue->save();
             DB::commit();
-        } catch (\Exception $E) {
+        } catch (\Throwable $E) {
             DB::rollBack();
 
             $queue->message = $E->getMessage();
@@ -72,8 +72,17 @@ class ImportProductsJob implements ShouldQueue
         }
     }
 
+    /**
+     * @param array $rows
+     * @return void
+     * @throws \Exception
+     */
     private function handleImport(array $rows): void
     {
+        if (!$this->validateCsv($rows)) {
+            throw new \Exception('Некорректный csv файл.');
+        }
+
         foreach ($rows as $index => $item) {
             if (!$item || $index === 0) {
                 continue;
@@ -186,5 +195,10 @@ class ImportProductsJob implements ShouldQueue
         }
 
         Product::create($data);
+    }
+
+    private function validateCsv(array $rows): bool
+    {
+        return implode(',', ExportProductsJob::getFieldsValues()) == str_replace("\r", '', $rows[0]);
     }
 }

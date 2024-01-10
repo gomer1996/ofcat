@@ -4,10 +4,8 @@ namespace App\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\Date;
-use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Status;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Http\Requests\NovaRequest;
 
 class ImportCategoriesQueue extends Resource
 {
@@ -16,7 +14,7 @@ class ImportCategoriesQueue extends Resource
      *
      * @var string
      */
-    public static $model = \App\Models\ImportProductsQueue::class;
+    public static $model = \App\Models\ImportCategoriesQueue::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
