@@ -60,4 +60,12 @@ class Category extends Model
 
         return $category->getRelation('linkedCategory')->getRelation('category');
     }
+
+    /**
+     * csv support
+     */
+    public function getNameAttribute()
+    {
+        return str_replace(';', ':', $this->attributes['name']);
+    }
 }

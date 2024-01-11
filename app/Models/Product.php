@@ -51,6 +51,24 @@ class Product extends Model implements HasMedia
         return [];
     }
 
+    /**
+     * csv support
+     */
+    public function getNameAttribute()
+    {
+        return str_replace(';', ':', $this->attributes['name']);
+    }
+
+    public function getBrandAttribute()
+    {
+        return str_replace(';', ':', $this->attributes['brand']);
+    }
+
+    public function getManufacturerAttribute()
+    {
+        return str_replace(';', ':', $this->attributes['manufacturer']);
+    }
+
     public function getThumbnailAttribute()
     {
         $img = $this->getMedia('product_media_collection')->first() ?? null;
