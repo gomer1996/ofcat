@@ -12,6 +12,7 @@ class SyncRelefProducts
     private $url = "https://api-sale.relef.ru/api/v1/products/list";
     private $offset = 0;
 
+
     public function __invoke()
     {
         $this->syncProducts();
@@ -30,7 +31,8 @@ class SyncRelefProducts
                 $relefProduct = $this->getRelefProduct($product->outer_id);
 
                 if (!$relefProduct) {
-                    return;
+                    $product->delete();
+                    continue;
                 }
 
                 $stock = $this->getStock('Новосибирск', $relefProduct["remains"]);
@@ -66,6 +68,10 @@ class SyncRelefProducts
             "limit" => 1
         ]);
 
+        if ($res->serverError()) {
+            throw new \Exception('Server error');
+        }
+
         $data = $res->json();
 
         return $data["list"][0] ?? null;
@@ -73,7 +79,13 @@ class SyncRelefProducts
 
     public function fetchProduct(string $guid, int $categoryId): void
     {
-        $product = $this->getRelefProduct($guid);
+        $product = null;
+
+        try {
+            $product = $this->getRelefProduct($guid);
+        } catch (\Throwable $e) {
+
+        }
 
         if (!$product) {
             return;

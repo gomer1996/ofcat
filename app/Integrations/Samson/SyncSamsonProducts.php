@@ -16,6 +16,7 @@ class SyncSamsonProducts
     private $apiKey = "e6f2f9ce0d1bfe7ed8a1fd8658921470";
     private $url = "https://api.samsonopt.ru/v1/sku/190892?api_key=60769b17043981a854f4d6ac667e5ac5&pagination_count=50";
 
+
     public function __invoke()
     {
         $this->syncProducts();
@@ -25,6 +26,9 @@ class SyncSamsonProducts
     {
         $products = Product::where('integration', 'samson')->get();
 
+        /**
+         * @var Product $product
+         */
         foreach ($products as $i => $product) {
             try {
                 if (!$product->outer_id) {
@@ -34,7 +38,8 @@ class SyncSamsonProducts
                 $skuData = $this->getSamsonProduct($product->outer_id);
 
                 if (!$skuData) {
-                    return;
+                    $product->delete();
+                    continue;
                 }
 
                 $stock = $this->getStock("idp", $skuData["stock_list"]);
@@ -53,7 +58,7 @@ class SyncSamsonProducts
 
                 $product->save();
             } catch (\Exception $E) {
-                // do nothing
+
             }
             usleep(1000);
         }
@@ -61,7 +66,13 @@ class SyncSamsonProducts
 
     public function fetchSku(string $sku, int $categoryId): void
     {
-        $skuData = $this->getSamsonProduct($sku);
+        $skuData = null;
+
+        try {
+            $skuData = $this->getSamsonProduct($sku);
+        } catch (\Throwable $e) {
+
+        }
 
         if (!$skuData) {
             return;
@@ -75,6 +86,10 @@ class SyncSamsonProducts
         $url = $this->buildUrl("v1/sku/" . $sku . '/');
         $res = Http::get($url);
         $data = $res->json();
+
+        if ($res->serverError()) {
+            throw new \Exception('Server error');
+        }
 
         return $data["data"][0] ?? null;
     }
