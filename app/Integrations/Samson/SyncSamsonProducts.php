@@ -38,6 +38,7 @@ class SyncSamsonProducts
                 $skuData = $this->getSamsonProduct($product->outer_id);
 
                 if (!$skuData) {
+                    Log::info('Deleting samson product: ' . $product->outer_id);
                     $product->delete();
                     continue;
                 }

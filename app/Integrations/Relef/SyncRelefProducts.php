@@ -31,6 +31,7 @@ class SyncRelefProducts
                 $relefProduct = $this->getRelefProduct($product->outer_id);
 
                 if (!$relefProduct) {
+                    Log::info('Deleting relef product: ' . $product->outer_id);
                     $product->delete();
                     continue;
                 }
