@@ -20,7 +20,7 @@ class SyncRelefProducts
 
     private function syncProducts(): void
     {
-        $products = Product::where('integration', 'relef')->get();
+        $products = Product::withoutGlobalScopes()->where('integration', 'relef')->get();
 
         foreach ($products as $i => $product) {
             try {

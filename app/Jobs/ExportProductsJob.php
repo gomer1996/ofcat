@@ -57,7 +57,7 @@ class ExportProductsJob implements ShouldQueue
         $output='';
         $output.=  implode(';', $this->generateHeader()) . PHP_EOL;
 
-        Product::chunk(100, function ($products) use (&$output) {
+        Product::withoutGlobalScopes()->chunk(100, function ($products) use (&$output) {
             foreach ($products as $row) {
                 $output.=  implode(';', $this->generateRow($row)) . PHP_EOL;
             }

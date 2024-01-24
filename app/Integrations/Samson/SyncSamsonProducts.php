@@ -24,7 +24,7 @@ class SyncSamsonProducts
 
     private function syncProducts(): void
     {
-        $products = Product::where('integration', 'samson')->get();
+        $products = Product::withoutGlobalScopes()->where('integration', 'samson')->get();
 
         /**
          * @var Product $product
