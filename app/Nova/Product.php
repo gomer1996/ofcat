@@ -81,6 +81,9 @@ class Product extends Resource
             Text::make('Наименовние', 'name')
                 ->rules('required', 'max:255'),
 
+            Text::make('Поставщик', 'integration')
+                ->readonly(),
+
             // todo: check categories for proper work
 
             Select::make('Категория', 'category_id')->options(
@@ -96,10 +99,14 @@ class Product extends Resource
                 ->step(0.01)
                 ->rules('required'),
 
+            Number::make('Наценка', 'markup'),
+
+            Number::make('Итоговая цена', 'final_price')->readonly(),
+
             Textarea::make('Описание', 'description')
                 ->nullable(),
 
-            Number::make('Код', 'code')
+            Text::make('Код', 'code')
                 ->hideFromIndex()
                 ->rules('max:255'),
 
@@ -178,14 +185,6 @@ class Product extends Resource
                 ->readonly(function($request) {
                     return $request->isUpdateOrUpdateAttachedRequest();
                 })
-                ->nullable()
-                ->rules('max:255'),
-
-            Text::make('Внешний ID', 'outer_id')
-                ->hideFromIndex()
-                ->readonly()
-                ->creationRules('unique:products,outer_id')
-                ->updateRules('unique:products,outer_id,{{resourceId}}')
                 ->nullable()
                 ->rules('max:255'),
 

@@ -6,8 +6,6 @@ use App\Scopes\ProductScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Support\Facades\DB;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Support\Facades\Cache;
@@ -73,6 +71,16 @@ class Product extends Model implements HasMedia
     {
         $img = $this->getMedia('product_media_collection')->first() ?? null;
         return $img ? $img->getFullUrl() : null;
+    }
+
+    public function getFinalPriceAttribute(): float
+    {
+        $price = $this->attributes['price'];
+        $markup = $this->attributes['markup'];
+
+        $markup = $price * ($markup / 100);
+
+        return round($price + $markup, 2);
     }
 
     public function registerMediaConversions(Media $media = null): void

@@ -2,10 +2,7 @@
 
 namespace App\Integrations\Samson;
 
-use App\Models\Category;
-use App\Models\LinkedCategory;
 use App\Models\Product;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
@@ -15,7 +12,6 @@ class SyncSamsonProducts
     private $baseUrl = "https://api.samsonopt.ru/";
     private $apiKey = "e6f2f9ce0d1bfe7ed8a1fd8658921470";
     private $url = "https://api.samsonopt.ru/v1/sku/190892?api_key=60769b17043981a854f4d6ac667e5ac5&pagination_count=50";
-
 
     public function __invoke()
     {
@@ -31,14 +27,14 @@ class SyncSamsonProducts
          */
         foreach ($products as $i => $product) {
             try {
-                if (!$product->outer_id) {
-                    return;
+                if (!$product->code) {
+                    continue;
                 }
 
-                $skuData = $this->getSamsonProduct($product->outer_id);
+                $skuData = $this->getSamsonProduct($product->code);
 
                 if (!$skuData) {
-                    Log::info('Deleting samson product: ' . $product->outer_id);
+                    Log::info('Deleting samson product: ' . $product->code);
                     $product->delete();
                     continue;
                 }
@@ -65,7 +61,7 @@ class SyncSamsonProducts
         }
     }
 
-    public function fetchSku(string $sku, int $categoryId): void
+    public function fetchSku(string $sku, int $categoryId, ?float $markup): void
     {
         $skuData = null;
 
@@ -79,7 +75,7 @@ class SyncSamsonProducts
             return;
         }
 
-        $this->createOrUpdateProduct($skuData, $categoryId);
+        $this->createOrUpdateProduct($skuData, $categoryId, $markup);
     }
 
     private function getSamsonProduct(string $sku): ?array
@@ -119,11 +115,11 @@ class SyncSamsonProducts
         return 0;
     }
 
-    private function createOrUpdateProduct(array $sku, int $categoryId): void
+    private function createOrUpdateProduct(array $sku, int $categoryId, ?float $markup): void
     {
-        $body = $this->buildBody($sku, $categoryId);
+        $body = $this->buildBody($sku, $categoryId, $markup);
 
-        $existingProduct = Product::where(['outer_id' => $sku["sku"], 'integration' => 'samson'])->first();
+        $existingProduct = Product::where(['code' => $sku["sku"], 'integration' => 'samson'])->first();
 
         if ($existingProduct) {
             $existingProduct->update($body);
@@ -146,37 +142,10 @@ class SyncSamsonProducts
         }
     }
 
-    private function updateLinkedCategories(Category $category, array $samsonCategoriesIds): void
-    {
-        // we cut the first because we assume that first category is main and others are linked categories
-        array_shift($samsonCategoriesIds);
-        if (!count($samsonCategoriesIds)) {
-            return;
-        }
-        $categories = Category::whereIn('samson_id', $samsonCategoriesIds)->get();
-        // we should add to LinkedCategory other categories from categoriesIds
-        foreach ($samsonCategoriesIds as $id) {
-            $cat = Category::where('samson_id', $id)->first();
-
-            if (!$cat) {
-                continue;
-            }
-
-            $data = [
-                'category_id' => $category->getAttribute('id'),
-                'linked_category_id' => $cat->getAttribute('id')
-            ];
-            LinkedCategory::updateOrCreate($data, $data);
-        }
-
-        $this->setCategoriesAsLinked($samsonCategoriesIds, $categories);
-    }
-
-    private function buildBody(array $sku, int $categoryId): array
+    private function buildBody(array $sku, int $categoryId, $markup): array
     {
         return [
             "name" => $sku["name"],
-            "outer_id" => $sku["sku"],
             "price" => $sku["price_list"][0]["value"] ?? 0,
             "brand" => $sku["brand"],
             "code" => $sku["sku"],
@@ -189,40 +158,9 @@ class SyncSamsonProducts
             "vendor_code" => $sku["vendor_code"] ?? null,
             "properties" => $sku["facet_list"] ? $this->parseProperties($sku["facet_list"]) : null,
             "integration" => "samson",
-            "stock" => $this->getStock("idp", $sku["stock_list"])
+            "stock" => $this->getStock("idp", $sku["stock_list"]),
+            "markup" => $markup
         ];
-    }
-
-    /**
-     * @param array $samsonCategoriesIds
-     * @param Collection $categories
-     */
-    private function setCategoriesAsLinked(array $samsonCategoriesIds, Collection $categories): void
-    {
-        Category::whereIn('samson_id', $samsonCategoriesIds)->update([
-            'is_link' => true
-        ]);
-
-        foreach ($categories as $category) {
-            $this->setParentCategoriesAsLinked($category);
-        }
-    }
-
-    private function setParentCategoriesAsLinked(Category $category): void
-    {
-        $parentCategory = Category::where([
-            'id' => $category->getAttribute('parent_id'),
-            'is_link' => false
-        ])->first();
-
-        if ($parentCategory) {
-            $parentCategory->setAttribute('is_link', true);
-            $parentCategory->save();
-
-            if ($parentCategory->getAttribute('parent_id')) {
-                $this->setParentCategoriesAsLinked($parentCategory);
-            }
-        }
     }
 
     private function buildUrl(string $url, string $queryParams = ''): string

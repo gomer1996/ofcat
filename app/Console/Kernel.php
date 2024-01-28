@@ -2,9 +2,7 @@
 
 namespace App\Console;
 
-use App\Jobs\SyncRelefCategoriesJob;
 use App\Jobs\SyncRelefProductsJob;
-use App\Jobs\SyncSamsonCategoriesJob;
 use App\Jobs\SyncSamsonProductsJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -37,8 +35,6 @@ class Kernel extends ConsoleKernel
           //SyncSamsonCategoriesJob::dispatch(); we dont sync categories anymore since august 2023
 
           SyncSamsonProductsJob::dispatch();
-
-          //SyncRelefCategoriesJob::dispatch(); we dont sync categories anymore since august
 
           SyncRelefProductsJob::dispatch();
         })->dailyAt('03:00');

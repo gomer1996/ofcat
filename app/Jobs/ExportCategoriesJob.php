@@ -86,7 +86,6 @@ class ExportCategoriesJob implements ShouldQueue
             ['id'         => 'ID товара'],
             ['name'       => 'Наименование'],
             ['parent_id'  => 'Родитель'],
-            ['tax'        => 'Наценка'],
             ['discount'   => 'Скидка'],
             ['is_update'  => 'Обновить']
         ];
@@ -157,7 +156,6 @@ class ExportCategoriesJob implements ShouldQueue
             $category->id,
             $category->name,
             $category->parent_id,
-            $category->tax,
             $category->discount,
             0
         ];

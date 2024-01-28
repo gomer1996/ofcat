@@ -2,7 +2,6 @@
 
 namespace App\Integrations\Relef;
 
-use App\Models\IntegrationCategory;
 use App\Models\Product;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -24,14 +23,14 @@ class SyncRelefProducts
 
         foreach ($products as $i => $product) {
             try {
-                if (!$product->outer_id) {
-                    return;
+                if (!$product->code) {
+                    continue;
                 }
 
-                $relefProduct = $this->getRelefProduct($product->outer_id);
+                $relefProduct = $this->getRelefProduct($product->code);
 
                 if (!$relefProduct) {
-                    Log::info('Deleting relef product: ' . $product->outer_id);
+                    Log::info('Deleting relef product: ' . $product->code);
                     $product->delete();
                     continue;
                 }
@@ -58,13 +57,13 @@ class SyncRelefProducts
         }
     }
 
-    private function getRelefProduct(string $guid): ?array
+    private function getRelefProduct(string $code): ?array
     {
         $res = Http::withHeaders([
             "apikey" => "f9f84dcf7bd647389500dc3ee23d6a25"
         ])->post($this->url, [
             "filter" => [
-                "guid" => $guid
+                "code" => $code
             ],
             "limit" => 1
         ]);
@@ -78,12 +77,12 @@ class SyncRelefProducts
         return $data["list"][0] ?? null;
     }
 
-    public function fetchProduct(string $guid, int $categoryId): void
+    public function fetchProduct(string $code, int $categoryId, ?float $markup): void
     {
         $product = null;
 
         try {
-            $product = $this->getRelefProduct($guid);
+            $product = $this->getRelefProduct($code);
         } catch (\Throwable $e) {
 
         }
@@ -92,11 +91,10 @@ class SyncRelefProducts
             return;
         }
 
-        $found = Product::where(['outer_id' => $product["guid"], 'integration' => 'relef'])->first();
+        $found = Product::where(['code' => $product["code"], 'integration' => 'relef'])->first();
 
         $body = [
             "name" => $product["name"],
-            "outer_id" => $product["guid"],
             "price" => $product["prices"][0]["value"] ?? 0,
             "brand" => $product["brand"]["name"] ?? null,
             "code" => $product["code"],
@@ -108,7 +106,8 @@ class SyncRelefProducts
             "vendor_code" => $product["vendorCode"] ?? null,
             "properties" => $product["properties"] ? $this->parseProperties($product["properties"]) : null,
             "integration" => "relef",
-            "stock" => $this->getStock('Новосибирск', $product["remains"])
+            "stock" => $this->getStock('Новосибирск', $product["remains"]),
+            "markup" => $markup
         ];
         if ($found) {
             $found->update($body);

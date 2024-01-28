@@ -1,15 +1,8 @@
 <?php
 
 use App\Exports\CategoryExport;
-use App\Jobs\SyncRelefProductsJob;
-use App\Jobs\SyncSamsonProductsJob;
-use App\Models\Category;
-use App\Models\ExportProductsQueue;
-use App\Models\ImportCategoriesQueue;
+use App\Jobs\ExportProductsJob;
 use App\Models\ImportProductsQueue;
-use App\Models\Product;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
@@ -26,14 +19,18 @@ use Maatwebsite\Excel\Facades\Excel;
 */
 
 Route::get('/', function () {
-//
-//    $queue = ImportProductsQueue::first();
-//    if (!$queue) {
-//        return;
-//    }
-//    $dataR = Storage::disk('local')->get('import/' . $queue->url);
-//
-//    $csvRows = explode(PHP_EOL, $dataR);
+    return view('home');
+});
+
+Route::get('/experiment/experiments', function () {
+
+    $queue = ImportProductsQueue::first();
+
+    $dataR = Storage::disk('local')->get('import/' . $queue->url);
+
+    $csvRows = explode(PHP_EOL, $dataR);
+
+    dd($csvRows);
 //
 //    foreach ($csvRows as $index => $item) {
 //        if (!$item || $index === 0 || $index !== 6) {

@@ -100,7 +100,6 @@ class ImportCategoriesJob implements ShouldQueue
 
         $category->name = !empty($csvJson["name"]) ? $csvJson["name"] : $category->name;
         $category->parent_id = !empty($csvJson["parent_id"]) ? $csvJson["parent_id"] : $category->parent_id;
-        $category->tax = !empty($csvJson["tax"]) ? $csvJson["tax"] : $category->tax;
         $category->discount = !empty($csvJson["discount"]) ? $csvJson["discount"] : $category->discount;
 
         $category->save();

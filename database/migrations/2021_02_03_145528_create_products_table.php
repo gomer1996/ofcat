@@ -28,7 +28,6 @@ class CreateProductsTable extends Migration
             $table->string('barcode')->nullable();
             $table->string('vendor_code')->nullable();
             $table->string('outer_id')->nullable();
-            $table->foreignId('integration_category_id')->nullable()->constrained();
             $table->enum('integration', ['samson', 'relef'])->nullable();
             $table->json('properties')->nullable();
 

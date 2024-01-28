@@ -77,12 +77,13 @@ class ExportProductsJob implements ShouldQueue
     {
         return [
             ['id'           => 'ID товара'],
-            ['outer_id'     => 'ID поставщика'],
             ['integration'  => 'Поставщик'],
             ['category_id'  => 'Категория'],
             ['code'         => 'Код'],
             ['name'         => 'Наименование'],
             ['price'        => 'Цена'],
+            ['markup'       => 'Наценка'],
+            ['final_price'  => 'Итоговая цена'],
             ['brand'        => 'Бренд'],
             ['manufacturer' => 'Производитель'],
             ['barcode'      => 'Штрих-код'],
@@ -160,12 +161,13 @@ class ExportProductsJob implements ShouldQueue
     {
         return [
             $product->id,
-            $product->outer_id,
             $product->integration,
             $product->category_id,
             $product->code,
             $product->name,
             $product->price,
+            $product->markup,
+            $product->final_price,
             $product->brand,
             $product->manufacturer,
             $product->barcode,

@@ -95,18 +95,17 @@ class ImportProductsJob implements ShouldQueue
                 continue;
             }
 
-            if (!$row["id"] && !$row["outer_id"]) {
+            if (!$row["id"] && !$row["code"]) {
                 $this->createNewProduct($row);
             }
 
-            if (!$row["id"] && $row["outer_id"]) {
+            if (!$row["id"] && $row["code"]) {
                 if ($row["integration"] == "samson") {
-
-                    $this->fetchSamsonSku($row["outer_id"], (int)$row["category_id"]);
+                    $this->fetchSamsonSku($row["code"], (int)$row["category_id"], (float)$row["markup"]);
                 }
 
                 if ($row["integration"] == "relef") {
-                    $this->fetchRelefProduct($row["outer_id"], (int)$row["category_id"]);
+                    $this->fetchRelefProduct($row["code"], (int)$row["category_id"], (float)$row["markup"]);
                 }
             }
 
@@ -119,40 +118,40 @@ class ImportProductsJob implements ShouldQueue
         }
     }
 
-    private function fetchSamsonSku(?string $outerId, ?int $categoryId): void
+    private function fetchSamsonSku(?string $code, ?int $categoryId, ?float $markup): void
     {
-        if (!$outerId || !$categoryId) {
+        if (!$code || !$categoryId) {
             return;
         }
 
         $product = Product::where([
             'integration' => 'samson',
-            'outer_id' => $outerId
+            'code' => $code
         ])->first();
 
         if ($product) {
             return;
         }
 
-        $this->syncSamsonProducts->fetchSku($outerId, $categoryId);
+        $this->syncSamsonProducts->fetchSku($code, $categoryId, $markup);
     }
 
-    private function fetchRelefProduct(?string $outerId, ?int $categoryId): void
+    private function fetchRelefProduct(?string $code, ?int $categoryId, ?float $markup): void
     {
-        if (!$outerId || !$categoryId) {
+        if (!$code || !$categoryId) {
             return;
         }
 
         $product = Product::where([
             'integration' => 'relef',
-            'outer_id' => $outerId
+            'code' => $code
         ])->first();
 
         if ($product) {
             return;
         }
 
-        $this->syncRelefProducts->fetchProduct($outerId, $categoryId);
+        $this->syncRelefProducts->fetchProduct($code, $categoryId, $markup);
     }
 
     private function updateProduct(array $productCsvJson): void
@@ -167,6 +166,7 @@ class ImportProductsJob implements ShouldQueue
         $product->code = $productCsvJson["code"] ?: $product->code;
         $product->name = $productCsvJson["name"] ?: $product->name;
         $product->price = $productCsvJson["price"] ?: $product->price;
+        $product->markup = $productCsvJson["markup"] ?: $product->markup;
         $product->brand = $productCsvJson["brand"] ?: $product->brand;
         $product->manufacturer = $productCsvJson["manufacturer"] ?: $product->manufacturer;
         $product->barcode = $productCsvJson["barcode"] ?: $product->barcode;
@@ -184,6 +184,7 @@ class ImportProductsJob implements ShouldQueue
         $productCsvJson["integration"] = null;
         unset($productCsvJson["id"]);
         unset($productCsvJson["is_update"]);
+        unset($productCsvJson["final_price"]);
 
         $data = [];
 

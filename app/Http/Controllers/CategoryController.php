@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use App\Models\IntegrationCategory;
-use App\Models\Product;
 
 class CategoryController extends Controller
 {
