@@ -11,7 +11,7 @@
             <td class="images" colspan="2">
 {{--                <div style="max-width: 300px; overflow: hidden; margin: auto;">--}}
                 <div>
-                    <a href="{{ $product->getLink($linkedCategory) }}">
+                    <a href="{{ $product->getLink() }}">
                         @if($product->thumbnail)
                             <img src="{{ $product->thumbnail }}" alt="Товар" />
                         @else
@@ -24,7 +24,7 @@
         <tr>
             <td class="tov" colspan="2">
                 <p>
-                    <a href="{{ $product->getLink($linkedCategory) }}">**{{ $product->name }}</a>
+                    <a href="{{ $product->getLink() }}">**{{ $product->name }}</a>
                 </p>
                 <p class="kod">Код {{ $product->code }}</p>
             </td>

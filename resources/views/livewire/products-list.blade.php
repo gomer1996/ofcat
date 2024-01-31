@@ -76,7 +76,6 @@
                                     :viewType="$viewType"
                                     :product="$product"
                                     :key="time().$product->id"
-                                    :linkedCategory="$linkedCategory"
                                 />
                             @endforeach
                         </tr>

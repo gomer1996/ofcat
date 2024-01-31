@@ -124,14 +124,6 @@ class SyncSamsonProducts
         if ($existingProduct) {
             $existingProduct->update($body);
         } else {
-            $existingProduct = Product::where('vendor_code', $sku["vendor_code"])
-                ->orWhere('barcode', $sku["barcode"])
-                ->first();
-
-            if ($existingProduct) {
-                return;
-            }
-
             $product = Product::create($body);
 
             if (count($sku["photo_list"])) {

@@ -22,16 +22,6 @@ class CategoryController extends Controller
             $category->load('children.children');
 
             if (!$category->children()->count()) {
-                if ($category->getAttribute('is_link')) {
-                    $category->load('linkedCategory', 'linkedCategory.category');
-                    if ($category->getRelation('linkedCategory')->getRelation('category')) {
-                        return view('product.category', [
-                            'category' => $category->getRelation('linkedCategory')->getRelation('category'),
-                            'linkedCategory' => $category
-                        ]);
-                    }
-                }
-
                 return view('product.category', [
                     'category' => $category,
                     'breadcrumbs' => $breadcrumbs
@@ -43,18 +33,6 @@ class CategoryController extends Controller
                 'breadcrumbs' => $breadcrumbs
             ]);
         }
-
-        if ($category->getAttribute('is_link')) {
-            $category->load('linkedCategory', 'linkedCategory.category');
-            if ($category->getRelation('linkedCategory')->getRelation('category')) {
-                return view('product.category', [
-                    'category' => $category->getRelation('linkedCategory')->getRelation('category'),
-                    'linkedCategory' => $category
-                ]);
-            }
-        }
-
-
 
         return view('product.category', [
             'category' => $category,

@@ -4,7 +4,6 @@ namespace App\Http\Livewire;
 
 use Gloudemans\Shoppingcart\Facades\Cart;
 use Livewire\Component;
-use App\Models\Product;
 
 class ProductIntro extends Component
 {
@@ -12,7 +11,6 @@ class ProductIntro extends Component
     public $cartQty = 1;
     public $viewType;
     public $productCalculatedPrice;
-    public $linkedCategory;
 
     public function mount()
     {
@@ -46,7 +44,6 @@ class ProductIntro extends Component
             'product' => $this->product,
             'viewType' => $this->viewType,
             'productCalculatedPrice' => $this->productCalculatedPrice,
-            'linkedCategory' => $this->linkedCategory
         ]);
     }
 }

@@ -1,7 +1,6 @@
 <x-app-layout>
     @section('title', $category->name)
     @php
-        $linkedCategory = isset($linkedCategory) ? $linkedCategory : null;
         $breadcrumbs = isset($breadcrumbs) ? $breadcrumbs : [];
     @endphp
     <div id="hornav">
@@ -37,8 +36,7 @@
         </div>
     </div>
     <livewire:products-list
-        :category="$category"
-        :linkedCategory="$linkedCategory" />
+        :category="$category" />
     <div class="otstyp">
     </div>
 </x-app-layout>
