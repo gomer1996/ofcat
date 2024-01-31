@@ -24,6 +24,8 @@ Route::get('/', function () {
 
 Route::get('/experiment/experiments', function () {
 
+    \Illuminate\Support\Facades\Log::info('Info log ' . time());
+
     $queue = ImportProductsQueue::first();
 
     $dataR = Storage::disk('local')->get('import/' . $queue->url);
