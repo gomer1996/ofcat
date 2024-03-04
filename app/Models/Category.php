@@ -46,6 +46,6 @@ class Category extends Model
      */
     public function getNameAttribute()
     {
-        return str_replace(';', ':', $this->attributes['name']);
+        return str_replace(';', ':', $this->attributes['name'] ?? null);
     }
 }

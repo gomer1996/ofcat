@@ -126,7 +126,8 @@ class ImportProductsJob implements ShouldQueue
 
         $product = Product::where([
             'integration' => 'samson',
-            'code' => $code
+            'code' => $code,
+            'category_id' => $categoryId
         ])->first();
 
         if ($product) {
@@ -144,7 +145,8 @@ class ImportProductsJob implements ShouldQueue
 
         $product = Product::where([
             'integration' => 'relef',
-            'code' => $code
+            'code' => $code,
+            'category_id' => $categoryId
         ])->first();
 
         if ($product) {

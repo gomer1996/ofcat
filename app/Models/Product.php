@@ -28,7 +28,7 @@ class Product extends Model implements HasMedia
     protected $attributes = [
         'is_hit' => 0,
         'is_new' => 0,
-        'is_active' => 0,
+        'is_active' => 1,
         'stock' => 0,
         'ignore_tax' => 0,
     ];
@@ -54,17 +54,18 @@ class Product extends Model implements HasMedia
      */
     public function getNameAttribute()
     {
-        return str_replace(';', ':', $this->attributes['name']);
+
+        return str_replace(';', ':', ($this->attributes['name'] ?? null));
     }
 
     public function getBrandAttribute()
     {
-        return str_replace(';', ':', $this->attributes['brand']);
+        return str_replace(';', ':', ($this->attributes['brand'] ?? null));
     }
 
     public function getManufacturerAttribute()
     {
-        return str_replace(';', ':', $this->attributes['manufacturer']);
+        return str_replace(';', ':', ($this->attributes['manufacturer'] ?? null));
     }
 
     public function getThumbnailAttribute()
@@ -75,8 +76,8 @@ class Product extends Model implements HasMedia
 
     public function getFinalPriceAttribute(): float
     {
-        $price = $this->attributes['price'];
-        $markup = $this->attributes['markup'];
+        $price = $this->attributes['price'] ?? 0;
+        $markup = $this->attributes['markup'] ?? 0;
 
         $markup = $price * ($markup / 100);
 

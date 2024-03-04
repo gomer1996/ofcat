@@ -25,7 +25,7 @@ class NewProducts extends Component
     public function render()
     {
         return view('components.new-products', [
-            'products' => Product::latest()->limit(8)->get()
+            'products' => Product::where('is_new', 1)->limit(20)->get()
         ]);
     }
 }

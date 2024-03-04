@@ -150,6 +150,7 @@
                     </tr>
                     <tr>
                         <td>
+                            <input type="hidden" name="type" value="{{ $isCompany ? 'company' : 'person' }}">
                             <input type="submit" value="ЗАРЕГИСТРИРОВАТЬСЯ" />
                         </td>
                     </tr>

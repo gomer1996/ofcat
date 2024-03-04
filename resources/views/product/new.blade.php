@@ -1,5 +1,5 @@
 <x-app-layout>
-    @section('title', 'Хит продаж')
+    @section('title', 'Новинки')
     <div id="hornav">
         <div class="field">
             <table>

@@ -31,6 +31,7 @@ class ProductScope implements Scope
 
         $builder->leftJoin('user_category_discounts as ucd', 'products.category_id', '=', 'ucd.category_id')
             ->join('categories', 'products.category_id', '=', 'categories.id')
+            ->where('is_active', '=', 1)
             ->select([
                 'products.*',
                 DB::raw('IF(ucd.user_id = '.$userId.' OR '.$discount.' > 0 , '.$userDiscount.', '.$categoryDiscount.') as calculated_price')

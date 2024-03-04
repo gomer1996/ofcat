@@ -1,6 +1,6 @@
 @php
- $type = request()->get('type') === 'company' ? 'company' : 'person';
  $user = auth()->user();
+  $type = $user && $user->type === 'company' ? 'company' : 'person';
 @endphp
 @section('title', 'Оформление заказа')
 <x-app-layout>
