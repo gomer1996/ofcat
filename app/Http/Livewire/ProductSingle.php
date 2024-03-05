@@ -18,7 +18,9 @@ class ProductSingle extends Component
     public function addToCart($product)
     {
         Cart::add($product["id"], $product["name"], 1, $this->productCalculatedPrice, 0, [
-            'img' => $product["thumbnail"]
+            'img' => $product["thumbnail"],
+            'code' => $product["code"],
+            'integration' => $product['integration']
         ]);
         $this->emit('livewireNotify', 'success', 'Товар добавлен в корзину');
         $this->emit('cartUpdated');

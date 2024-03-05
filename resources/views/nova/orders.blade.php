@@ -2,7 +2,10 @@
     <table id="custom-cart-products">
         <tr>
             <td>
-                ID
+                Код
+            </td>
+            <td>
+                Поставщик
             </td>
             <td>
                 Наименование
@@ -17,7 +20,10 @@
     @foreach($products as $product)
         <tr>
             <td>
-                {{ $product["id"] }}
+                {{ $product["options"]["code"] ?? '' }}
+            </td>
+            <td>
+                {{ $product["options"]["integration"] ?? '' }}
             </td>
             <td>
                 <a href="{{ url("/admin/resources/products/{$product['id']}") }}" target="_blank">
