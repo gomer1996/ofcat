@@ -169,19 +169,4 @@ class Category extends Resource
     }
 
     public static $trafficCop = false;
-
-    public static function indexQuery(NovaRequest $request, $query)
-    {
-        return $query->where('is_link', 0);
-    }
-
-    public static function detailQuery(NovaRequest $request, $query)
-    {
-        return $query->where('is_link', 0);
-    }
-
-    public static function relatableQuery(NovaRequest $request, $query)
-    {
-        return $query->where('is_link', 0);
-    }
 }
