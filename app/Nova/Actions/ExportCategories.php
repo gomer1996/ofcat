@@ -2,7 +2,7 @@
 
 namespace App\Nova\Actions;
 
-use App\Exports\CategoryExport;
+use App\Exports\OrderItemsExport;
 use App\Jobs\ExportCategoriesJob;
 use App\Models\ExportCategoriesQueue;
 use Illuminate\Bus\Queueable;

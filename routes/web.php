@@ -1,8 +1,9 @@
 <?php
 
-use App\Exports\CategoryExport;
+use App\Exports\OrderItemsExport;
 use App\Jobs\ExportProductsJob;
 use App\Models\ImportProductsQueue;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;
@@ -149,13 +150,11 @@ Route::get('/pages/{page}', [\App\Http\Controllers\PageController::class, 'show'
 Route::get('/selections/{category}', [\App\Http\Controllers\ProductSelectionCategoryController::class, 'index'])
     ->name('selections.index');
 
-//Route::get('/cron/run', function(){
-//
-//    \App\Jobs\RunIntegrations::dispatch();
-//});
+Route::get('/download/excel/order/{orderId}', function(int $orderId) {
 
-Route::get('/download/excel/category', function() {
-    return Excel::download(new CategoryExport, 'categories.xlsx');
-})->middleware('auth')->name('download.excel.category');
+    if (auth()->id() && auth()->user()->role === 'admin') {
+        return Excel::download(new OrderItemsExport($orderId), 'order-' . $orderId . '.xlsx');
+    }
+})->middleware('auth')->name('download.excel.order');
 
 require __DIR__.'/auth.php';

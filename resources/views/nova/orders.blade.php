@@ -1,4 +1,7 @@
 @if($products)
+    <a href="{{ url("/download/excel/order/$orderId") }}" target="_blank">
+        Скачать
+    </a>
     <table id="custom-cart-products">
         <tr>
             <td>

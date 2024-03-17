@@ -1,9 +1,7 @@
 <?php
 
-use App\Exports\CategoryExport;
 use Illuminate\Http\Middleware\CheckResponseForModifications;
 use Illuminate\Support\Facades\Route;
-use Maatwebsite\Excel\Facades\Excel;
 
 // Scripts & Styles...
 Route::get('/scripts/{script}', 'ScriptController@show')->middleware(CheckResponseForModifications::class);
