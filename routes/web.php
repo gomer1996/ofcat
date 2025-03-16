@@ -1,9 +1,7 @@
 <?php
 
 use App\Exports\OrderItemsExport;
-use App\Jobs\ExportProductsJob;
 use App\Models\ImportProductsQueue;
-use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Maatwebsite\Excel\Facades\Excel;

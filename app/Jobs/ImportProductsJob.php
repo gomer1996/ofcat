@@ -35,7 +35,6 @@ class ImportProductsJob implements ShouldQueue
      */
     public function __construct()
     {
-
     }
 
     /**
@@ -124,7 +123,7 @@ class ImportProductsJob implements ShouldQueue
             return;
         }
 
-        $product = Product::where([
+        $product = Product::withoutGlobalScopes()->where([
             'integration' => 'samson',
             'code' => $code,
             'category_id' => $categoryId
@@ -143,7 +142,7 @@ class ImportProductsJob implements ShouldQueue
             return;
         }
 
-        $product = Product::where([
+        $product = Product::withoutGlobalScopes()->where([
             'integration' => 'relef',
             'code' => $code,
             'category_id' => $categoryId
@@ -158,7 +157,7 @@ class ImportProductsJob implements ShouldQueue
 
     private function updateProduct(array $productCsvJson): void
     {
-        $product = Product::find($productCsvJson["id"]);
+        $product = Product::withoutGlobalScopes()->find($productCsvJson["id"]);
 
         if (!$product) {
             return;

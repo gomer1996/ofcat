@@ -91,7 +91,7 @@ class SyncRelefProducts
             return;
         }
 
-        $found = Product::where(['code' => $product["code"], 'integration' => 'relef'])->first();
+        $found = Product::withoutGlobalScopes()->where(['code' => $product["code"], 'integration' => 'relef'])->first();
 
         $body = [
             "name" => $product["name"],
@@ -112,7 +112,7 @@ class SyncRelefProducts
         if ($found) {
             $found->update($body);
         } else {
-            $found = Product::where('vendor_code', $product["vendorCode"])->first();
+            $found = Product::withoutGlobalScopes()->where('vendor_code', $product["vendorCode"])->first();
 
             if ($found) return;
 

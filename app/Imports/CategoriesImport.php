@@ -9,18 +9,6 @@ use Illuminate\Support\Collection;
 
 class CategoriesImport implements ToCollection
 {
-//    /**
-//    * @param array $row
-//    *
-//    * @return \Illuminate\Database\Eloquent\Model|null
-//    */
-//    public function model(array $row)
-//    {
-//        return new Category([
-//            'name' => $row[0]
-//        ]);
-//    }
-
     public function collection(Collection $rows): void
     {
         foreach ($rows as $index => $row)

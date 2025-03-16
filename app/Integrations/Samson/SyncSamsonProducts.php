@@ -119,7 +119,7 @@ class SyncSamsonProducts
     {
         $body = $this->buildBody($sku, $categoryId, $markup);
 
-        $existingProduct = Product::where(['code' => $sku["sku"], 'integration' => 'samson'])->first();
+        $existingProduct = Product::withoutGlobalScopes()->where(['code' => $sku["sku"], 'integration' => 'samson'])->first();
 
         if ($existingProduct) {
             $existingProduct->update($body);
