@@ -60,7 +60,7 @@ class SyncRelefProducts
     private function getRelefProduct(string $code): ?array
     {
         $res = Http::withHeaders([
-            "apikey" => "f9f84dcf7bd647389500dc3ee23d6a25"
+            "apikey" => "fc21beb2dc194755a1414cdcc2a7c8e5"
         ])->post($this->url, [
             "filter" => [
                 "code" => $code
