@@ -25,7 +25,7 @@
             @foreach($categories as $category)
                 <dl>
                     <dt>
-                        <img src="{{ asset("storage/{$category->img}") }}" alt="картинка группы" />
+{{--                        <img src="{{ asset("storage/{$category->img}") }}" alt="картинка группы" />--}}
                         <a href="{{ route('categories.index', $category) }}">{{ $category->name }}</a>
                     </dt>
                     @if($category->children->count())

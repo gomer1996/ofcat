@@ -45,10 +45,10 @@
                 </div>
                 <div class="header_tel">
                     <p>Есть вопрос?</p>
-                    <p><span>+7 (383) 281-90-01</span></P>
+                    <p><span>8-983-002-90-01</span></P>
                 </div>
                 <div class="contact_cent">
-                    <a href="https://wa.me/79830029001">
+                    <a href="https://wa.me/89830029001">
                         <span>Написать в WhatsApp</span>
                     </a>
                 </div>

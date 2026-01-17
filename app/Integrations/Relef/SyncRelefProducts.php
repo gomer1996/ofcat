@@ -45,8 +45,12 @@ class SyncRelefProducts
                 $product->price = $price;
                 $product->stock = $stock;
 
-                if ($stock == 0) {
+                $availability = $this->checkAvailabilityByRemains($relefProduct["remains"]);
+
+                if ($availability === false) {
                     $product->is_active = 0;
+                } else if ($availability && !$product->is_active) {
+                    $product->is_active = 1;
                 }
 
                 $product->save();
@@ -95,7 +99,7 @@ class SyncRelefProducts
 
         $body = [
             "name" => $product["name"],
-            "price" => $product["prices"][0]["value"] ?? 0,
+            "price" => $this->getPreferredPrice($product["prices"]),
             "brand" => $product["brand"]["name"] ?? null,
             "code" => $product["code"],
             "category_id" => $categoryId,
@@ -148,5 +152,47 @@ class SyncRelefProducts
             return $found["quantity"];
         }
         return 0;
+    }
+
+    private function getPreferredPrice(array $prices): float
+    {
+        $recommend = 0.0;
+
+        foreach ($prices as $price) {
+            if (!isset($price['type'], $price['value'])) {
+                continue;
+            }
+
+            if ($price['type'] === 'contracts' && is_numeric($price['value'])) {
+                return (float) $price['value'];
+            }
+
+            if ($price['type'] === 'recommend' && is_numeric($price['value'])) {
+                $recommend = (float) $price['value'];
+            }
+        }
+
+        return $recommend;
+    }
+
+    private function checkAvailabilityByRemains(array $remains): bool
+    {
+        $rznQuantity = 0;
+
+        foreach ($remains as $item) {
+            if (!isset($item['code'], $item['quantity'])) {
+                continue;
+            }
+
+            if ($item['code'] === 'НСК' && (int)$item['quantity'] > 0) {
+                return true;
+            }
+
+            if ($item['code'] === 'РЗН') {
+                $rznQuantity = (int)$item['quantity'];
+            }
+        }
+
+        return $rznQuantity > 0;
     }
 }

@@ -49,8 +49,12 @@ class SyncSamsonProducts
                 $product->price = $price;
                 $product->stock = $stock;
 
-                if ($stock == 0) {
+                $availability = $this->checkAvailabilityByStock($skuData["stock_list"]);
+
+                if ($availability === false) {
                     $product->is_active = 0;
+                } else if ($availability && !$product->is_active) {
+                    $product->is_active = 1;
                 }
 
                 $product->save();
@@ -132,6 +136,27 @@ class SyncSamsonProducts
                 }
             }
         }
+    }
+
+    private function checkAvailabilityByStock(array $stockList): bool
+    {
+        $total = 0;
+
+        foreach ($stockList as $stock) {
+            if (!isset($stock['type'], $stock['value'])) {
+                continue;
+            }
+
+            if ($stock['type'] === 'idp' && (int)$stock['value'] > 0) {
+                return true;
+            }
+
+            if ($stock['type'] === 'total') {
+                $total = (int)$stock['value'];
+            }
+        }
+
+        return $total > 0;
     }
 
     private function buildBody(array $sku, int $categoryId, $markup): array

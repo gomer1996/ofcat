@@ -41,14 +41,14 @@
             </nav>
         </div>
         <div class="blocright">
-            <div class="header_social blokleft">
-                <a href="#">
-                    <img src="/images/hed_vk.png" alt="Вконтакте" />
-                </a>
-                <a class="social_last" href="#">
-                    <img src="/images/hed_insta.png" alt="Инстаграмм" />
-                </a>
-            </div>
+{{--            <div class="header_social blokleft">--}}
+{{--                <a href="#">--}}
+{{--                    <img src="/images/hed_vk.png" alt="Вконтакте" />--}}
+{{--                </a>--}}
+{{--                <a class="social_last" href="#">--}}
+{{--                    <img src="/images/hed_insta.png" alt="Инстаграмм" />--}}
+{{--                </a>--}}
+{{--            </div>--}}
             <livewire:cart-widget />
         </div>
     </div>

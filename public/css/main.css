@@ -1423,10 +1423,10 @@ input:active{ outline: none; }
 	clear: left;
 	position: relative;
 }
-.subkataloggroup img {
-	float: left;
-	margin: 0 7px 15px 0;
-}
+/*.subkataloggroup img {*/
+/*	float: left;*/
+/*	margin: 0 7px 15px 0;*/
+/*}*/
 .subkataloggroup dt a:hover {
 	color: #cd7710;
 }
