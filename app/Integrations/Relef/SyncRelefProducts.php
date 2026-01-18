@@ -36,7 +36,7 @@ class SyncRelefProducts
                 }
 
                 $stock = $this->getStock('Новосибирск', $relefProduct["remains"]);
-                $price = $relefProduct["prices"][0]["value"] ?? 0;
+                $price = $this->getPreferredPrice($relefProduct["prices"]) ?? 0;
 
                 if ($price <= 0) {
                     continue;

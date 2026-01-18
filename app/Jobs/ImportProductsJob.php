@@ -163,19 +163,19 @@ class ImportProductsJob implements ShouldQueue
             return;
         }
 
-        $product->category_id = $productCsvJson["category_id"] ?: $product->category_id;
-        $product->code = $productCsvJson["code"] ?: $product->code;
-        $product->name = $productCsvJson["name"] ?: $product->name;
-        $product->price = $productCsvJson["price"] ?: $product->price;
-        $product->markup = $productCsvJson["markup"] ?: $product->markup;
-        $product->brand = $productCsvJson["brand"] ?: $product->brand;
-        $product->manufacturer = $productCsvJson["manufacturer"] ?: $product->manufacturer;
-        $product->barcode = $productCsvJson["barcode"] ?: $product->barcode;
-        $product->vendor_code = $productCsvJson["vendor_code"] ?: $product->vendor_code;
-        $product->stock = $productCsvJson["stock"] ?: $product->stock;
-        $product->is_hit = $productCsvJson["is_hit"] ?: $product->is_hit;
-        $product->is_active = $productCsvJson["is_active"] ?: $product->is_active;
-        $product->is_new = $productCsvJson["is_new"] ?: $product->is_new;
+        $product->category_id = $productCsvJson["category_id"] ?? $product->category_id;
+        $product->code = $productCsvJson["code"] ?? $product->code;
+        $product->name = $productCsvJson["name"] ?? $product->name;
+        $product->price = $productCsvJson["price"] ?? $product->price;
+        $product->markup = $productCsvJson["markup"] ?? $product->markup;
+        $product->brand = $productCsvJson["brand"] ?? $product->brand;
+        $product->manufacturer = $productCsvJson["manufacturer"] ?? $product->manufacturer;
+        $product->barcode = $productCsvJson["barcode"] ?? $product->barcode;
+        $product->vendor_code = $productCsvJson["vendor_code"] ?? $product->vendor_code;
+        $product->stock = $productCsvJson["stock"] ?? $product->stock;
+        $product->is_hit = $productCsvJson["is_hit"] ?? $product->is_hit;
+        $product->is_active = $productCsvJson["is_active"] ?? $product->is_active;
+        $product->is_new = $productCsvJson["is_new"] ?? $product->is_new;
 
         $product->save();
     }

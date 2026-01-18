@@ -1431,9 +1431,13 @@ input:active{ outline: none; }
 	color: #cd7710;
 }
 .subkataloggroup dd ul {
-	float: none;
-	margin: 0 0 0 3px;
-	list-style: none;
+    float: none;
+    margin: 0 0 0 3px;
+    list-style: none;
+    padding-left: 0;
+}
+.subkataloggroup dd {
+    margin-left: 10px;
 }
 .subkataloggroup dd li {
 	border: none;
