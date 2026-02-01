@@ -2,16 +2,16 @@
 
 namespace App\Integrations\Samson;
 
+use App\Integrations\Samson\DTO\SamsonProductDTO;
 use App\Models\Product;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 
 class SyncSamsonProducts
-{ //&pagination_page=0
-    private $baseUrl = "https://api.samsonopt.ru/";
-    private $apiKey = "e6f2f9ce0d1bfe7ed8a1fd8658921470";
-    private $url = "https://api.samsonopt.ru/v1/sku/190892?api_key=60769b17043981a854f4d6ac667e5ac5&pagination_count=50";
+{
+    private string $baseUrl = "https://api.samsonopt.ru/";
+    private string $apiKey = "e6f2f9ce0d1bfe7ed8a1fd8658921470";
 
     public function __invoke()
     {
@@ -25,37 +25,28 @@ class SyncSamsonProducts
         /**
          * @var Product $product
          */
-        foreach ($products as $i => $product) {
+        foreach ($products as $product) {
             try {
                 if (!$product->code) {
                     continue;
                 }
 
-                $skuData = $this->getSamsonProduct($product->code);
+                $samsonProductDTO = $this->fetchSamsonProduct($product->code);
 
-                if (!$skuData) {
+                if (!$samsonProductDTO) {
                     Log::info('Deleting samson product: ' . $product->code);
                     $product->delete();
                     continue;
                 }
 
-                $stock = $this->getStock("idp", $skuData["stock_list"]);
-                $price = $skuData["price_list"][0]["value"] ?? 0;
-
-                if ($price <= 0) {
+                if ($samsonProductDTO->getPrice() <= 0) {
                     continue;
                 }
 
-                $product->price = $price;
-                $product->stock = $stock;
-
-                $availability = $this->checkAvailabilityByStock($skuData["stock_list"]);
-
-                if ($availability === false) {
-                    $product->is_active = 0;
-                } else if ($availability && !$product->is_active) {
-                    $product->is_active = 1;
-                }
+                $product->price = $samsonProductDTO->getPrice();
+                $product->stock = $samsonProductDTO->getStock();
+                $product->total_stock = $samsonProductDTO->getTotalStock();
+                $product->is_active = $samsonProductDTO->isActive();
 
                 $product->save();
             } catch (\Exception $E) {
@@ -67,19 +58,19 @@ class SyncSamsonProducts
 
     public function fetchSku(string $sku, int $categoryId, ?float $markup): void
     {
-        $skuData = null;
+        $samsonProductDTO = null;
 
         try {
-            $skuData = $this->getSamsonProduct($sku);
+            $samsonProductDTO = $this->fetchSamsonProduct($sku, $categoryId, $markup);
         } catch (\Throwable $e) {
 
         }
 
-        if (!$skuData) {
+        if (!$samsonProductDTO) {
             return;
         }
 
-        $this->createOrUpdateProduct($skuData, $categoryId, $markup);
+        $this->createOrUpdateProduct($samsonProductDTO);
     }
 
     private function getSamsonProduct(string $sku): ?array
@@ -95,88 +86,59 @@ class SyncSamsonProducts
         return $data["data"][0] ?? null;
     }
 
-    public function parseProperties(array $props): array
+    private function fetchSamsonProduct(string $skuCode, ?int $categoryId = null, ?int $markup = null): ?SamsonProductDTO
     {
-        $properties = [];
+        $samsonSku = $this->getSamsonProduct($skuCode);
 
-        foreach ($props as $prop) {
-            $properties[$prop["name"]] = $prop["value"];
+        if (!$samsonSku) {
+            return null;
         }
 
-        return $properties;
+        return new SamsonProductDTO($samsonSku, $categoryId, $markup);
     }
 
-    private function getStock(string $key = '', array $stock = [])
+    private function createOrUpdateProduct(SamsonProductDTO $samsonProductDTO): void
     {
-        $found = null;
+        $body = $this->buildBody($samsonProductDTO);
 
-        foreach ($stock as $s) {
-            if ($s["type"] == $key) $found = $s;
-        }
-        if ($found && $found["value"]) {
-            return $found["value"];
-        }
-        return 0;
-    }
-
-    private function createOrUpdateProduct(array $sku, int $categoryId, ?float $markup): void
-    {
-        $body = $this->buildBody($sku, $categoryId, $markup);
-
-        $existingProduct = Product::withoutGlobalScopes()->where(['code' => $sku["sku"], 'integration' => 'samson'])->first();
+        $existingProduct = Product::withoutGlobalScopes()->where(['code' => $samsonProductDTO->getCode(), 'integration' => 'samson'])->first();
 
         if ($existingProduct) {
             $existingProduct->update($body);
         } else {
             $product = Product::create($body);
 
-            if (count($sku["photo_list"])) {
-                foreach ($sku["photo_list"] as $url) {
+            if (count($samsonProductDTO->getPhotoList())) {
+                foreach ($samsonProductDTO->getPhotoList() as $url) {
                     $product->addMediaFromUrl($url)->toMediaCollection('product_media_collection');
                 }
             }
         }
     }
 
-    private function checkAvailabilityByStock(array $stockList): bool
-    {
-        $total = 0;
-
-        foreach ($stockList as $stock) {
-            if (!isset($stock['type'], $stock['value'])) {
-                continue;
-            }
-
-            if ($stock['type'] === 'idp' && (int)$stock['value'] > 0) {
-                return true;
-            }
-
-            if ($stock['type'] === 'total') {
-                $total = (int)$stock['value'];
-            }
-        }
-
-        return $total > 0;
-    }
-
-    private function buildBody(array $sku, int $categoryId, $markup): array
+    /**
+     * @todo move to Product class and create method like fillFromDTO
+     */
+    private function buildBody(SamsonProductDTO $samsonProductDTO): array
     {
         return [
-            "name" => $sku["name"],
-            "price" => $sku["price_list"][0]["value"] ?? 0,
-            "brand" => $sku["brand"],
-            "code" => $sku["sku"],
-            "category_id" => $categoryId,
-            "description" => $sku["description"],
-            "manufacturer" => $sku["manufacturer"],
-            "weight" => $sku["weight"],
-            "volume" => $sku["volume"],
-            "barcode" => $sku["barcode"] ?? null,
-            "vendor_code" => $sku["vendor_code"] ?? null,
-            "properties" => $sku["facet_list"] ? $this->parseProperties($sku["facet_list"]) : null,
+            "name" => $samsonProductDTO->getName(),
+            "price" => $samsonProductDTO->getPrice(),
+            "brand" => $samsonProductDTO->getBrand(),
+            "code" => $samsonProductDTO->getCode(),
+            "category_id" => $samsonProductDTO->getCategoryId(),
+            "description" => $samsonProductDTO->getDescription(),
+            "manufacturer" => $samsonProductDTO->getManufacturer(),
+            "weight" => $samsonProductDTO->getWeight(),
+            "volume" => $samsonProductDTO->getVolume(),
+            "barcode" => $samsonProductDTO->getBarcode(),
+            "vendor_code" => $samsonProductDTO->getVendorCode(),
+            "properties" => $samsonProductDTO->getProperties(),
             "integration" => "samson",
-            "stock" => $this->getStock("idp", $sku["stock_list"]),
-            "markup" => $markup
+            "stock" => $samsonProductDTO->getStock(),
+            "total_stock" => $samsonProductDTO->getTotalStock(),
+            "markup" => $samsonProductDTO->getMarkup(),
+            "is_active" => $samsonProductDTO->isActive(),
         ];
     }
 

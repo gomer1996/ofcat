@@ -1,6 +1,6 @@
 @php
  $user = auth()->user();
-  $type = $user && $user->type === 'company' ? 'company' : 'person';
+  $type = $user && $user->type === 'company' ? 'company' : $type;
 @endphp
 @section('title', 'Оформление заказа')
 <x-app-layout>

@@ -26,9 +26,14 @@ class SendOrderConfirmationNotification
      */
     public function handle(NewOrder $event)
     {
+        if ($event->cartContent->isEmpty()) {
+            return;
+        }
+
         if ($event->user) {
             try {
                 Mail::to($event->user->email)->send(new \App\Mail\OrderConfirmMail());
+                Mail::to(config('mail.admin.address'))->send(new \App\Mail\AdminOrderConfirmationMail($event->cartContent));
             } catch (\Throwable $E) {
                 Log::critical('Error while sending confirmation email ' . $E->getMessage());
             }

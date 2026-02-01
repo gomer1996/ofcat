@@ -10,12 +10,14 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Collection;
 
 class NewOrder
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $user;
+    public Collection $cartContent;
 
     /**
      * Create a new event instance.
@@ -23,9 +25,10 @@ class NewOrder
      * @param User $user
      * @return void
      */
-    public function __construct(?User $user)
+    public function __construct(?User $user, Collection $cartContent)
     {
         $this->user = $user;
+        $this->cartContent = $cartContent;
     }
 
     /**

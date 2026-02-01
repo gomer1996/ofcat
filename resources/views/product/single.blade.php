@@ -68,7 +68,7 @@
                                         <p>Код <span>{{ $product->code }}</span></p>
                                     </li>
                                     <li style="margin-left: 50px">
-                                        <p>{{ $product->stock > 0 ? $product->stock . ' шт. в наличии' : 'Под заказ' }}</p>
+                                        <p>{{ $product->stock > 0 ? $product->stock . ' шт. в наличии' : 'Под заказ (' . $product->total_stock . ')' }}</p>
                                     </li>
                                 </ul>
                             </td>
