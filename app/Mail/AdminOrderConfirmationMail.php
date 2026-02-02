@@ -2,6 +2,7 @@
 
 namespace App\Mail;
 
+use App\DTO\CheckoutDTO;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -16,14 +17,17 @@ class AdminOrderConfirmationMail extends Mailable
 
     public Collection $cartItems;
 
+    public CheckoutDTO $checkoutDTO;
+
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Collection $cartItems)
+    public function __construct(CheckoutDTO $checkoutDTO, Collection $cartItems)
     {
         $this->cartItems = $cartItems;
+        $this->checkoutDTO = $checkoutDTO;
     }
 
     /**
@@ -41,9 +45,18 @@ class AdminOrderConfirmationMail extends Mailable
             'level' => 'success',
             'greeting' => 'Данные по заказу',
             'introLines' => $introLines,
-            'outroLines' => []
+            'outroLines' => [],
+            'name' => $this->checkoutDTO->getName(),
+            'email' => $this->checkoutDTO->getEmail(),
+            'delivery' => $this->checkoutDTO->getDelivery(),
+            'phone' => $this->checkoutDTO->getPhone(),
+            'address' => $this->checkoutDTO->getAddress(),
+            'company' => $this->checkoutDTO->getCompany(),
+            'note' => $this->checkoutDTO->getNote(),
+            'userType' => $this->checkoutDTO->getUserType(),
+            'price' => $this->checkoutDTO->getPrice(),
         ];
 
-        return $this->markdown('vendor.notifications.email')->with($data);
+        return $this->markdown('vendor.notifications.order-admin-email')->with($data);
     }
 }

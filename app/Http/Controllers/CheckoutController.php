@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTO\CheckoutDTO;
 use App\Events\NewOrder;
 use App\Http\Requests\CheckoutStoreRequest;
 use App\Models\Order;
@@ -14,8 +15,7 @@ class CheckoutController extends Controller
 {
     public function index(Request $request)
     {
-        $type = $request->get('type') ?? 'person';
-        return view('checkout.index', ['type' => $type]);
+        return view('checkout.index', ['type' => $request->get('type') ?? 'person']);
     }
 
     public function store(CheckoutStoreRequest $request)
@@ -36,8 +36,22 @@ class CheckoutController extends Controller
         $request->request->add(['price' => CartHelper::getTotalWithDelivery()]);
         $request->request->add(['discount' => floatval(Cart::discount(2, '.', ''))]);
 
+        $email = Auth::user() ? Auth::user()->email : $request->get('email');
+
+        $checkoutDTO = new CheckoutDTO(
+            $request->get('name'),
+            $request->get('company'),
+            $request->get('phone'),
+            $email,
+            $request->get('address'),
+            $request->get('note'),
+            $request->get('delivery'),
+            $request->get('user_type'),
+            CartHelper::getTotalWithDelivery()
+        );
+
         if (Order::create($request->all())) {
-            NewOrder::dispatch(Auth::user(), $cart);
+            NewOrder::dispatch($checkoutDTO, $cart);
             Cart::destroy();
 
             return redirect()->route('checkout.success');

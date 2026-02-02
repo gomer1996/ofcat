@@ -20,8 +20,7 @@ class NewsletterForm extends Component
         $this->validate();
 
         if ($this->name && $this->email) {
-
-            Mail::to("marat-valiev-1996@mail.ru")
+            Mail::to(config('mail.admin.address'))
                 ->send(new \App\Mail\NewsletterSubscriptionMail($this->name, $this->email));
 
             $this->emit('livewireNotify', 'success', 'Вы успешно подписались на рассылку');

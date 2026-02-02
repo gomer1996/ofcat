@@ -30,13 +30,14 @@ class SendOrderConfirmationNotification
             return;
         }
 
-        if ($event->user) {
-            try {
-                Mail::to($event->user->email)->send(new \App\Mail\OrderConfirmMail());
-                Mail::to(config('mail.admin.address'))->send(new \App\Mail\AdminOrderConfirmationMail($event->cartContent));
-            } catch (\Throwable $E) {
-                Log::critical('Error while sending confirmation email ' . $E->getMessage());
+        try {
+            Mail::to(config('mail.admin.address'))->send(new \App\Mail\AdminOrderConfirmationMail($event->checkoutDTO, $event->cartContent));
+
+            if ($email = $event->checkoutDTO->getEmail()) {
+                Mail::to($email)->send(new \App\Mail\OrderConfirmMail());
             }
+        } catch (\Throwable $E) {
+            Log::critical('Error while sending confirmation email ' . $E->getMessage());
         }
     }
 }

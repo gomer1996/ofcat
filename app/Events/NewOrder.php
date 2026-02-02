@@ -11,23 +11,23 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
+use App\DTO\CheckoutDTO;
 
 class NewOrder
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $user;
+    public CheckoutDTO $checkoutDTO;
     public Collection $cartContent;
 
     /**
      * Create a new event instance.
      *
-     * @param User $user
      * @return void
      */
-    public function __construct(?User $user, Collection $cartContent)
+    public function __construct(CheckoutDTO $checkoutDTO, Collection $cartContent)
     {
-        $this->user = $user;
+        $this->checkoutDTO = $checkoutDTO;
         $this->cartContent = $cartContent;
     }
 
